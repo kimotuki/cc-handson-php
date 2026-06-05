@@ -1,16 +1,27 @@
-# Claude Code ハンズオン教材 — Laravel × Prism チャットアプリ構築
+# Claude Code ハンズオン
 
-自然言語の指示だけで、**環境構築からサンプルアプリ完成・デバッグまで**を Claude Code に任せる一連の流れを体験するハンズオン教材です。
+Claude Code の基本操作からソフトウェア開発・チーム開発までを **60分 × 3回** で実践するハンズオンコースです。
 
-PHP すら入っていない macOS から、**Laravel 13 + [Prism](https://github.com/prism-php/prism)（LLM 統合パッケージ）による AI チャット Web アプリ**を、すべてプロンプトだけで構築・デバッグした実セッションを再現可能な形にまとめています。
+実践教材として、PHP すら入っていない macOS から **Laravel 13 + [Prism](https://github.com/prism-php/prism)（LLM 統合パッケージ）による AI チャット Web アプリ**を、すべてプロンプトだけで構築・デバッグした実セッションを再現可能な形にまとめています。
 
 ## 📖 教材の閲覧
 
-ブラウザで [`index.html`](index.html) を開くだけで閲覧できます（外部依存なしの単一 HTML ファイル）。
+ブラウザで [`index.html`](index.html)（コースポータル）を開くと、各回の資料にアクセスできます（外部依存なしの静的 HTML）。
 
 ```bash
 open index.html
 ```
+
+| ファイル | 内容 |
+|---|---|
+| [`index.html`](index.html) | コースポータル（概要・各回へのリンク） |
+| [`session1.html`](session1.html) | 第1回：Claude Code の基本 |
+| [`session2.html`](session2.html) | 第2回：Claude Code を使ったソフトウェア開発 |
+| [`session3.html`](session3.html) | 第3回：Claude Code を使ったチーム開発 |
+| [`laravel-prism.html`](laravel-prism.html) | 第1回 実践教材（Laravel × Prism チャットアプリ構築） |
+| [`HANDSON.md`](HANDSON.md) | 講義資料のソース（Markdown） |
+
+以下は実践教材（Laravel × Prism チャットアプリ構築）の説明です。
 
 ## 🎯 学べること
 

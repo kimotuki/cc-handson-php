@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第2回：Claude Code を使ったソフトウェア開発 — Claude Code ハンズオン</title>
+<style>
+  :root {
+    --accent: #d97706;
+    --accent-light: #fef3c7;
+    --bg: #fafaf9;
+    --code-bg: #1e293b;
+    --code-fg: #e2e8f0;
+    --border: #e7e5e4;
+    --text: #292524;
+    --muted: #78716c;
+    --ok: #16a34a;
+    --warn: #dc2626;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+  }
+  .layout { display: flex; max-width: 1180px; margin: 0 auto; }
+  nav {
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    width: 260px;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 28px 18px;
+    border-right: 1px solid var(--border);
+    background: #fff;
+    flex-shrink: 0;
+  }
+  nav h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0 0 12px; }
+  nav ol { list-style: none; margin: 0; padding: 0; }
+  nav li { margin: 0; }
+  nav a {
+    display: block;
+    padding: 6px 10px;
+    font-size: 14px;
+    color: var(--text);
+    text-decoration: none;
+    border-radius: 6px;
+    border-left: 3px solid transparent;
+  }
+  nav a:hover { background: var(--accent-light); border-left-color: var(--accent); }
+  main { flex: 1; min-width: 0; padding: 40px 48px 120px; }
+  header.hero {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    color: #fff;
+    padding: 48px;
+    border-radius: 16px;
+    margin-bottom: 40px;
+  }
+  header.hero h1 { margin: 0 0 12px; font-size: 30px; line-height: 1.4; }
+  header.hero p { margin: 0; opacity: .95; font-size: 16px; }
+  .badges { margin-top: 20px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge {
+    background: rgba(255,255,255,.2);
+    border: 1px solid rgba(255,255,255,.35);
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+  }
+  section { margin-bottom: 48px; scroll-margin-top: 20px; }
+  h2.step {
+    font-size: 24px;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 8px;
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .step-num {
+    background: var(--accent);
+    color: #fff;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  h3 { font-size: 18px; margin-top: 28px; color: #b45309; }
+  h4 { font-size: 15.5px; margin: 22px 0 8px; }
+  pre {
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: 16px 18px;
+    border-radius: 10px;
+    overflow-x: auto;
+    font-size: 13.5px;
+    line-height: 1.6;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  pre .prompt { color: #38bdf8; }
+  pre .comment { color: #94a3b8; }
+  pre .str { color: #fcd34d; }
+  pre .kw { color: #f472b6; }
+  code.inline {
+    background: #f1f5f9;
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: .9em;
+    color: #be123c;
+    border: 1px solid #e2e8f0;
+  }
+  .callout {
+    border-left: 4px solid var(--accent);
+    background: var(--accent-light);
+    padding: 14px 18px;
+    border-radius: 0 8px 8px 0;
+    margin: 18px 0;
+  }
+  .callout.tip { border-color: #0ea5e9; background: #e0f2fe; }
+  .callout.warn { border-color: var(--warn); background: #fef2f2; }
+  .callout.ok { border-color: var(--ok); background: #f0fdf4; }
+  .callout > strong:first-child { display: block; margin-bottom: 4px; }
+  .prompt-box {
+    background: #fff;
+    border: 2px dashed var(--accent);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 16px 0;
+  }
+  .prompt-box .label { font-size: 12px; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+  .prompt-box p { margin: 6px 0 0; font-size: 16px; }
+  table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 14px; }
+  th, td { border: 1px solid var(--border); padding: 9px 12px; text-align: left; }
+  th { background: #f5f5f4; font-weight: 600; }
+  td code { font-size: .9em; }
+  footer { border-top: 1px solid var(--border); padding-top: 24px; color: var(--muted); font-size: 14px; }
+  .lesson {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 18px 0;
+  }
+  .lesson h4 { margin: 0 0 8px; color: #b45309; font-size: 15px; }
+  .lesson ul { margin: 0; padding-left: 20px; }
+  @media (max-width: 860px) {
+    nav { display: none; }
+    main { padding: 24px; }
+    header.hero { padding: 28px; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav>
+    <p style="margin:0 0 16px;"><a href="index.html" style="font-size:13px;color:var(--accent);text-decoration:none;font-weight:600;">← コースポータルへ戻る</a></p>
+    <h2>目次</h2>
+    <ol>
+      <li><a href="#goal">1. 到達目標・時間配分</a></li>
+      <li><a href="#sec2">2. CLAUDE.md とメモリ</a></li>
+      <li><a href="#sec3">3. Skills</a></li>
+      <li><a href="#sec4">4. Hooks</a></li>
+      <li><a href="#sec5">5. 実践：コード変更</a></li>
+      <li><a href="#sec6">6. まとめ</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <h1>第2回：Claude Code を使ったソフトウェア開発</h1>
+      <p>「プロジェクト知識を Claude に定着させ、コード変更を安全に任せる」</p>
+      <div class="badges">
+        <span class="badge">60分</span>
+        <span class="badge">CLAUDE.md</span>
+        <span class="badge">Skills</span>
+        <span class="badge">Hooks</span>
+        <span class="badge">コード変更</span>
+      </div>
+    </header>
+
+    <section id="goal">
+      <h2 class="step"><span class="step-num">1</span>到達目標・時間配分</h2>
+      <h3>到達目標</h3>
+      <ul>
+        <li><code class="inline">CLAUDE.md</code> とメモリの仕組みを理解し、プロジェクトに合わせて整備できる</li>
+        <li>Skills / Hooks の役割を理解し、簡単なものを自作できる</li>
+        <li>Plan Mode → 実装 → テスト → コミットの流れで機能追加を完遂できる</li>
+      </ul>
+      <h3>時間配分（60分）</h3>
+      <table>
+        <tr><th>#</th><th>内容</th><th>時間</th></tr>
+        <tr><td>1</td><td>前回の振り返り</td><td>5分</td></tr>
+        <tr><td>2</td><td>CLAUDE.md とメモリ</td><td>10分</td></tr>
+        <tr><td>3</td><td>Skills</td><td>10分</td></tr>
+        <tr><td>4</td><td>Hooks</td><td>10分</td></tr>
+        <tr><td>5</td><td>実践：コード変更</td><td>20分</td></tr>
+        <tr><td>6</td><td>まとめ</td><td>5分</td></tr>
+      </table>
+    </section>
+
+    <section id="sec2">
+      <h2 class="step"><span class="step-num">2</span>CLAUDE.md とメモリ（10分）</h2>
+
+      <h3>2-1. CLAUDE.md とは（3分）</h3>
+      <ul>
+        <li>セッション開始時に <strong>自動で読み込まれる</strong> プロジェクトの説明書</li>
+        <li>書くべきこと：ビルド・テストコマンド / コーディング規約 / ディレクトリ構成 / 注意事項</li>
+        <li><code class="inline">/init</code> で雛形を自動生成できる（第1回で実施済み）</li>
+      </ul>
+      <h4>配置場所と優先順位</h4>
+      <table>
+        <tr><th>配置場所</th><th>スコープ</th></tr>
+        <tr><td><code class="inline">~/.claude/CLAUDE.md</code></td><td>全プロジェクト共通（個人設定）</td></tr>
+        <tr><td><code class="inline">&lt;repo&gt;/CLAUDE.md</code></td><td>プロジェクト共通（<strong>チームで共有</strong>）</td></tr>
+        <tr><td><code class="inline">&lt;repo&gt;/CLAUDE.local.md</code></td><td>プロジェクト個人用（git 管理外）</td></tr>
+      </table>
+
+      <h3>2-2. メモリ（2分）</h3>
+      <p><code class="inline">#</code> プレフィックスでセッション中に得た知見をその場で追記できる。</p>
+<pre># このプロジェクトのテストは php artisan test で実行する</pre>
+      <ul>
+        <li><code class="inline">/memory</code> で保存先（CLAUDE.md など）を選択・編集できる</li>
+      </ul>
+
+      <h3>2-3. 書き方のコツ（2分）</h3>
+      <ul>
+        <li><strong>簡潔に・宣言的に</strong>。長文の経緯説明より「○○するときは△△を使う」</li>
+        <li>コードから読み取れること（ファイル構成そのもの等）は書かない — コンテキストの無駄</li>
+        <li>守られなかった指示は <strong>表現を強める</strong> より <strong>理由を添える</strong> ほうが効く</li>
+      </ul>
+
+      <h3>演習1</h3>
+      <div class="prompt-box">
+        <span class="label">やってみよう</span>
+        <p>前回の解析結果をもとに CLAUDE.md に「テストコマンド」「コーディング規約」を追記する</p>
+      </div>
+
+      <h3>2-4. Claude Code を用いた個人開発のフロー（3分）</h3>
+      <p>新規の個人プロジェクトを Claude Code 中心で立ち上げる典型的な流れ。<strong>リポジトリの初期化から GitHub への push まで、会話だけで完結できる。</strong></p>
+<pre><span class="prompt">$</span> mkdir my-app &amp;&amp; cd my-app
+<span class="prompt">$</span> claude</pre>
+      <table>
+        <tr><th>#</th><th>ステップ</th><th>指示・コマンド</th></tr>
+        <tr><td>1</td><td>雛形の作成</td><td>「Laravel で TODO アプリの雛形を作って」</td></tr>
+        <tr><td>2</td><td>プロジェクトメモリの整備</td><td><code class="inline">/init</code> で <code class="inline">CLAUDE.md</code> を生成</td></tr>
+        <tr><td>3</td><td>ローカル Git の初期化</td><td>「git リポジトリを初期化して、最初のコミットを作って」</td></tr>
+        <tr><td>4</td><td>GitHub リポジトリの作成と push</td><td>「gh で GitHub にプライベートリポジトリを作って push して」</td></tr>
+        <tr><td>5</td><td>開発ループ</td><td>機能追加を依頼 → テスト → コミット → push を小さく繰り返す</td></tr>
+      </table>
+      <p>ステップ3〜4で Claude が実行するコマンドの例:</p>
+<pre><span class="prompt">$</span> git init &amp;&amp; git add -A &amp;&amp; git commit -m "Initial commit"
+<span class="prompt">$</span> gh repo create my-app --private --source=. --push</pre>
+      <ul>
+        <li><code class="inline">gh</code>（GitHub CLI）が入っていれば、リポジトリ作成〜push まで Claude に任せられる（初回のみ <code class="inline">gh auth login</code> で認証が必要）</li>
+        <li>コミットメッセージも Claude が <strong>差分から生成</strong> する — 「変更をコミットして」だけでよい</li>
+        <li><code class="inline">/init</code> で作った <code class="inline">CLAUDE.md</code> は最初のコミットに含める — 以後のセッション（と将来の自分）への引き継ぎ書になる</li>
+      </ul>
+    </section>
+
+    <section id="sec3">
+      <h2 class="step"><span class="step-num">3</span>Skills（10分）</h2>
+
+      <h3>3-1. Skills とは（2分）</h3>
+      <ul>
+        <li><strong>手順書をスキル化</strong> して <code class="inline">/&lt;スキル名&gt;</code> で呼び出せる仕組み</li>
+        <li>実体は <code class="inline">.claude/skills/&lt;スキル名&gt;/SKILL.md</code> — Markdown で手順を書くだけ</li>
+        <li>「毎回プロンプトで説明していた定型作業」をコマンド一発にできる</li>
+      </ul>
+
+      <h3>3-2. スキルの作成（4分）</h3>
+      <p>例：コードレビュー用スキル</p>
+<pre><span class="comment">---
+name: review
+description: 変更差分をレビューする
+---</span>
+
+git diff の内容を確認し、以下の観点でレビューしてください：
+1. バグ・エッジケースの見落とし
+2. Laravel の規約への準拠
+3. セキュリティ上の問題（SQL インジェクション・XSS 等）
+指摘は重要度順に、該当ファイル:行番号付きで出力してください。</pre>
+
+      <h3>演習2</h3>
+      <div class="prompt-box">
+        <span class="label">やってみよう</span>
+        <p>上記の review スキルを .claude/skills/review/SKILL.md に作成し、/review で呼び出す</p>
+      </div>
+
+      <h3>3-3. 組み込みスキル（4分）</h3>
+      <p>自作しなくても、Claude Code には <strong>組み込みスキル</strong> が同梱されている。</p>
+      <ul>
+        <li>同梱スキルは <strong>オンデマンドで展開</strong> される — スキルが実際に呼び出されたタイミングで、参照用ファイル（examples 等）だけが一時ディレクトリ（<code class="inline">bundled-skills/</code> 配下）に書き出される。本文（SKILL.md）はファイルとしてではなく、<strong>会話に直接注入</strong> される</li>
+        <li>呼び出していないスキルは展開されないため、ファイルとしては見えない</li>
+      </ul>
+      <p>主な組み込みスキル（呼び出し可能なもの）:</p>
+      <table>
+        <tr><th>スキル</th><th>用途</th></tr>
+        <tr><td><code class="inline">code-review</code></td><td>差分のバグ・改善点レビュー</td></tr>
+        <tr><td><code class="inline">security-review</code></td><td>ブランチ変更のセキュリティレビュー</td></tr>
+        <tr><td><code class="inline">review</code></td><td>Pull Request のレビュー</td></tr>
+        <tr><td><code class="inline">verify</code></td><td>変更が実際に動くかアプリを起動して検証</td></tr>
+        <tr><td><code class="inline">simplify</code></td><td>変更コードの簡素化・リファクタリング</td></tr>
+        <tr><td><code class="inline">init</code></td><td>CLAUDE.md の初期生成</td></tr>
+        <tr><td><code class="inline">deep-research</code></td><td>Web検索を束ねた詳細リサーチレポート作成</td></tr>
+        <tr><td><code class="inline">loop</code> / <code class="inline">schedule</code></td><td>定期実行・スケジュール実行</td></tr>
+        <tr><td><code class="inline">update-config</code></td><td>settings.json の設定変更</td></tr>
+        <tr><td><code class="inline">keybindings-help</code></td><td>キーバインドのカスタマイズ</td></tr>
+        <tr><td><code class="inline">claude-api</code></td><td>Claude API のリファレンス参照</td></tr>
+        <tr><td><code class="inline">fewer-permission-prompts</code></td><td>権限プロンプト削減のための許可リスト生成</td></tr>
+      </table>
+      <div class="callout tip">
+        <strong>💡 ハンズオンで試すなら</strong>
+        題材のチャットアプリなら、<code class="inline">/security-review</code> や <code class="inline">/code-review</code> を試す価値がある。
+      </div>
+      <h3>演習3：/code-review を試す</h3>
+      <ol>
+        <li>レビュー対象の差分を作るため、チャットアプリに小さな変更を入れる</li>
+      </ol>
+      <div class="prompt-box">
+        <span class="label">あなたの指示</span>
+        <p>ChatController のシステムプロンプトに「回答は3文以内で簡潔に」という指示を追加して</p>
+      </div>
+      <ol start="2">
+        <li><code class="inline">/code-review</code> を実行する — 未コミットの差分に対して、バグ・エッジケース・改善点のレビューが返ってくる</li>
+        <li>妥当な指摘があれば「指摘の1番を修正して」と依頼し、修正された差分を確認する</li>
+        <li>演習2で自作した <code class="inline">/review</code> と結果を見比べる — 観点の網羅性や出力形式の違いから、<strong>自作スキルを育てるヒント</strong> が得られる</li>
+      </ol>
+    </section>
+
+    <section id="sec4">
+      <h2 class="step"><span class="step-num">4</span>Hooks（10分）</h2>
+
+      <h3>4-1. Hooks とは（3分）</h3>
+      <ul>
+        <li>ツール実行の <strong>前後などに自動でコマンドを差し込む</strong> 仕組み（<code class="inline">settings.json</code> に定義）</li>
+        <li>CLAUDE.md の指示と違い、<strong>ハーネスが機械的に実行する</strong> — Claude が「忘れる」ことがない</li>
+      </ul>
+      <table>
+        <tr><th>フック</th><th>タイミング</th><th>用途例</th></tr>
+        <tr><td><code class="inline">PreToolUse</code></td><td>ツール実行の直前</td><td>危険なコマンドのブロック</td></tr>
+        <tr><td><code class="inline">PostToolUse</code></td><td>ツール実行の直後</td><td>フォーマッタ・リンタの自動実行</td></tr>
+        <tr><td><code class="inline">Stop</code></td><td>Claude が応答を終えたとき</td><td>テストの自動実行・完了通知</td></tr>
+      </table>
+      <div class="callout tip">
+        <strong>💡 フィードバックの仕組み</strong>
+        フックが <strong>終了コード 2</strong> で終わると、その出力が Claude にフィードバックされる。PreToolUse ならツール実行がブロックされ、PostToolUse なら <strong>Claude が出力を読んで自分で修正</strong> する — これが品質向上ループの鍵。
+      </div>
+
+      <h3>4-2. 例：編集後に自動フォーマット（3分）</h3>
+      <p><code class="inline">.claude/settings.json</code>：</p>
+<pre>{
+  <span class="str">"hooks"</span>: {
+    <span class="str">"PostToolUse"</span>: [
+      {
+        <span class="str">"matcher"</span>: <span class="str">"Edit|Write"</span>,
+        <span class="str">"hooks"</span>: [
+          { <span class="str">"type"</span>: <span class="str">"command"</span>, <span class="str">"command"</span>: <span class="str">"vendor/bin/pint --dirty"</span> }
+        ]
+      }
+    ]
+  }
+}</pre>
+      <ul>
+        <li>Claude がファイルを編集するたびに <strong>Laravel Pint が自動で整形</strong> する</li>
+        <li>「人間がレビューしやすい状態を機械的に担保する」のが Hooks の本質</li>
+      </ul>
+
+      <h3>4-3. コード品質を高める Hooks 実例（4分）</h3>
+      <h4>静的解析の自動実行（Larastan）</h4>
+      <p><a href="https://github.com/larastan/larastan" target="_blank" rel="noopener">Larastan</a> は、PHP の静的解析ツール PHPStan の <strong>Laravel 特化拡張</strong>。Eloquent モデルのプロパティや Facade、リレーションといった「Laravel の魔法」を理解した上で型チェックできるため、素の PHPStan より誤検知が少なく Laravel プロジェクトの実態に合った指摘が得られる。</p>
+<pre><span class="prompt">$</span> composer require --dev "larastan/larastan"</pre>
+      <p>導入後も実行コマンドは PHPStan のもの（Larastan は PHPStan の拡張として動く）:</p>
+<pre>{
+  <span class="str">"hooks"</span>: {
+    <span class="str">"PostToolUse"</span>: [
+      {
+        <span class="str">"matcher"</span>: <span class="str">"Edit|Write"</span>,
+        <span class="str">"hooks"</span>: [
+          { <span class="str">"type"</span>: <span class="str">"command"</span>, <span class="str">"command"</span>: <span class="str">"vendor/bin/phpstan analyse --no-progress"</span> }
+        ]
+      }
+    ]
+  }
+}</pre>
+      <ul>
+        <li>編集のたびに型エラー・未定義変数・<strong>存在しないモデルプロパティやリレーションの参照</strong> などを検出。エラーは Claude にフィードバックされ、<strong>指示しなくても自分で直す</strong></li>
+      </ul>
+      <h4>作業の区切りでテストを自動実行（Stop）</h4>
+<pre>{
+  <span class="str">"hooks"</span>: {
+    <span class="str">"Stop"</span>: [
+      {
+        <span class="str">"hooks"</span>: [
+          { <span class="str">"type"</span>: <span class="str">"command"</span>, <span class="str">"command"</span>: <span class="str">"php artisan test"</span> }
+        ]
+      }
+    ]
+  }
+}</pre>
+      <ul>
+        <li>Claude が応答を終えるたびにテストが走る — <strong>壊れた状態で作業が「完了」したことにならない</strong></li>
+      </ul>
+      <h4>危険なコマンドのブロック（PreToolUse）</h4>
+<pre>{
+  <span class="str">"hooks"</span>: {
+    <span class="str">"PreToolUse"</span>: [
+      {
+        <span class="str">"matcher"</span>: <span class="str">"Bash"</span>,
+        <span class="str">"hooks"</span>: [
+          { <span class="str">"type"</span>: <span class="str">"command"</span>, <span class="str">"command"</span>: <span class="str">".claude/hooks/guard.sh"</span> }
+        ]
+      }
+    ]
+  }
+}</pre>
+      <ul>
+        <li><code class="inline">guard.sh</code> 内で <code class="inline">git push --force</code> や <code class="inline">rm -rf</code> などを検知したら <strong>終了コード 2 でブロック</strong>。ブロック理由は Claude に伝わるので、安全な代替手段を取り直す</li>
+      </ul>
+      <h4>レシピまとめ</h4>
+      <table>
+        <tr><th>目的</th><th>フック</th><th>コマンド例</th></tr>
+        <tr><td>コード整形の強制</td><td><code class="inline">PostToolUse</code>（Edit/Write）</td><td><code class="inline">vendor/bin/pint --dirty</code></td></tr>
+        <tr><td>静的解析（Larastan）</td><td><code class="inline">PostToolUse</code>（Edit/Write）</td><td><code class="inline">vendor/bin/phpstan analyse</code></td></tr>
+        <tr><td>テストの自動実行</td><td><code class="inline">Stop</code></td><td><code class="inline">php artisan test</code></td></tr>
+        <tr><td>危険コマンドのブロック</td><td><code class="inline">PreToolUse</code>（Bash）</td><td>検知スクリプトで <code class="inline">exit 2</code></td></tr>
+      </table>
+      <div class="callout warn">
+        <strong>⚠️ フックは軽量に</strong>
+        編集ごとに走るフックは <strong>軽量に保つ</strong>（重い処理は <code class="inline">Stop</code> に寄せる）。遅いフックは開発のテンポを壊す。
+      </div>
+    </section>
+
+    <section id="sec5">
+      <h2 class="step"><span class="step-num">5</span>実践：コード変更（20分）</h2>
+      <p>題材：チャットアプリに <strong>「モデル選択 UI」を追加</strong> する（Haiku / Sonnet 切り替え）。</p>
+
+      <h3>5-1. Plan Mode で計画（5分）</h3>
+      <p><code class="inline">Shift + Tab</code> で Plan Mode に切り替えてから：</p>
+      <div class="prompt-box">
+        <span class="label">あなたの指示</span>
+        <p>チャット画面にモデル選択のドロップダウン（Haiku / Sonnet）を追加したい。選択したモデルで Prism の呼び出しが行われるようにする。まず実装計画を立てて。</p>
+      </div>
+      <ul>
+        <li>出てきた計画を <strong>レビューして赤入れ</strong> する（Plan Mode 中は何度でも安全）</li>
+      </ul>
+
+      <h3>5-2. 実装（10分）</h3>
+      <ul>
+        <li>計画に納得したら承認して実装開始</li>
+        <li>Default モードで <strong>1つ1つの編集を確認しながら</strong> 進める</li>
+        <li>エラーが出たら Claude 自身に修正させる — エージェントループを体感する</li>
+      </ul>
+
+      <h3>5-3. テストと確認（5分）</h3>
+<pre>!php artisan test</pre>
+      <ul>
+        <li>ブラウザで動作確認 → 問題があれば会話で修正指示</li>
+        <li>完了したら Claude にコミットメッセージを書かせてコミット</li>
+      </ul>
+    </section>
+
+    <section id="sec6">
+      <h2 class="step"><span class="step-num">✓</span>まとめ（5分）</h2>
+      <ul>
+        <li><code class="inline">CLAUDE.md</code> は <strong>Claude への引き継ぎ書</strong> — 簡潔・宣言的に保つ</li>
+        <li>Skills で定型作業をコマンド化、Hooks で品質担保を自動化</li>
+        <li>コード変更は <strong>Plan Mode で計画 → 承認 → 小さく実装 → テスト</strong> のリズムで</li>
+      </ul>
+    </section>
+
+    <footer>
+      <p>Claude Code ハンズオン — 第2回:Claude Code を使ったソフトウェア開発</p>
+      <p><a href="session1.html">← 第1回</a> ／ <a href="index.html">コースポータル</a> ／ <a href="session3.html">第3回 →</a></p>
+    </footer>
+  </main>
+</div>
+</body>
+</html>
