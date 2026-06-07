@@ -187,12 +187,12 @@
       <ul>
         <li>CLAUDE.md / Skills / settings をチームで共有・運用できる</li>
         <li><code class="inline">/context</code> <code class="inline">/compact</code> <code class="inline">/clear</code> を使い分けてコンテキストを管理できる</li>
-        <li>Claude Code を組み込んだ PR ベースの開発フローを回せる</li>
+        <li>Issue 起点のチーム開発フロー（Issue → ブランチ → fix → レビュー → PR → マージ）を Claude Code で回せる</li>
       </ul>
       <h3>時間配分（60分）</h3>
       <table>
         <tr><th>#</th><th>内容</th><th>時間</th></tr>
-        <tr><td>1</td><td>前回の振り返り</td><td>5分</td></tr>
+        <tr><td>1</td><td>オープニング（到達目標・時間配分の説明）</td><td>5分</td></tr>
         <tr><td>2</td><td>チームでの CLAUDE.md 運用</td><td>10分</td></tr>
         <tr><td>3</td><td>Skills・設定の共有</td><td>10分</td></tr>
         <tr><td>4</td><td>コンテキスト管理</td><td>15分</td></tr>
@@ -233,7 +233,7 @@
 
       <h3>3-2. チームでの活用例（5分）</h3>
       <ul>
-        <li>レビュー観点を <code class="inline">/review</code> スキルとして共有 → <strong>レビュー品質の平準化</strong></li>
+        <li>テスト生成の手順を <code class="inline">/test-gen</code> スキルとして共有 → <strong>テスト観点の平準化</strong></li>
         <li><code class="inline">PostToolUse</code> でリンタを強制 → <strong>「Claude が書いてもチーム標準のコード」を担保</strong></li>
         <li>新メンバーのオンボーディング：<code class="inline">claude</code> を起動して「このプロジェクトの開発の流れを教えて」</li>
       </ul>
@@ -241,7 +241,7 @@
       <h3>演習1</h3>
       <div class="prompt-box">
         <span class="label">やってみよう</span>
-        <p>第2回で作った review スキルをコミットし、隣の受講者のリポジトリで動かしてもらう</p>
+        <p>第2回で作った test-gen スキルをコミットし、隣の受講者のリポジトリで動かしてもらう</p>
       </div>
     </section>
 
@@ -280,43 +280,69 @@
 
     <section id="sec5">
       <h2 class="step"><span class="step-num">5</span>実践：チーム開発フロー（15分）</h2>
-      <p>題材：チャットアプリへの小さな機能追加を <strong>PR ベース</strong> で行う。</p>
+      <p>題材：チーム共有のリポジトリ（例：第2回で作った <code class="inline">hello-laravel</code> を1つ選ぶ）に対して、<strong>Issue 起点の開発フロー</strong> を一周する。</p>
 
-      <h3>5-1. ブランチ作成 〜 実装（7分）</h3>
+      <h3>5-1. gh で Issue を作成（2分）</h3>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
-        <p>会話履歴を保持してマルチターンの会話ができるようにしたい。feature ブランチを切って、Plan Mode で計画してから実装して。</p>
+        <p>「/greet/{name} の挨拶を日本語にも対応してほしい」という Issue を gh で作成して</p>
       </div>
       <ul>
-        <li>ブランチ作成・実装・テストまで Claude に任せ、人間は <strong>計画と差分のレビュー</strong> に集中する</li>
+        <li><code class="inline">gh issue create</code> が実行される — タイトル・本文も Claude が整えてくれる</li>
+        <li><strong>Issue 本文がそのまま Claude への要件になる</strong> — 再現手順や期待動作を丁寧に書くほど後工程の精度が上がる</li>
       </ul>
 
-      <h3>5-2. PR 作成 〜 レビュー（8分）</h3>
+      <h3>5-2. clone してブランチを作成（2分）</h3>
+      <p>チームのリポジトリを clone し、Issue 対応のブランチを切る。</p>
+<pre><span class="prompt">$</span> git clone &lt;チームのリポジトリURL&gt;
+<span class="prompt">$</span> cd &lt;リポジトリ名&gt;
+<span class="prompt">$</span> claude</pre>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
-        <p>変更内容をまとめて PR を作成して</p>
+        <p>Issue #1 に対応するブランチを切って</p>
       </div>
       <ul>
-        <li><code class="inline">gh</code> コマンドで PR が作成される — 説明文も Claude が差分から生成する</li>
-        <li>受講者同士で PR を交換し、<code class="inline">/review</code> スキルでレビューしてみる</li>
+        <li><code class="inline">gh issue view 1</code> で内容を確認し、<code class="inline">fix/issue-1</code> のようなブランチが作られる</li>
       </ul>
 
-      <h4><code class="inline">claude --from-pr</code> — PR の文脈で再開</h4>
-<pre><span class="prompt">$</span> claude --from-pr &lt;N&gt;   <span class="comment"># N は PR 番号</span></pre>
-      <ul>
-        <li>PR 番号を指定して起動すると、その PR の <strong>差分・説明文・レビューコメント</strong> を読み込んだ状態でセッションが始まる</li>
-        <li>レビュー指摘への対応が一気に楽になる — 「レビューコメントに対応して」のひと言で修正が始められる</li>
-        <li>PR を作った本人でなくても、<strong>PR の背景を把握した状態</strong> でレビューや修正を引き継げる — チーム開発でこそ効く</li>
-      </ul>
-      <div class="callout tip">
-        <strong>💡 実践の流れ</strong>
-        <ol style="margin:6px 0 0;padding-left:20px;">
-          <li>レビュアーから PR に指摘コメントが付く</li>
-          <li><code class="inline">claude --from-pr &lt;N&gt;</code> で起動 — PR の文脈が読み込まれる</li>
-          <li>「レビューコメントに対応して」と指示 → Claude が指摘内容を読み、修正 → push まで実行</li>
-          <li>対応結果を PR 上のコメントで報告させる</li>
-        </ol>
+      <h3>5-3. Issue に対する fix を実装（4分）</h3>
+      <div class="prompt-box">
+        <span class="label">あなたの指示</span>
+        <p>Issue #1 を読んで、Plan Mode で対応方針を立ててから修正して</p>
       </div>
+      <ul>
+        <li>Claude が Issue 本文を読み、計画を提示 → レビューして承認 → 実装 → テスト</li>
+        <li>人間は <strong>計画と差分のレビュー</strong> に集中する</li>
+      </ul>
+
+      <h3>5-4. スキルでレビューして PR を作成（3分）</h3>
+      <p>push する前に、組み込みスキルで自己レビューする。</p>
+<pre>/code-review</pre>
+      <p>指摘があれば修正してから PR を作成：</p>
+      <div class="prompt-box">
+        <span class="label">あなたの指示</span>
+        <p>Issue #1 を closes する PR を作成して</p>
+      </div>
+      <ul>
+        <li>PR 本文に <code class="inline">Closes #1</code> が入り、<strong>マージすると Issue が自動クローズ</strong> される</li>
+      </ul>
+
+      <h3>5-5. 他の人の PR をレビューしてマージ（4分）</h3>
+      <p>受講者同士で PR 番号を交換し、互いの PR をレビューする。<code class="inline">claude --from-pr &lt;N&gt;</code> で <strong>PR の文脈（差分・説明文・レビューコメント）を読み込んだ状態</strong> でセッションを開始できる。</p>
+<pre><span class="prompt">$</span> claude --from-pr &lt;N&gt;   <span class="comment"># N はレビューする PR 番号</span></pre>
+<pre>/review</pre>
+      <ul>
+        <li>指摘があれば PR にコメントを残す（「レビュー結果を PR にコメントして」）</li>
+        <li>PR の作者は <code class="inline">claude --from-pr &lt;自分のPR番号&gt;</code> で起動し、「レビューコメントに対応して」→ 修正 → push</li>
+        <li>問題がなくなったらマージ：</li>
+      </ul>
+      <div class="prompt-box">
+        <span class="label">あなたの指示</span>
+        <p>この PR をマージして</p>
+      </div>
+      <ul>
+        <li><code class="inline">gh pr merge</code> が実行され、<code class="inline">Closes #1</code> により Issue も自動クローズ — <strong>Issue 起点のフローが一周</strong> する</li>
+      </ul>
     </section>
 
     <section id="sec6">
