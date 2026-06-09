@@ -146,6 +146,22 @@
   }
   .lesson h4 { margin: 0 0 8px; color: #b45309; font-size: 15px; }
   .lesson ul { margin: 0; padding-left: 20px; }
+  .exercise {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-left: 4px solid var(--ok);
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px;
+    margin: 18px 0;
+  }
+  .exercise > .ex-title {
+    display: block;
+    font-weight: 700;
+    color: #15803d;
+    margin-bottom: 8px;
+  }
+  .exercise p { margin: 0 0 8px; }
+  .exercise ol, .exercise ul { margin: 0; padding-left: 22px; }
   .shot { margin: 18px 0; }
   .shot img {
     max-width: 100%;
@@ -218,7 +234,7 @@
       <h3>2-1. Claude Code（2分）</h3>
       <ul>
         <li>Anthropic が提供する <strong>エージェント型コーディングツール</strong></li>
-        <li>ターミナル / VS Code / JetBrains / Claude Desktop / Web (<code class="inline">claude.ai/code</code>) の <strong>5つの入口</strong> がある</li>
+        <li>CLI（ターミナル）/ VS Code / JetBrains / Claude Desktop / Web (<code class="inline">claude.ai/code</code>) の <strong>5つの入口</strong> がある</li>
         <li>本コースでは <strong>CLI（ターミナル）</strong> を中心に扱う</li>
       </ul>
 
@@ -232,13 +248,15 @@
       </table>
 
       <h3>2-3. エージェントの動き（3分）</h3>
-<pre>[ユーザのプロンプト] → [コンテキスト収集] → [ツール実行] → [結果の検証]
-                                ↑________________ ループ ________________|</pre>
+      <figure class="shot">
+        <img src="Image/agentic-loop.png" alt="エージェントループ">
+      </figure>
       <ol>
-        <li>ユーザがプロンプトを入れる</li>
-        <li>Claude が必要なコンテキストを集める（ファイル読込・コマンド実行）</li>
-        <li>アクションを実行する（編集・テスト）</li>
-        <li>結果が要件を満たすか自分で確認 → 満たすまで繰り返す</li>
+        <li><strong>プロンプトを受け取る。</strong> ユーザの入力に加えて、Claude Code が用意する指示（システムプロンプト）・使えるツールの一覧・これまでの会話履歴をまとめて受け取る。</li>
+        <li><strong>評価して応答する。</strong> Claude が今の状況を見て、どう進めるか決める。テキストで答える／ツールを使う（ファイル読込・編集・コマンド実行など）／その両方、のいずれか。</li>
+        <li><strong>ツールを実行する。</strong> 要求されたツールを実行し、結果を Claude に返す。この結果が次の判断材料になる。Hooks を使えば、ツールの実行を <strong>実行前に止めたり書き換えたり</strong> できる（第2回）。</li>
+        <li><strong>繰り返す。</strong> ステップ 2 と 3 を繰り返す。この 1 サイクルが <strong>1 ターン</strong>。ツールを使わずに答えだけ返せる状態になるまで続く。</li>
+        <li><strong>結果を返す。</strong> 最終的な回答テキストを返し、その作業で使った <strong>トークン量・コスト・セッション ID</strong> も確認できる（<code class="inline">/usage</code> や <code class="inline">/status</code> で見られる）。</li>
       </ol>
       <div class="callout tip">
         <strong>💡 人間の関与</strong>
@@ -246,6 +264,12 @@
       </div>
 
       <h3>2-4. 用語説明（3分）</h3>
+      <h4>セッション</h4>
+      <ul>
+        <li><code class="inline">claude</code> の起動から終了までの <strong>1つの対話単位</strong>。会話履歴（コンテキスト）はセッションごとに保持される</li>
+        <li>終了しても履歴は残っており、<code class="inline">claude --continue</code>（直前）や <code class="inline">claude -r</code>（一覧から選択）で再開できる</li>
+        <li>セッションが変わるとコンテキストはまっさらになる — <strong>1タスク1セッション</strong> が使い方の基本</li>
+      </ul>
       <h4>モデル</h4>
       <p>ここでは Large Language Model (LLM) を指す。Anthropic 社が提供するモデルファミリー：</p>
       <table>
@@ -270,12 +294,6 @@
         <li>モデル（LLM）を実用的なエージェントとして動かすための <strong>周辺機構の総称</strong></li>
         <li>ツール実行・パーミッション管理・コンテキスト管理（コンパクション）・セッション管理などを担う</li>
         <li><strong>Claude Code = モデル + ハーネス</strong>。同じモデルでもハーネスの出来でエージェントの性能は大きく変わる</li>
-      </ul>
-      <h4>セッション</h4>
-      <ul>
-        <li><code class="inline">claude</code> の起動から終了までの <strong>1つの対話単位</strong>。会話履歴（コンテキスト）はセッションごとに保持される</li>
-        <li>終了しても履歴は残っており、<code class="inline">claude --continue</code>（直前）や <code class="inline">claude -r</code>（一覧から選択）で再開できる</li>
-        <li>セッションが変わるとコンテキストはまっさらになる — <strong>1タスク1セッション</strong> が使い方の基本</li>
       </ul>
     </section>
 
@@ -307,6 +325,16 @@
         <img src="Image/welcome.png" alt="起動確認画面">
         <figcaption>起動確認画面（ウェルカム画面）</figcaption>
       </figure>
+      <p>新しいフォルダで初めて起動すると、<strong>そのフォルダを信頼するか</strong> の確認が表示される。</p>
+      <figure class="shot">
+        <img src="Image/trust-folder.png" alt="フォルダの信頼確認">
+        <figcaption>フォルダの信頼確認</figcaption>
+      </figure>
+      <ul>
+        <li>Claude Code は起動ディレクトリ配下を <strong>読み取り・編集・コマンド実行</strong> できる。そのための起動時にユーザに確認を行います（ハーネス機能）</li>
+        <li>自分が作った／信頼できるプロジェクト（自分のコード・有名な OSS・チームの成果物）なら <code class="inline">1. Yes, I trust this folder</code></li>
+        <li>心当たりのないフォルダなら、中身を確認するまでは <code class="inline">2. No, exit</code> で抜ける</li>
+      </ul>
       <div class="callout">
         <strong>初回サインイン</strong>
         初回起動時はブラウザが開き、Claude アカウントでのサインイン（サブスクリプションの認証）が行われる。
@@ -394,16 +422,18 @@
         <tr><td><code class="inline">/help</code></td><td>コマンド一覧</td></tr>
         <tr><td><code class="inline">/exit</code></td><td>セッション終了</td></tr>
       </table>
-      <h4>演習1</h4>
-      <p>紹介したコマンドを実際に実行して、自分の環境を確認・整備する。</p>
-      <ol>
-        <li>プロジェクト直下で <code class="inline">claude</code> を起動する</li>
-        <li><code class="inline">/status</code> でバージョン・サインイン状態・使用モデルを確認する</li>
-        <li><code class="inline">/config</code> で <code class="inline">Language</code> を <code class="inline">Japanese</code> に変更する</li>
-        <li><code class="inline">/usage</code> で現在の利用量とリセット時刻を確認する</li>
-        <li><code class="inline">/model</code> と <code class="inline">/effort</code> で現在の設定を確認する（変更してもよい）</li>
-        <li><code class="inline">/init</code> を実行して <code class="inline">CLAUDE.md</code> を生成し、どんな内容が書かれたか眺めてみる</li>
-      </ol>
+      <div class="exercise">
+        <span class="ex-title">✏️ 演習1</span>
+        <p>紹介したコマンドを実際に実行して、自分の環境を確認・整備する。</p>
+        <ol>
+          <li>プロジェクト直下で <code class="inline">claude</code> を起動する</li>
+          <li><code class="inline">/status</code> でバージョン・サインイン状態・使用モデルを確認する</li>
+          <li><code class="inline">/config</code> で <code class="inline">Language</code> を <code class="inline">Japanese</code> に変更する</li>
+          <li><code class="inline">/usage</code> で現在の利用量とリセット時刻を確認する</li>
+          <li><code class="inline">/model</code> と <code class="inline">/effort</code> で現在の設定を確認する（変更してもよい）</li>
+          <li><code class="inline">/init</code> を実行して <code class="inline">CLAUDE.md</code> を生成し、どんな内容が書かれたか眺めてみる</li>
+        </ol>
+      </div>
 
       <h3>3-4. 承認モードと Plan Mode（3分）</h3>
       <table>
@@ -425,11 +455,17 @@
         <strong>💡 Plan Mode</strong>
         「コードを書かずに計画だけを出させる」モード。読み取り専用ツールしか使わないので、何回赤入れしても安全。
       </div>
+      <div class="exercise">
+        <span class="ex-title">✏️ 演習2</span>
+        <ul>
+          <li><code class="inline">Shift + Tab</code> で上記4つのモードを切り替えてみましょう。</li>
+        </ul>
+      </div>
     </section>
 
     <section id="sec4">
       <h2 class="step"><span class="step-num">4</span>Claude Code を使ってみよう！（5分）</h2>
-      <p>ここまでの内容を使って、実際に Claude Code でアプリを1本作ってみる。題材は PHP の「Hello world」。</p>
+      <p>ここまでの内容を使って、実際に Claude Code でアプリを1本作ってみる。題材は PHP の「Hello world」。承認モードは Default モードにしておく。</p>
 
       <h3>4-1. 起動して依頼する（2分）</h3>
       <p>空のディレクトリを作って <code class="inline">claude</code> を起動し、自然言語で依頼する。</p>
@@ -476,7 +512,7 @@ Hello world</pre>
       </ul>
       <div class="callout tip">
         <strong>💡 確認の質問が来たら</strong>
-        指示が曖昧なとき（CLI か Web か、ファイル名はどうするか等）は Claude が確認の質問をしてくることがある。勝手に進めないのが正常な動き。
+        指示が曖昧なとき（CLI か Web か、ファイル名はどうするか等）は Claude が確認の質問をしてくることがある。勝手に進めないのが Default モードの正常な動き。
       </div>
       <div class="callout tip">
         <strong>💡 TIPS：スピナー（作業中の表示）</strong>
@@ -535,10 +571,13 @@ Hello world</pre>
         <tr><td><code class="inline">Up / Down</code></td><td>履歴ナビゲーション</td></tr>
       </table>
 
-      <h3>演習2（2分）</h3>
-      <div class="prompt-box">
-        <span class="label">実行してみよう</span>
-        <p>claude -p "composer.json の主要な依存パッケージを3行で要約して"</p>
+      <div class="exercise">
+        <span class="ex-title">✏️ 演習3（2分）</span>
+        <p>非対話モード（<code class="inline">-p</code>）を実際に試す。</p>
+        <div class="prompt-box" style="margin-bottom:0;">
+          <span class="label">実行してみよう</span>
+          <p>claude -p "composer.json の主要な依存パッケージを3行で要約して"</p>
+        </div>
       </div>
     </section>
 
@@ -638,11 +677,13 @@ Hello world</pre>
         <p>チャット送信から応答表示までの処理フローを Mermaid のシーケンス図で出力して。</p>
       </div>
 
-      <h3>演習3</h3>
-      <ul>
-        <li>上記 7-1 〜 7-4 を自分の手で実行する</li>
-        <li>余裕があれば「このコードの改善点を3つ挙げて」と聞いてみる</li>
-      </ul>
+      <div class="exercise">
+        <span class="ex-title">✏️ 演習4</span>
+        <ul>
+          <li>上記 7-1 〜 7-4 を自分の手で実行する</li>
+          <li>余裕があれば「このコードの改善点を3つ挙げて」と聞いてみる</li>
+        </ul>
+      </div>
     </section>
 
     <section id="sec8">
