@@ -394,7 +394,7 @@ Do you want to proceed?
 
 ```
 !git status
-!php artisan test
+!php --version
 ```
 
 * プロンプトとして送らず **シェルだけ実行**。手元の状態を Claude に渡したいときに便利。
