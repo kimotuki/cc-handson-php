@@ -587,7 +587,7 @@ allowed-tools: Read, Edit, Bash
         <li>Claude に聞いてもよい：「この環境に PHP と Laravel が入っているか確認して」</li>
       </ul>
 
-      <h3>6-2. Hello World アプリの作成（3分）</h3>
+      <h3>6-2. Hello World アプリの作成（2分）</h3>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
         <p>PHP と Laravel で「Hello World」を表示する Web アプリを作って。プロジェクト名は hello-laravel で。</p>
@@ -618,7 +618,7 @@ allowed-tools: Read, Edit, Bash
         <code class="inline">devcontainer.json</code> に <code class="inline">"onAutoForward": "ignore"</code> があると VS Code の自動ポート転送は無効になるが、docker-compose の明示的なポート公開があれば問題ない。ただし <code class="inline">php artisan serve</code> のまま起動するとホストから見えないので注意。
       </div>
 
-      <h3>6-3. gh で GitHub リポジトリを作成してコミット & push（3分）</h3>
+      <h3>6-3. gh で GitHub リポジトリを作成してコミット & push（2分）</h3>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
         <p>gh で新規プライベートリポジトリを作成して、初回コミットを push して</p>
@@ -660,7 +660,16 @@ allowed-tools: Read, Edit, Bash
         自作スキル（3-3 で作った <code class="inline">/test-gen</code> 等）は <code class="inline">~/.claude/skills/</code> に置いておくと <strong>どのプロジェクトでも呼び出せる</strong>（リポジトリ内の <code class="inline">.claude/skills/</code> はそのプロジェクト専用）。
       </div>
 
-      <h3>6-6. レビュー内容を修正してコミット & push（3分）</h3>
+      <h3>6-6. 組み込みスキルでセキュリティレビュー（2分）</h3>
+      <p>組み込みスキル <code class="inline">/security-review</code> で、現在のブランチの変更にセキュリティ上の問題がないかをレビューする。</p>
+<pre>/security-review</pre>
+      <ul>
+        <li>SQL インジェクション・XSS・認証/認可漏れ・機密情報のハードコードなど、<strong>脆弱性の観点</strong> でレビューしてくれる</li>
+        <li><code class="inline">/code-review</code>（バグ・改善点）と <code class="inline">/security-review</code>（セキュリティ）は <strong>観点が違う</strong> — 両方かけると安心</li>
+        <li>3章で <code class="inline">security-guidance</code> プラグインを入れていれば、編集のたびに <strong>自動でも</strong> 同様のチェックが走る</li>
+      </ul>
+
+      <h3>6-7. レビュー内容を修正してコミット & push（3分）</h3>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
         <p>レビュー指摘のうち、○番と○番を直して</p>
