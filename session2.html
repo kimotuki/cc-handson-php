@@ -637,7 +637,7 @@ model: sonnet
 
     <section id="sec7">
       <h2 class="step"><span class="step-num">7</span>実践：Laravel アプリ開発の一連フロー（28分）</h2>
-      <p><strong>個人開発のフロー</strong> を最初から最後まで回す。アプリ作成 → GitHub 公開 → 機能追加 → レビュー → 修正 → push まで、すべて Claude Code との会話で進める。</p>
+      <p><strong>個人開発のフロー</strong> を最初から最後まで回す。Hello World で動作確認 → 題材アプリをクローン → 機能追加（改修） → レビュー → セキュリティレビュー → 修正 → 自分のリポジトリへ push まで、すべて Claude Code との会話で進める。</p>
 
       <h3>7-1. 環境確認（2分）</h3>
       <p>devcontainer に PHP / Laravel / gh が入っていることを確認する。</p>
@@ -679,13 +679,13 @@ model: sonnet
         <code class="inline">devcontainer.json</code> に <code class="inline">"onAutoForward": "ignore"</code> があると VS Code の自動ポート転送は無効になるが、docker-compose の明示的なポート公開があれば問題ない。ただし <code class="inline">php artisan serve</code> のまま起動するとホストから見えないので注意。
       </div>
 
-      <h3>7-3. gh で GitHub リポジトリを作成してコミット & push（2分）</h3>
-      <div class="prompt-box">
-        <span class="label">あなたの指示</span>
-        <p>gh で新規プライベートリポジトリを作成して、初回コミットを push して</p>
-      </div>
+      <h3>7-3. 題材アプリ（Laravel × Prism チャットアプリ）をクローン（2分）</h3>
+      <p>Hello World で Laravel の動作を確認したら、以降の <strong>改修は題材の Laravel × Prism チャットアプリ</strong> で行う。GitHub からクローンして準備する:</p>
+<pre>$ git clone https://github.com/kimotuki/laravel-chat-app
+$ cd laravel-chat-app</pre>
       <ul>
-        <li><code class="inline">git init</code> → 初回コミット → <code class="inline">gh repo create --source=. --push</code> まで会話だけで完結する（初回のみ <code class="inline">gh auth login</code> で認証が必要）</li>
+        <li>以降のステップ（機能追加・レビュー・修正）は、この <strong>クローンしたアプリを対象</strong> に進める</li>
+        <li>第1回の「ソースコード解析」と同じ題材なので、構造を把握済みならスムーズに改修へ入れる</li>
       </ul>
 
       <h3>7-4. コーディング規約を追記して機能追加（8分）</h3>
@@ -730,16 +730,19 @@ model: sonnet
         <li>3章で <code class="inline">security-guidance</code> プラグインを入れていれば、編集のたびに <strong>自動でも</strong> 同様のチェックが走る</li>
       </ul>
 
-      <h3>7-7. レビュー内容を修正してコミット & push（6分）</h3>
+      <h3>7-7. レビュー内容を修正して自分のリポジトリへコミット & push（6分）</h3>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
         <p>レビュー指摘のうち、○番と○番を直して</p>
       </div>
-      <p>修正の差分を確認したら、git コマンドでコミットして push する：</p>
-<pre>!git add -A && git commit -m "Add greet page"
-!git push</pre>
+      <p>修正の差分を確認したら、<strong>自分の GitHub リポジトリ</strong> を作成して push する（クローン元は他人のリポジトリなので、そのままでは push できない）:</p>
+<pre>!git add -A && git commit -m "Improve chat app"
+<span class="comment"># クローン元(他人のorigin)を外し、自分のリポジトリを作成して push</span>
+!git remote remove origin
+!gh repo create laravel-chat-app --private --source=. --remote=origin --push</pre>
       <ul>
         <li>コミットメッセージは Claude に書かせてもよい（「変更をコミットして push して」）</li>
+        <li><code class="inline">gh repo create --source=. --push</code> で、新規リポジトリ作成〜push までが会話だけで完結する（初回のみ <code class="inline">gh auth login</code>）</li>
       </ul>
     </section>
 
