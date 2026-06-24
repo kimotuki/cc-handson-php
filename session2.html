@@ -162,11 +162,12 @@
     <h2>目次</h2>
     <ol>
       <li><a href="#goal">1. 到達目標・時間配分</a></li>
-      <li><a href="#sec2">2. CLAUDE.md とメモリ</a></li>
-      <li><a href="#sec3">3. Skills</a></li>
+      <li><a href="#sec2">2. 設定ファイル（CLAUDE.md・settings.json）</a></li>
+      <li><a href="#sec3">3. Skills とプラグイン</a></li>
       <li><a href="#sec4">4. Hooks</a></li>
-      <li><a href="#sec5">5. 実践：Laravel アプリ開発の一連フロー</a></li>
-      <li><a href="#sec6">6. まとめ</a></li>
+      <li><a href="#sec5">5. MCP（Figma MCP）</a></li>
+      <li><a href="#sec6">6. 実践：Laravel アプリ開発の一連フロー</a></li>
+      <li><a href="#sec7">7. まとめ</a></li>
     </ol>
   </nav>
 
@@ -187,26 +188,28 @@
       <h2 class="step"><span class="step-num">1</span>到達目標・時間配分</h2>
       <h3>到達目標</h3>
       <ul>
-        <li><code class="inline">CLAUDE.md</code> とメモリの仕組みを理解し、プロジェクトに合わせて整備できる</li>
-        <li>Skills / Hooks の役割を理解し、簡単なものを自作できる</li>
+        <li><code class="inline">CLAUDE.md</code>・メモリ・<code class="inline">settings.json</code> の仕組みを理解し、設定が効いているかを確認できる</li>
+        <li>プラグインで機能を追加し、skill-creator で自作スキルを作れる。Hooks で品質担保を自動化できる</li>
+        <li>MCP で外部サービス（Figma）を接続し、デザインからコード生成を体験できる</li>
         <li>新規 Laravel アプリの作成から機能追加・レビュー・GitHub への push まで、Claude Code との会話で完遂できる</li>
       </ul>
       <h3>時間配分（60分）</h3>
       <table>
         <tr><th>#</th><th>内容</th><th>時間</th></tr>
-        <tr><td>1</td><td>オープニング（到達目標・時間配分の説明）</td><td>5分</td></tr>
-        <tr><td>2</td><td>CLAUDE.md とメモリ</td><td>10分</td></tr>
-        <tr><td>3</td><td>Skills</td><td>10分</td></tr>
-        <tr><td>4</td><td>Hooks</td><td>10分</td></tr>
-        <tr><td>5</td><td>実践：Laravel アプリ開発の一連フロー</td><td>20分</td></tr>
-        <tr><td>6</td><td>まとめ</td><td>5分</td></tr>
+        <tr><td>1</td><td>オープニング（到達目標・時間配分の説明）</td><td>4分</td></tr>
+        <tr><td>2</td><td>設定ファイル（CLAUDE.md・メモリ・settings.json）</td><td>9分</td></tr>
+        <tr><td>3</td><td>Skills とプラグイン</td><td>10分</td></tr>
+        <tr><td>4</td><td>Hooks</td><td>6分</td></tr>
+        <tr><td>5</td><td>MCP（Figma MCP）</td><td>6分</td></tr>
+        <tr><td>6</td><td>実践：Laravel アプリ開発の一連フロー</td><td>20分</td></tr>
+        <tr><td>7</td><td>まとめ</td><td>5分</td></tr>
       </table>
     </section>
 
     <section id="sec2">
-      <h2 class="step"><span class="step-num">2</span>CLAUDE.md とメモリ（10分）</h2>
+      <h2 class="step"><span class="step-num">2</span>設定ファイル：CLAUDE.md・メモリ・settings.json（9分）</h2>
 
-      <h3>2-1. CLAUDE.md とは（4分）</h3>
+      <h3>2-1. CLAUDE.md とは（2分）</h3>
       <ul>
         <li>セッション開始時に <strong>自動で読み込まれる</strong> プロジェクトの説明書</li>
         <li>書くべきこと：ビルド・テストコマンド / コーディング規約 / ディレクトリ構成 / 注意事項</li>
@@ -220,14 +223,55 @@
         <tr><td><code class="inline">&lt;repo&gt;/CLAUDE.local.md</code></td><td>プロジェクト個人用（git 管理外）</td></tr>
       </table>
 
-      <h3>2-2. メモリ（3分）</h3>
+      <h3>2-2. メモリ（1分）</h3>
       <p><code class="inline">#</code> プレフィックスでセッション中に得た知見をその場で追記できる。</p>
 <pre># このプロジェクトのテストは php artisan test で実行する</pre>
       <ul>
         <li><code class="inline">/memory</code> で保存先（CLAUDE.md など）を選択・編集できる</li>
       </ul>
 
-      <h3>2-3. 書き方のコツ（3分）</h3>
+      <h3>2-3. settings.json と設定の確認（4分）</h3>
+      <p>第1回で settings.json の配置場所（user / project / local）と <code class="inline">permissions.allow</code> の基本に触れた。ここでは <strong>書ける主な項目</strong> と、<strong>設定が効いているかの確認方法</strong> を押さえる。</p>
+      <h4>主な設定キー</h4>
+      <table>
+        <tr><th>キー</th><th>役割</th></tr>
+        <tr><td><code class="inline">permissions</code></td><td>ツール実行の許可/拒否/確認（<code class="inline">allow</code> / <code class="inline">deny</code> / <code class="inline">ask</code>）</td></tr>
+        <tr><td><code class="inline">hooks</code></td><td>ツール実行の前後に差し込むコマンド（4章）</td></tr>
+        <tr><td><code class="inline">env</code></td><td>セッションに渡す環境変数</td></tr>
+        <tr><td><code class="inline">model</code></td><td>既定モデル</td></tr>
+        <tr><td><code class="inline">outputStyle</code></td><td>応答スタイル</td></tr>
+        <tr><td><code class="inline">enabledPlugins</code> / <code class="inline">extraKnownMarketplaces</code></td><td>プラグイン・マーケットプレイスの設定（3章）</td></tr>
+        <tr><td><code class="inline">includeCoAuthoredBy</code></td><td>コミットに <code class="inline">Co-Authored-By</code> を付けるか</td></tr>
+        <tr><td><code class="inline">cleanupPeriodDays</code></td><td>セッション履歴の保持日数</td></tr>
+      </table>
+      <p><code class="inline">permissions</code> は allow / deny / ask の3種で書く:</p>
+<pre>{
+  <span class="str">"permissions"</span>: {
+    <span class="str">"allow"</span>: [<span class="str">"Bash(php artisan test:*)"</span>],
+    <span class="str">"deny"</span>: [<span class="str">"Read(./.env)"</span>, <span class="str">"Bash(rm -rf *)"</span>],
+    <span class="str">"ask"</span>: [<span class="str">"Bash(git push:*)"</span>]
+  }
+}</pre>
+      <ul>
+        <li><code class="inline">allow</code>＝確認なしで許可 / <code class="inline">deny</code>＝実行不可 / <code class="inline">ask</code>＝毎回確認</li>
+        <li><code class="inline">:*</code> は末尾ワイルドカード、<code class="inline">**</code> は複数階層のパスにマッチ</li>
+      </ul>
+      <h4>設定の確認方法</h4>
+      <p>設定は user → project → local の順に重ねられ、<strong>より近い設定が勝つ</strong>（local &gt; project &gt; user）。いま何が効いているかは次のコマンドで確認する。</p>
+      <table>
+        <tr><th>コマンド</th><th>確認できること</th></tr>
+        <tr><td><code class="inline">/config</code></td><td>現在の設定を UI で確認・変更（model, theme, language など）</td></tr>
+        <tr><td><code class="inline">/permissions</code></td><td>許可/拒否ルールをスコープ別に確認・編集</td></tr>
+        <tr><td><code class="inline">/hooks</code></td><td>有効なフック設定を確認</td></tr>
+        <tr><td><code class="inline">/memory</code></td><td>読み込まれている <code class="inline">CLAUDE.md</code>・メモリを確認</td></tr>
+        <tr><td><code class="inline">/status</code></td><td>バージョン・モデル・接続状態の全体像</td></tr>
+      </table>
+      <div class="callout tip">
+        <strong>💡 settings.json と CLAUDE.md の役割分担</strong>
+        組織が配布する managed settings は最優先で、個人設定では上書きできない。<code class="inline">settings.json</code> は <strong>JSON でハーネスを強制設定</strong> するもの、<code class="inline">CLAUDE.md</code> は <strong>Markdown で Claude に指示</strong> するもの、と意識する。
+      </div>
+
+      <h3>2-4. 書き方のコツ（2分）</h3>
       <ul>
         <li><strong>簡潔に・宣言的に</strong>。長文の経緯説明より「○○するときは△△を使う」</li>
         <li>コードから読み取れること（ファイル構成そのもの等）は書かない — コンテキストの無駄</li>
@@ -259,36 +303,75 @@
     </section>
 
     <section id="sec3">
-      <h2 class="step"><span class="step-num">3</span>Skills（10分）</h2>
+      <h2 class="step"><span class="step-num">3</span>Skills とプラグイン（10分）</h2>
 
-      <h3>3-1. Skills とは（2分）</h3>
+      <h3>3-1. Skills とは（1分）</h3>
       <ul>
-        <li><strong>手順書をスキル化</strong> して <code class="inline">/&lt;スキル名&gt;</code> で呼び出せる仕組み</li>
-        <li>実体は <code class="inline">.claude/skills/&lt;スキル名&gt;/SKILL.md</code> — Markdown で手順を書くだけ</li>
+        <li><strong>手順書をスキル化</strong> して <code class="inline">/&lt;スキル名&gt;</code> で呼び出せる仕組み。実体は <code class="inline">.claude/skills/&lt;スキル名&gt;/SKILL.md</code></li>
         <li>「毎回プロンプトで説明していた定型作業」をコマンド一発にできる</li>
+        <li>自分で書くほかに、<strong>プラグインで配布されたスキルを入れる</strong>・<strong>skill-creator に作ってもらう</strong> という選択肢がある</li>
       </ul>
 
-      <h3>3-2. スキルの作成（4分）</h3>
-      <p>例：テスト生成スキル</p>
-<pre><span class="comment">---
-name: test-gen
-description: 指定した機能の Feature テストを生成する
----</span>
-
-引数で指定されたルートやコントローラについて、以下の手順で
-Feature テストを作成してください：
-1. 対象のコードを読み、正常系・異常系のテスト観点を洗い出す
-2. `tests/Feature/` にテストを作成する（既存テストの命名・書き方に合わせる）
-3. `php artisan test` を実行し、すべて通るまで修正する</pre>
-
+      <h3>3-2. プラグインを入れて機能を足す（3分）</h3>
+      <p><strong>プラグイン</strong> ＝ スキル・エージェント・Hooks・MCP サーバーをまとめた配布パッケージ。マーケットプレイスから入れる。公式マーケットプレイス <code class="inline">claude-plugins-official</code> は最初から利用できる。</p>
+      <p>例として、Claude の変更を自動でセキュリティレビューする <code class="inline">security-guidance</code> を入れてみる:</p>
+<pre>/plugin install security-guidance@claude-plugins-official
+/reload-plugins</pre>
+      <ul>
+        <li><code class="inline">/plugin</code> を実行すると <strong>Discover / Installed / Marketplaces / Errors</strong> のタブ型 UI で管理できる</li>
+        <li><code class="inline">security-guidance</code> は導入後、Claude のコード変更を自動でレビューし、見つけた問題をその場で直すよう促す（明示的に呼び出さなくても効く）</li>
+      </ul>
       <h3>演習2</h3>
       <div class="prompt-box">
         <span class="label">やってみよう</span>
-        <p>上記の test-gen スキルを .claude/skills/test-gen/SKILL.md に作成し、/test-gen ChatController のように対象を指定して呼び出す</p>
+        <p>security-guidance を install → /reload-plugins → /plugin の Installed タブで入ったことを確認する</p>
       </div>
 
-      <h3>3-3. 組み込みスキル（4分）</h3>
-      <p>自作しなくても、Claude Code には <strong>組み込みスキル</strong> が同梱されている。</p>
+      <h3>3-3. skill-creator でスキルを作る（3分）</h3>
+      <p>手書きで <code class="inline">SKILL.md</code> を書いてもよいが、<strong>skill-creator</strong> プラグインを使うと <strong>対話的にスキルを作れる</strong>。</p>
+<pre>/plugin install skill-creator@claude-plugins-official
+/reload-plugins</pre>
+      <p><code class="inline">/skill-creator</code> を呼び出し、作りたいスキルを言葉で伝える:</p>
+      <div class="prompt-box">
+        <span class="label">あなたの指示</span>
+        <p>Feature テストを生成する test-gen というスキルを作って。対象のコントローラを引数で受け取り、正常系・異常系のテストを tests/Feature/ に作成して、php artisan test が通るまで直す手順にして。</p>
+      </div>
+      <ul>
+        <li>skill-creator が <code class="inline">SKILL.md</code> と必要な補助ファイルを生成してくれる</li>
+        <li><strong>Create / Eval / Improve / Benchmark</strong> の4モードがあり、作成だけでなく評価・改善まで支援する</li>
+      </ul>
+
+      <h3>3-4. スキルのフォルダ構成（2分）</h3>
+      <p>スキルは「<strong>1ディレクトリ＝1スキル</strong>」。エントリは <code class="inline">SKILL.md</code>（必須）で、<strong>ディレクトリ名がそのままコマンド名</strong>になる（<code class="inline">test-gen/</code> → <code class="inline">/test-gen</code>）。</p>
+      <table>
+        <tr><th>配置場所</th><th>スコープ</th></tr>
+        <tr><td><code class="inline">~/.claude/skills/&lt;name&gt;/SKILL.md</code></td><td>個人（全プロジェクトで使える）</td></tr>
+        <tr><td><code class="inline">&lt;repo&gt;/.claude/skills/&lt;name&gt;/SKILL.md</code></td><td>プロジェクト（チームで共有）</td></tr>
+      </table>
+      <p><code class="inline">SKILL.md</code> は YAML frontmatter ＋ Markdown 本文:</p>
+<pre><span class="comment">---
+name: test-gen
+description: 指定した機能の Feature テストを生成する。テスト追加を頼まれたときに使う。
+allowed-tools: Read, Edit, Bash
+---</span>
+
+（ここに手順を Markdown で書く）</pre>
+      <ul>
+        <li><code class="inline">name</code>＝表示名 / <code class="inline">description</code>＝Claude が <strong>自動起動を判断する鍵</strong>（具体的に書く）/ <code class="inline">allowed-tools</code>＝確認なしで使えるツール</li>
+        <li>補助ファイルを同梱できる:</li>
+      </ul>
+<pre>test-gen/
+├── SKILL.md        <span class="comment">← 必須・エントリ</span>
+├── reference.md    <span class="comment">← 詳細リファレンス</span>
+├── templates/      <span class="comment">← 雛形</span>
+└── scripts/        <span class="comment">← 実行スクリプト</span></pre>
+      <div class="callout tip">
+        <strong>💡 遅延ロード</strong>
+        <code class="inline">description</code> だけが常時ロードされ、<strong>本文や補助ファイルは呼ばれたときだけ読まれる</strong>。長い資料を同梱してもコンテキストをほとんど消費しない。
+      </div>
+
+      <h3>3-5. 組み込みスキル（1分）</h3>
+      <p>自作・導入しなくても、Claude Code には <strong>組み込みスキル</strong> が同梱されている。</p>
       <ul>
         <li>同梱スキルは <strong>オンデマンドで展開</strong> される — スキルが実際に呼び出されたタイミングで、参照用ファイル（examples 等）だけが一時ディレクトリ（<code class="inline">bundled-skills/</code> 配下）に書き出される。本文（SKILL.md）はファイルとしてではなく、<strong>会話に直接注入</strong> される</li>
         <li>呼び出していないスキルは展開されないため、ファイルとしては見えない</li>
@@ -325,14 +408,14 @@ Feature テストを作成してください：
       <ol start="2">
         <li><code class="inline">/code-review</code> を実行する — 未コミットの差分に対して、バグ・エッジケース・改善点のレビューが返ってくる</li>
         <li>妥当な指摘があれば「指摘の1番を修正して」と依頼し、修正された差分を確認する</li>
-        <li>レビューは組み込みスキル、テスト生成は自作 <code class="inline">/test-gen</code>（演習2）のように、<strong>組み込みでカバーされない定型作業を自作スキルが埋める</strong> 役割分担を意識する</li>
+        <li>レビューは組み込みスキル、テスト生成は自作 <code class="inline">/test-gen</code>（3-3）のように、<strong>組み込みでカバーされない定型作業を自作スキルが埋める</strong> 役割分担を意識する</li>
       </ol>
     </section>
 
     <section id="sec4">
-      <h2 class="step"><span class="step-num">4</span>Hooks（10分）</h2>
+      <h2 class="step"><span class="step-num">4</span>Hooks（6分）</h2>
 
-      <h3>4-1. Hooks とは（3分）</h3>
+      <h3>4-1. Hooks とは（2分）</h3>
       <ul>
         <li>ツール実行の <strong>前後などに自動でコマンドを差し込む</strong> 仕組み（<code class="inline">settings.json</code> に定義）</li>
         <li>CLAUDE.md の指示と違い、<strong>ハーネスが機械的に実行する</strong> — Claude が「忘れる」ことがない</li>
@@ -348,7 +431,7 @@ Feature テストを作成してください：
         フックが <strong>終了コード 2</strong> で終わると、その出力が Claude にフィードバックされる。PreToolUse ならツール実行がブロックされ、PostToolUse なら <strong>Claude が出力を読んで自分で修正</strong> する — これが品質向上ループの鍵。
       </div>
 
-      <h3>4-2. 例：編集後に自動フォーマット（3分）</h3>
+      <h3>4-2. 例：編集後に自動フォーマット（2分）</h3>
       <p><code class="inline">.claude/settings.json</code>：</p>
 <pre>{
   <span class="str">"hooks"</span>: {
@@ -367,7 +450,7 @@ Feature テストを作成してください：
         <li>「人間がレビューしやすい状態を機械的に担保する」のが Hooks の本質</li>
       </ul>
 
-      <h3>4-3. コード品質を高める Hooks 実例（4分）</h3>
+      <h3>4-3. コード品質を高める Hooks 実例（2分）</h3>
       <h4>静的解析の自動実行（Larastan）</h4>
       <p><a href="https://github.com/larastan/larastan" target="_blank" rel="noopener">Larastan</a> は、PHP の静的解析ツール PHPStan の <strong>Laravel 特化拡張</strong>。Eloquent モデルのプロパティや Facade、リレーションといった「Laravel の魔法」を理解した上で型チェックできるため、素の PHPStan より誤検知が少なく Laravel プロジェクトの実態に合った指摘が得られる。</p>
 <pre><span class="prompt">$</span> composer require --dev "larastan/larastan"</pre>
@@ -433,10 +516,54 @@ Feature テストを作成してください：
     </section>
 
     <section id="sec5">
-      <h2 class="step"><span class="step-num">5</span>実践：Laravel アプリ開発の一連フロー（20分）</h2>
+      <h2 class="step"><span class="step-num">5</span>MCP（Figma MCP）（6分）</h2>
+
+      <h3>5-1. MCP とは（2分）</h3>
+      <ul>
+        <li><strong>MCP（Model Context Protocol）</strong> ＝ Claude Code に <strong>外部サービスやツールを接続する標準規格</strong></li>
+        <li>接続すると、その外部サービスの操作が「ツール」として Claude から使えるようになる（GitHub・Slack・Figma・DB など）</li>
+        <li>接続方法は2つ：① <strong>プラグイン経由</strong>（公式マーケットプレイスの外部連携プラグイン）/ ② <code class="inline">claude mcp add</code> で直接追加</li>
+        <li>接続状況は <code class="inline">/mcp</code> で確認・認証できる</li>
+      </ul>
+
+      <h3>5-2. Figma MCP を接続する（2分）</h3>
+      <p>Figma 公式の MCP（リモート）を、3章で学んだ <strong>プラグイン機構</strong> で導入する:</p>
+<pre>/plugin install figma@claude-plugins-official
+/reload-plugins</pre>
+      <ul>
+        <li><code class="inline">/mcp</code> を開き <code class="inline">figma</code> を選んで <strong>Authenticate</strong> → ブラウザで Figma にログインして認可（OAuth）</li>
+        <li><code class="inline">/mcp</code> で <code class="inline">figma</code> が <strong>connected</strong> になれば OK。リモート方式なので <strong>デスクトップアプリ不要・無料プランでも試せる</strong></li>
+      </ul>
+      <div class="callout tip">
+        <strong>💡 別の接続方法</strong>
+        プラグインを使わず直接追加する場合は <code class="inline">claude mcp add --transport http figma https://mcp.figma.com/mcp</code>。<br>
+        ローカル（デスクトップ）方式は Figma デスクトップアプリ＋Dev 席（有料プラン）が必要。
+      </div>
+
+      <h3>5-3. ハンズオン：デザイン → コード（2分）</h3>
+      <ol>
+        <li>Figma でフレームを選択 → 右クリック <strong>Copy link to selection</strong> でリンクを取得</li>
+        <li>Claude Code に貼り付けて依頼:</li>
+      </ol>
+      <div class="prompt-box">
+        <span class="label">あなたの指示</span>
+        <p>このFigmaデザインを HTML + Tailwind CSS で実装して（リンク貼り付け）。色やスペーシングはデザインのトークンに合わせて。</p>
+      </div>
+      <ul>
+        <li>Claude が figma の <code class="inline">get_design_context</code>（コード生成）・<code class="inline">get_variable_defs</code>（色/サイズ等のトークン抽出）・<code class="inline">get_screenshot</code>（選択範囲の画像）などのツールを呼び、デザインからコードを生成する</li>
+      </ul>
+      <h3>演習4</h3>
+      <div class="prompt-box">
+        <span class="label">やってみよう</span>
+        <p>任意の Figma ファイル（自分のデザイン or サンプル）でフレームを選び、リンクを渡してコード生成を試す</p>
+      </div>
+    </section>
+
+    <section id="sec6">
+      <h2 class="step"><span class="step-num">6</span>実践：Laravel アプリ開発の一連フロー（20分）</h2>
       <p><strong>個人開発のフロー</strong> を最初から最後まで回す。アプリ作成 → GitHub 公開 → 機能追加 → レビュー → 修正 → push まで、すべて Claude Code との会話で進める。</p>
 
-      <h3>5-1. 環境確認（2分）</h3>
+      <h3>6-1. 環境確認（2分）</h3>
       <p>devcontainer に PHP / Laravel / gh が入っていることを確認する。</p>
 <pre>!php -v
 !composer -V
@@ -445,7 +572,7 @@ Feature テストを作成してください：
         <li>Claude に聞いてもよい：「この環境に PHP と Laravel が入っているか確認して」</li>
       </ul>
 
-      <h3>5-2. Hello World アプリの作成（3分）</h3>
+      <h3>6-2. Hello World アプリの作成（3分）</h3>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
         <p>PHP と Laravel で「Hello World」を表示する Web アプリを作って。プロジェクト名は hello-laravel で。</p>
@@ -476,7 +603,7 @@ Feature テストを作成してください：
         <code class="inline">devcontainer.json</code> に <code class="inline">"onAutoForward": "ignore"</code> があると VS Code の自動ポート転送は無効になるが、docker-compose の明示的なポート公開があれば問題ない。ただし <code class="inline">php artisan serve</code> のまま起動するとホストから見えないので注意。
       </div>
 
-      <h3>5-3. gh で GitHub リポジトリを作成してコミット & push（3分）</h3>
+      <h3>6-3. gh で GitHub リポジトリを作成してコミット & push（3分）</h3>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
         <p>gh で新規プライベートリポジトリを作成して、初回コミットを push して</p>
@@ -485,7 +612,7 @@ Feature テストを作成してください：
         <li><code class="inline">git init</code> → 初回コミット → <code class="inline">gh repo create --source=. --push</code> まで会話だけで完結する（初回のみ <code class="inline">gh auth login</code> で認証が必要）</li>
       </ul>
 
-      <h3>5-4. コーディング規約を追記して機能追加（6分）</h3>
+      <h3>6-4. コーディング規約を追記して機能追加（6分）</h3>
       <p>まず、<code class="inline">CLAUDE.md</code> にコーディング規約を追記する（<code class="inline">#</code> プレフィックスを使うと早い）:</p>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
@@ -507,18 +634,18 @@ Feature テストを作成してください：
       </div>
       <div class="callout tip">
         <strong>💡 規約は「効いているか」まで確認する</strong>
-        CLAUDE.md は書いたら終わりではなく、<strong>生成コードに効いているかを確認</strong> する。守られていない規約があれば、表現を強めるのではなく <strong>理由を添える</strong> 形で書き直す（2-3 のコツ）。
+        CLAUDE.md は書いたら終わりではなく、<strong>生成コードに効いているかを確認</strong> する。守られていない規約があれば、表現を強めるのではなく <strong>理由を添える</strong> 形で書き直す（2-4 のコツ）。
       </div>
 
-      <h3>5-5. 組み込みスキルでレビュー（3分）</h3>
-      <p>3-3 で紹介した組み込みスキル <code class="inline">/code-review</code> でレビューする。</p>
+      <h3>6-5. 組み込みスキルでレビュー（3分）</h3>
+      <p>3-5 で紹介した組み込みスキル <code class="inline">/code-review</code> でレビューする。</p>
 <pre>/code-review</pre>
       <div class="callout tip">
         <strong>💡 スキルの置き場所</strong>
-        自作スキル（演習2の <code class="inline">/test-gen</code> 等）は <code class="inline">~/.claude/skills/</code> に置いておくと <strong>どのプロジェクトでも呼び出せる</strong>（リポジトリ内の <code class="inline">.claude/skills/</code> はそのプロジェクト専用）。
+        自作スキル（3-3 で作った <code class="inline">/test-gen</code> 等）は <code class="inline">~/.claude/skills/</code> に置いておくと <strong>どのプロジェクトでも呼び出せる</strong>（リポジトリ内の <code class="inline">.claude/skills/</code> はそのプロジェクト専用）。
       </div>
 
-      <h3>5-6. レビュー内容を修正してコミット & push（3分）</h3>
+      <h3>6-6. レビュー内容を修正してコミット & push（3分）</h3>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
         <p>レビュー指摘のうち、○番と○番を直して</p>
@@ -531,11 +658,12 @@ Feature テストを作成してください：
       </ul>
     </section>
 
-    <section id="sec6">
+    <section id="sec7">
       <h2 class="step"><span class="step-num">✓</span>まとめ（5分）</h2>
       <ul>
-        <li><code class="inline">CLAUDE.md</code> は <strong>Claude への引き継ぎ書</strong> — 簡潔・宣言的に保つ</li>
-        <li>Skills で定型作業をコマンド化、Hooks で品質担保を自動化</li>
+        <li><code class="inline">CLAUDE.md</code> は <strong>Claude への引き継ぎ書</strong> — 簡潔・宣言的に保つ。<code class="inline">settings.json</code> は <strong>ハーネスの強制設定</strong>（<code class="inline">/config</code> <code class="inline">/permissions</code> <code class="inline">/hooks</code> で確認）</li>
+        <li><strong>プラグイン</strong> で機能を足し、<strong>skill-creator</strong> で自作スキルを作り、<strong>Hooks</strong> で品質担保を自動化する</li>
+        <li><strong>MCP</strong> で外部サービス（Figma など）を接続すると、Claude の作業範囲が広がる</li>
         <li>コード変更は <strong>Plan Mode で計画 → 承認 → 小さく実装 → テスト</strong> のリズムで</li>
       </ul>
     </section>
