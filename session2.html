@@ -713,6 +713,16 @@ $ cd laravel-chat-app</pre>
         CLAUDE.md は書いたら終わりではなく、<strong>生成コードに効いているかを確認</strong> する。守られていない規約があれば、表現を強めるのではなく <strong>理由を添える</strong> 形で書き直す（2-4 のコツ）。
       </div>
 
+      <h3>演習6（オプション）：自分の好きな機能を追加する</h3>
+      <div class="prompt-box">
+        <span class="label">やってみよう</span>
+        <p>チャットアプリに、自分で考えた機能を1つ追加する（例：メッセージの文字数制限、送信履歴の絞り込み、簡単なバリデーション追加など）。Plan Mode で計画 → 承認 → 実装の流れで進める。</p>
+      </div>
+      <div class="callout warn">
+        <strong>⚠️ 機能を追加したら必ず AI レビューを</strong>
+        実装が終わったら、次に進む前に <strong>必ず <code class="inline">/code-review</code>（必要に応じて <code class="inline">/security-review</code>）で AI レビューを実行</strong> する。自分で考えた機能ほど、バグやセキュリティ観点の見落としが起きやすい。次の 7-5・7-6 はまさにこのレビュー工程にあたる。
+      </div>
+
       <h3>7-5. 組み込みスキルでレビュー（4分）</h3>
       <p>3-5 で紹介した組み込みスキル <code class="inline">/code-review</code> でレビューする。</p>
 <pre>/code-review</pre>
