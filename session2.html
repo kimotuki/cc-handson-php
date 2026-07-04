@@ -444,23 +444,35 @@ allowed-tools: Read, Edit, Bash
         フックが <strong>終了コード 2</strong> で終わると、その出力が Claude にフィードバックされる。PreToolUse ならツール実行がブロックされ、PostToolUse なら <strong>Claude が出力を読んで自分で修正</strong> する — これが品質向上ループの鍵。
       </div>
 
-      <h3>4-2. 例：編集後に自動フォーマット（4分）</h3>
+      <h3>4-2. 例：パッケージの install / update をブロック（PreToolUse）（4分）</h3>
+      <p><code class="inline">npm</code> / <code class="inline">pnpm</code> / <code class="inline">bun</code> によるパッケージの追加・更新は、依存の増加やロックファイルの変更を伴う。レビューなしに走らせたくない操作を、<code class="inline">PreToolUse</code> で <strong>実行前に検知して止める</strong>。</p>
       <p><code class="inline">.claude/settings.json</code>：</p>
 <pre>{
   <span class="str">"hooks"</span>: {
-    <span class="str">"PostToolUse"</span>: [
+    <span class="str">"PreToolUse"</span>: [
       {
-        <span class="str">"matcher"</span>: <span class="str">"Edit|Write"</span>,
+        <span class="str">"matcher"</span>: <span class="str">"Bash"</span>,
         <span class="str">"hooks"</span>: [
-          { <span class="str">"type"</span>: <span class="str">"command"</span>, <span class="str">"command"</span>: <span class="str">"vendor/bin/pint --dirty"</span> }
+          { <span class="str">"type"</span>: <span class="str">"command"</span>, <span class="str">"command"</span>: <span class="str">".claude/hooks/block-package-install.sh"</span> }
         ]
       }
     ]
   }
 }</pre>
+      <p><code class="inline">.claude/hooks/block-package-install.sh</code>：</p>
+<pre>#!/usr/bin/env bash
+# 実行されようとしている Bash コマンドは stdin に JSON で渡ってくる
+command=$(jq -r '.tool_input.command')
+
+# npm / pnpm / bun のインストール・アップデート系サブコマンドを検知
+if echo "$command" | grep -Eq '\b(npm|pnpm|bun)\b[[:space:]]+(install|i|add|update|upgrade|up)\b'; then
+  echo "パッケージの install / update はブロックしています。依存を変えるなら人間に相談してください。" &gt;&amp;2
+  exit 2
+fi
+exit 0</pre>
       <ul>
-        <li>Claude がファイルを編集するたびに <strong>Laravel Pint が自動で整形</strong> する</li>
-        <li>「人間がレビューしやすい状態を機械的に担保する」のが Hooks の本質</li>
+        <li><code class="inline">npm install</code> / <code class="inline">pnpm add</code> / <code class="inline">bun update</code> などを検知したら <strong>終了コード 2 でブロック</strong>。理由は Claude に伝わるので、勝手に依存を足さず相談・代替手段へ切り替える</li>
+        <li>「何を入れる・何を上げるか」は人間が握る、というガバナンスを <strong>機械的に担保</strong> するのが Hooks の本質</li>
       </ul>
 
       <h3>4-3. コード品質を高める Hooks 実例（4分）</h3>
