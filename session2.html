@@ -164,9 +164,9 @@
       <li><a href="#goal">1. 到達目標・時間配分</a></li>
       <li><a href="#sec2">2. 設定ファイル（CLAUDE.md・settings.json）</a></li>
       <li><a href="#sec3">3. Skills とプラグイン</a></li>
-      <li><a href="#sec4">4. Hooks</a></li>
-      <li><a href="#sec5">5. MCP（Figma MCP）</a></li>
-      <li><a href="#sec6">6. SubAgent（サブエージェント）</a></li>
+      <li><a href="#sec4">4. MCP（Figma MCP）</a></li>
+      <li><a href="#sec5">5. SubAgent（サブエージェント）</a></li>
+      <li><a href="#sec6">6. Hooks</a></li>
       <li><a href="#sec7">7. 実践：Laravel アプリ開発の一連フロー</a></li>
       <li><a href="#sec8">8. まとめ</a></li>
     </ol>
@@ -200,9 +200,9 @@
         <tr><td>1</td><td>オープニング（到達目標・時間配分の説明）</td><td>8分</td></tr>
         <tr><td>2</td><td>設定ファイル（CLAUDE.md・メモリ・settings.json）</td><td>18分</td></tr>
         <tr><td>3</td><td>Skills とプラグイン</td><td>20分</td></tr>
-        <tr><td>4</td><td>Hooks</td><td>12分</td></tr>
-        <tr><td>5</td><td>MCP（Figma MCP）</td><td>12分</td></tr>
-        <tr><td>6</td><td>SubAgent（サブエージェント）</td><td>12分</td></tr>
+        <tr><td>4</td><td>MCP（Figma MCP）</td><td>12分</td></tr>
+        <tr><td>5</td><td>SubAgent（サブエージェント）</td><td>12分</td></tr>
+        <tr><td>6</td><td>Hooks</td><td>12分</td></tr>
         <tr><td>7</td><td>実践：Laravel アプリ開発の一連フロー</td><td>28分</td></tr>
         <tr><td>8</td><td>まとめ</td><td>10分</td></tr>
       </table>
@@ -249,7 +249,7 @@
       <table>
         <tr><th>キー</th><th>役割</th></tr>
         <tr><td><code class="inline">permissions</code></td><td>ツール実行の許可/拒否/確認（<code class="inline">allow</code> / <code class="inline">deny</code> / <code class="inline">ask</code>）</td></tr>
-        <tr><td><code class="inline">hooks</code></td><td>ツール実行の前後に差し込むコマンド（4章）</td></tr>
+        <tr><td><code class="inline">hooks</code></td><td>ツール実行の前後に差し込むコマンド（6章）</td></tr>
         <tr><td><code class="inline">env</code></td><td>セッションに渡す環境変数</td></tr>
         <tr><td><code class="inline">model</code></td><td>既定モデル</td></tr>
         <tr><td><code class="inline">outputStyle</code></td><td>応答スタイル</td></tr>
@@ -426,9 +426,146 @@ allowed-tools: Read, Edit, Bash
     </section>
 
     <section id="sec4">
-      <h2 class="step"><span class="step-num">4</span>Hooks（12分）</h2>
+      <h2 class="step"><span class="step-num">4</span>MCP（Figma MCP）（12分）</h2>
 
-      <h3>4-1. Hooks とは（4分）</h3>
+      <h3>4-1. MCP とは（4分）</h3>
+      <ul>
+        <li><strong>MCP（Model Context Protocol）</strong> ＝ Claude Code に <strong>外部サービスやツールを接続する標準規格</strong></li>
+        <li>接続すると、その外部サービスの操作が「ツール」として Claude から使えるようになる（GitHub・Slack・Figma・DB など）</li>
+        <li>接続方法は2つ：① <strong>プラグイン経由</strong>（公式マーケットプレイスの外部連携プラグイン）/ ② <code class="inline">claude mcp add</code> で直接追加</li>
+      </ul>
+      <h4><code class="inline">/mcp</code> コマンド</h4>
+      <p>接続した MCP サーバーの管理は <code class="inline">/mcp</code> で行う。</p>
+      <table>
+        <tr><th>できること</th><th>内容</th></tr>
+        <tr><td>状態の確認</td><td>接続済みサーバーの一覧と状態（<code class="inline">connected</code> / <code class="inline">needs auth</code> / <code class="inline">failed</code>）を表示</td></tr>
+        <tr><td>認証</td><td>サーバーを選んで <strong>Authenticate</strong> → OAuth 認可（認証が必要なサーバー向け）</td></tr>
+        <tr><td>ツールの確認</td><td>そのサーバーが提供するツール一覧を確認</td></tr>
+        <tr><td>有効/無効・再接続</td><td>サーバーの有効化/無効化や、切れた接続の再接続</td></tr>
+      </table>
+      <div class="callout tip">
+        <strong>💡 状態確認のコツ</strong>
+        起動画面の「MCP servers: ◯ need auth」表示や <code class="inline">/status</code> からも状態が分かる。うまく動かないときは <strong>まず <code class="inline">/mcp</code> で <code class="inline">connected</code> になっているか</strong> を確認する。
+      </div>
+
+      <h3>4-2. Figma MCP を接続する（4分）</h3>
+      <p>Figma 公式の MCP（リモート）を、3章で学んだ <strong>プラグイン機構</strong> で導入する:</p>
+<pre>/plugin install figma@claude-plugins-official
+/reload-plugins</pre>
+      <ul>
+        <li><code class="inline">/mcp</code> を開き <code class="inline">figma</code> を選んで <strong>Authenticate</strong> → ブラウザで Figma にログインして認可（OAuth）</li>
+        <li><code class="inline">/mcp</code> で <code class="inline">figma</code> が <strong>connected</strong> になれば OK。リモート方式なので <strong>デスクトップアプリ不要・無料プランでも試せる</strong></li>
+      </ul>
+      <div class="callout tip">
+        <strong>💡 別の接続方法</strong>
+        プラグインを使わず直接追加する場合は <code class="inline">claude mcp add --transport http figma https://mcp.figma.com/mcp</code>。<br>
+        ローカル（デスクトップ）方式は Figma デスクトップアプリ＋Dev 席（有料プラン）が必要。
+      </div>
+
+      <h3>4-3. ハンズオン：公開サンプルを複製してデザイン → コード（4分）</h3>
+      <p>自分の Figma ファイルがなくても試せるよう、Figma 公式の公開サンプル <strong>Simple Design System</strong> を複製（クローン）して使う。</p>
+      <ol>
+        <li>公式サンプルを開く：<a href="https://www.figma.com/community/file/1380235722331273046/simple-design-system" target="_blank" rel="noopener">figma.com/community/file/…/simple-design-system</a></li>
+        <li><strong>Get a copy（複製を取得）</strong> をクリック → 自分の下書き（Drafts）にコピーされる（ファイル名に <code class="inline">(Community)</code> が付く）。URL の末尾に <code class="inline">/duplicate</code> を付けて開いても複製できる</li>
+        <li>複製したファイルでコンポーネント（例：ボタンやカード）を選択 → 右クリック <strong>Copy link to selection</strong> でリンクを取得</li>
+        <li>以下をClaude Code に貼り付けて依頼:</li>
+      </ol>
+      <div class="prompt-box">
+        <span class="label">あなたの指示</span>
+        <p>このFigmaデザインを HTML + Tailwind CSS で実装して（リンク貼り付け）。色やスペーシングはデザインのトークンに合わせて。</p>
+      </div>
+      <ul>
+        <li>Claude が figma の <code class="inline">get_design_context</code>（コード生成）・<code class="inline">get_variable_defs</code>（色/サイズ等のトークン抽出）・<code class="inline">get_screenshot</code>（選択範囲の画像）などのツールを呼び、デザインからコードを生成する</li>
+      </ul>
+      <h3>演習4</h3>
+      <div class="prompt-box">
+        <span class="label">やってみよう</span>
+        <p>複製した Simple Design System から任意のコンポーネントを選び、リンクを渡してコード生成を試す</p>
+      </div>
+    </section>
+
+    <section id="sec5">
+      <h2 class="step"><span class="step-num">5</span>SubAgent（サブエージェント）（12分）</h2>
+
+      <h3>5-1. SubAgent とは（4分）</h3>
+      <ul>
+        <li><strong>サブエージェント</strong> ＝ メイン会話とは <strong>別の独立したコンテキスト</strong> で動く AI アシスタント。専用の <strong>システムプロンプト・ツール権限・モデル</strong> を持てる</li>
+        <li>大量の出力が出る作業（全文検索・全テスト実行・複数ファイルのレビュー・ログ調査など）を任せても、<strong>メイン会話にはサマリーだけ返る</strong> — コンテキストを汚さない</li>
+        <li>組み込みのサブエージェントもある：<code class="inline">Explore</code>（高速・読み取り専用の探索）/ <code class="inline">Plan</code>（計画用）/ <code class="inline">general-purpose</code>（調査＋修正の汎用）</li>
+      </ul>
+      <div class="callout tip">
+        <strong>💡 スキル / プラグイン との違い</strong>
+        スキルは <strong>メイン会話の中</strong> で手順を実行する。サブエージェントは <strong>別コンテキストで実行してサマリーだけ返す</strong>。プラグインはそれらをまとめて配布する入れ物。
+      </div>
+      <div class="callout">
+        <strong>💡 サブエージェントのメリット</strong>
+        <ul style="margin:8px 0 0;padding-left:20px;">
+          <li><strong>コンテキスト節約</strong>：大量出力（検索結果・diff・ログ）を別コンテキストに隔離し、メイン会話にはサマリーだけ返る → 本筋の文脈が長持ちする</li>
+          <li><strong>専門化で精度向上</strong>：観点を絞ったシステムプロンプト＋必要なツールだけに制限でき、レビュー／調査／デバッグなど用途特化の質が上がる</li>
+          <li><strong>並列化で高速</strong>：複数のサブエージェントを同時に走らせ、調査やレビューをまとめて進められる</li>
+          <li><strong>再利用・共有</strong>：<code class="inline">.claude/agents/</code> に置けばプロジェクト／チームで使い回せる</li>
+          <li><strong>安全性</strong>：ツール権限を絞れる（例：読み取り専用のレビュアーにして書き込みをさせない）</li>
+        </ul>
+      </div>
+
+      <h3>5-2. サブエージェントの作成（4分）</h3>
+      <p><code class="inline">/agents</code> を実行 → <strong>Library</strong> タブ → <strong>Create new agent</strong> で対話的に作れる（Personal＝全プロジェクト / Project＝チーム共有 を選択。「Generate with Claude」で雛形を自動生成も可）。</p>
+      <p>実体は Markdown ファイル。配置場所でスコープが決まる:</p>
+      <table>
+        <tr><th>配置場所</th><th>スコープ</th></tr>
+        <tr><td><code class="inline">~/.claude/agents/&lt;name&gt;.md</code></td><td>個人（全プロジェクト）</td></tr>
+        <tr><td><code class="inline">&lt;repo&gt;/.claude/agents/&lt;name&gt;.md</code></td><td>プロジェクト（チームで共有）</td></tr>
+      </table>
+      <p>例：<code class="inline">.claude/agents/laravel-code-reviewer.md</code></p>
+<pre><span class="comment">---
+name: laravel-code-reviewer
+description: Laravel のコードレビュー専門家。コードを書いた/変更した直後に積極的に使う。
+tools: Read, Grep, Glob, Bash
+model: sonnet
+---</span>
+
+あなたは Laravel のシニアコードレビュアーです。次の観点でレビューしてください：
+1. コントローラは薄いか（ロジックはサービスへ）
+2. Eloquent の N+1（eager loading で回避）
+3. バリデーションは FormRequest を使っているか
+4. セキュリティ（SQLインジェクション・CSRF・mass assignment・認可）
+5. テストの不足
+
+指摘ごとに「観点 / 該当ファイル・行 / 問題のコード / 理由 / 修正案」を示すこと。</pre>
+      <ul>
+        <li>frontmatter：<code class="inline">name</code>・<code class="inline">description</code>（委譲判断の鍵）は必須。<code class="inline">tools</code>（省略時は全ツール継承）・<code class="inline">model</code>（省略時は <code class="inline">inherit</code>）は任意</li>
+      </ul>
+
+      <h3>5-3. ハンズオン：レビュー専用サブエージェントを使う（4分）</h3>
+      <p>上の <code class="inline">laravel-code-reviewer</code> を作成し（または <code class="inline">/agents</code> で生成し）、呼び出してみる。</p>
+      <div class="prompt-box">
+        <span class="label">あなたの指示</span>
+        <p>laravel-code-reviewer エージェントで app/Http/Controllers の変更をレビューして</p>
+      </div>
+      <ul>
+        <li>サブエージェントが別コンテキストで該当コードを読み込み・レビューし、<strong>メイン会話には結果のサマリーだけ</strong> 返ることを観察する</li>
+        <li>「○○と△△モジュールを別々のサブエージェントで並行調査して」のように <strong>複数を並列実行</strong> させることもできる</li>
+      </ul>
+      <h4>実行中の表示</h4>
+      <p>委譲すると、メイン画面に <strong>別タスクとして実行中の状態</strong> が表示される:</p>
+<pre>● laravel-code-reviewer<span class="comment">(app/Http/Controllers の変更をレビュー)</span>
+  ⎿ Running… <span class="comment">(18s · ↓ 4.2k tokens · esc to interrupt)</span></pre>
+      <ul>
+        <li>実行中は <strong>エージェント名・経過時間・消費トークン</strong> が表示され、終わると <strong>結果のサマリーだけ</strong> がメイン会話に差し込まれる（途中の大量の読み込み・diff は残らない）</li>
+        <li><code class="inline">/agents</code> の <strong>Running</strong> タブで、実行中／最近終わったサブエージェントの一覧・停止・中身の確認ができる</li>
+        <li><code class="inline">Esc</code> で実行を中断できる</li>
+      </ul>
+      <h3>演習5</h3>
+      <div class="prompt-box">
+        <span class="label">やってみよう</span>
+        <p>/agents で「テスト失敗の原因だけを切り分けるデバッガー」サブエージェントを作り、わざとテストを壊して呼び出してみる</p>
+      </div>
+    </section>
+
+    <section id="sec6">
+      <h2 class="step"><span class="step-num">6</span>Hooks（12分）</h2>
+
+      <h3>6-1. Hooks とは（4分）</h3>
       <ul>
         <li>ツール実行の <strong>前後などに自動でコマンドを差し込む</strong> 仕組み（<code class="inline">settings.json</code> に定義）</li>
         <li>CLAUDE.md の指示と違い、<strong>ハーネスが機械的に実行する</strong> — Claude が「忘れる」ことがない</li>
@@ -444,7 +581,7 @@ allowed-tools: Read, Edit, Bash
         フックが <strong>終了コード 2</strong> で終わると、その出力が Claude にフィードバックされる。PreToolUse ならツール実行がブロックされ、PostToolUse なら <strong>Claude が出力を読んで自分で修正</strong> する — これが品質向上ループの鍵。
       </div>
 
-      <h3>4-2. 例：パッケージの install / update をブロック（PreToolUse）（4分）</h3>
+      <h3>6-2. 例：パッケージの install / update をブロック（PreToolUse）（4分）</h3>
       <p><code class="inline">npm</code> / <code class="inline">pnpm</code> / <code class="inline">bun</code> によるパッケージの追加・更新は、依存の増加やロックファイルの変更を伴う。レビューなしに走らせたくない操作を、<code class="inline">PreToolUse</code> で <strong>実行前に検知して止める</strong>。</p>
       <p><code class="inline">.claude/settings.json</code>：</p>
 <pre>{
@@ -475,7 +612,7 @@ exit 0</pre>
         <li>「何を入れる・何を上げるか」は人間が握る、というガバナンスを <strong>機械的に担保</strong> するのが Hooks の本質</li>
       </ul>
 
-      <h3>4-3. コード品質を高める Hooks 実例（4分）</h3>
+      <h3>6-3. コード品質を高める Hooks 実例（4分）</h3>
       <h4>静的解析の自動実行（Larastan）</h4>
       <p><a href="https://github.com/larastan/larastan" target="_blank" rel="noopener">Larastan</a> は、PHP の静的解析ツール PHPStan の <strong>Laravel 特化拡張</strong>。Eloquent モデルのプロパティや Facade、リレーションといった「Laravel の魔法」を理解した上で型チェックできるため、素の PHPStan より誤検知が少なく Laravel プロジェクトの実態に合った指摘が得られる。</p>
 <pre><span class="prompt">$</span> composer require --dev "larastan/larastan"</pre>
@@ -537,143 +674,6 @@ exit 0</pre>
       <div class="callout warn">
         <strong>⚠️ フックは軽量に</strong>
         編集ごとに走るフックは <strong>軽量に保つ</strong>（重い処理は <code class="inline">Stop</code> に寄せる）。遅いフックは開発のテンポを壊す。
-      </div>
-    </section>
-
-    <section id="sec5">
-      <h2 class="step"><span class="step-num">5</span>MCP（Figma MCP）（12分）</h2>
-
-      <h3>5-1. MCP とは（4分）</h3>
-      <ul>
-        <li><strong>MCP（Model Context Protocol）</strong> ＝ Claude Code に <strong>外部サービスやツールを接続する標準規格</strong></li>
-        <li>接続すると、その外部サービスの操作が「ツール」として Claude から使えるようになる（GitHub・Slack・Figma・DB など）</li>
-        <li>接続方法は2つ：① <strong>プラグイン経由</strong>（公式マーケットプレイスの外部連携プラグイン）/ ② <code class="inline">claude mcp add</code> で直接追加</li>
-      </ul>
-      <h4><code class="inline">/mcp</code> コマンド</h4>
-      <p>接続した MCP サーバーの管理は <code class="inline">/mcp</code> で行う。</p>
-      <table>
-        <tr><th>できること</th><th>内容</th></tr>
-        <tr><td>状態の確認</td><td>接続済みサーバーの一覧と状態（<code class="inline">connected</code> / <code class="inline">needs auth</code> / <code class="inline">failed</code>）を表示</td></tr>
-        <tr><td>認証</td><td>サーバーを選んで <strong>Authenticate</strong> → OAuth 認可（認証が必要なサーバー向け）</td></tr>
-        <tr><td>ツールの確認</td><td>そのサーバーが提供するツール一覧を確認</td></tr>
-        <tr><td>有効/無効・再接続</td><td>サーバーの有効化/無効化や、切れた接続の再接続</td></tr>
-      </table>
-      <div class="callout tip">
-        <strong>💡 状態確認のコツ</strong>
-        起動画面の「MCP servers: ◯ need auth」表示や <code class="inline">/status</code> からも状態が分かる。うまく動かないときは <strong>まず <code class="inline">/mcp</code> で <code class="inline">connected</code> になっているか</strong> を確認する。
-      </div>
-
-      <h3>5-2. Figma MCP を接続する（4分）</h3>
-      <p>Figma 公式の MCP（リモート）を、3章で学んだ <strong>プラグイン機構</strong> で導入する:</p>
-<pre>/plugin install figma@claude-plugins-official
-/reload-plugins</pre>
-      <ul>
-        <li><code class="inline">/mcp</code> を開き <code class="inline">figma</code> を選んで <strong>Authenticate</strong> → ブラウザで Figma にログインして認可（OAuth）</li>
-        <li><code class="inline">/mcp</code> で <code class="inline">figma</code> が <strong>connected</strong> になれば OK。リモート方式なので <strong>デスクトップアプリ不要・無料プランでも試せる</strong></li>
-      </ul>
-      <div class="callout tip">
-        <strong>💡 別の接続方法</strong>
-        プラグインを使わず直接追加する場合は <code class="inline">claude mcp add --transport http figma https://mcp.figma.com/mcp</code>。<br>
-        ローカル（デスクトップ）方式は Figma デスクトップアプリ＋Dev 席（有料プラン）が必要。
-      </div>
-
-      <h3>5-3. ハンズオン：公開サンプルを複製してデザイン → コード（4分）</h3>
-      <p>自分の Figma ファイルがなくても試せるよう、Figma 公式の公開サンプル <strong>Simple Design System</strong> を複製（クローン）して使う。</p>
-      <ol>
-        <li>公式サンプルを開く：<a href="https://www.figma.com/community/file/1380235722331273046/simple-design-system" target="_blank" rel="noopener">figma.com/community/file/…/simple-design-system</a></li>
-        <li><strong>Get a copy（複製を取得）</strong> をクリック → 自分の下書き（Drafts）にコピーされる（ファイル名に <code class="inline">(Community)</code> が付く）。URL の末尾に <code class="inline">/duplicate</code> を付けて開いても複製できる</li>
-        <li>複製したファイルでコンポーネント（例：ボタンやカード）を選択 → 右クリック <strong>Copy link to selection</strong> でリンクを取得</li>
-        <li>以下をClaude Code に貼り付けて依頼:</li>
-      </ol>
-      <div class="prompt-box">
-        <span class="label">あなたの指示</span>
-        <p>このFigmaデザインを HTML + Tailwind CSS で実装して（リンク貼り付け）。色やスペーシングはデザインのトークンに合わせて。</p>
-      </div>
-      <ul>
-        <li>Claude が figma の <code class="inline">get_design_context</code>（コード生成）・<code class="inline">get_variable_defs</code>（色/サイズ等のトークン抽出）・<code class="inline">get_screenshot</code>（選択範囲の画像）などのツールを呼び、デザインからコードを生成する</li>
-      </ul>
-      <h3>演習4</h3>
-      <div class="prompt-box">
-        <span class="label">やってみよう</span>
-        <p>複製した Simple Design System から任意のコンポーネントを選び、リンクを渡してコード生成を試す</p>
-      </div>
-    </section>
-
-    <section id="sec6">
-      <h2 class="step"><span class="step-num">6</span>SubAgent（サブエージェント）（12分）</h2>
-
-      <h3>6-1. SubAgent とは（4分）</h3>
-      <ul>
-        <li><strong>サブエージェント</strong> ＝ メイン会話とは <strong>別の独立したコンテキスト</strong> で動く AI アシスタント。専用の <strong>システムプロンプト・ツール権限・モデル</strong> を持てる</li>
-        <li>大量の出力が出る作業（全文検索・全テスト実行・複数ファイルのレビュー・ログ調査など）を任せても、<strong>メイン会話にはサマリーだけ返る</strong> — コンテキストを汚さない</li>
-        <li>組み込みのサブエージェントもある：<code class="inline">Explore</code>（高速・読み取り専用の探索）/ <code class="inline">Plan</code>（計画用）/ <code class="inline">general-purpose</code>（調査＋修正の汎用）</li>
-      </ul>
-      <div class="callout tip">
-        <strong>💡 スキル / プラグイン との違い</strong>
-        スキルは <strong>メイン会話の中</strong> で手順を実行する。サブエージェントは <strong>別コンテキストで実行してサマリーだけ返す</strong>。プラグインはそれらをまとめて配布する入れ物。
-      </div>
-      <div class="callout">
-        <strong>💡 サブエージェントのメリット</strong>
-        <ul style="margin:8px 0 0;padding-left:20px;">
-          <li><strong>コンテキスト節約</strong>：大量出力（検索結果・diff・ログ）を別コンテキストに隔離し、メイン会話にはサマリーだけ返る → 本筋の文脈が長持ちする</li>
-          <li><strong>専門化で精度向上</strong>：観点を絞ったシステムプロンプト＋必要なツールだけに制限でき、レビュー／調査／デバッグなど用途特化の質が上がる</li>
-          <li><strong>並列化で高速</strong>：複数のサブエージェントを同時に走らせ、調査やレビューをまとめて進められる</li>
-          <li><strong>再利用・共有</strong>：<code class="inline">.claude/agents/</code> に置けばプロジェクト／チームで使い回せる</li>
-          <li><strong>安全性</strong>：ツール権限を絞れる（例：読み取り専用のレビュアーにして書き込みをさせない）</li>
-        </ul>
-      </div>
-
-      <h3>6-2. サブエージェントの作成（4分）</h3>
-      <p><code class="inline">/agents</code> を実行 → <strong>Library</strong> タブ → <strong>Create new agent</strong> で対話的に作れる（Personal＝全プロジェクト / Project＝チーム共有 を選択。「Generate with Claude」で雛形を自動生成も可）。</p>
-      <p>実体は Markdown ファイル。配置場所でスコープが決まる:</p>
-      <table>
-        <tr><th>配置場所</th><th>スコープ</th></tr>
-        <tr><td><code class="inline">~/.claude/agents/&lt;name&gt;.md</code></td><td>個人（全プロジェクト）</td></tr>
-        <tr><td><code class="inline">&lt;repo&gt;/.claude/agents/&lt;name&gt;.md</code></td><td>プロジェクト（チームで共有）</td></tr>
-      </table>
-      <p>例：<code class="inline">.claude/agents/laravel-code-reviewer.md</code></p>
-<pre><span class="comment">---
-name: laravel-code-reviewer
-description: Laravel のコードレビュー専門家。コードを書いた/変更した直後に積極的に使う。
-tools: Read, Grep, Glob, Bash
-model: sonnet
----</span>
-
-あなたは Laravel のシニアコードレビュアーです。次の観点でレビューしてください：
-1. コントローラは薄いか（ロジックはサービスへ）
-2. Eloquent の N+1（eager loading で回避）
-3. バリデーションは FormRequest を使っているか
-4. セキュリティ（SQLインジェクション・CSRF・mass assignment・認可）
-5. テストの不足
-
-指摘ごとに「観点 / 該当ファイル・行 / 問題のコード / 理由 / 修正案」を示すこと。</pre>
-      <ul>
-        <li>frontmatter：<code class="inline">name</code>・<code class="inline">description</code>（委譲判断の鍵）は必須。<code class="inline">tools</code>（省略時は全ツール継承）・<code class="inline">model</code>（省略時は <code class="inline">inherit</code>）は任意</li>
-      </ul>
-
-      <h3>6-3. ハンズオン：レビュー専用サブエージェントを使う（4分）</h3>
-      <p>上の <code class="inline">laravel-code-reviewer</code> を作成し（または <code class="inline">/agents</code> で生成し）、呼び出してみる。</p>
-      <div class="prompt-box">
-        <span class="label">あなたの指示</span>
-        <p>laravel-code-reviewer エージェントで app/Http/Controllers の変更をレビューして</p>
-      </div>
-      <ul>
-        <li>サブエージェントが別コンテキストで該当コードを読み込み・レビューし、<strong>メイン会話には結果のサマリーだけ</strong> 返ることを観察する</li>
-        <li>「○○と△△モジュールを別々のサブエージェントで並行調査して」のように <strong>複数を並列実行</strong> させることもできる</li>
-      </ul>
-      <h4>実行中の表示</h4>
-      <p>委譲すると、メイン画面に <strong>別タスクとして実行中の状態</strong> が表示される:</p>
-<pre>● laravel-code-reviewer<span class="comment">(app/Http/Controllers の変更をレビュー)</span>
-  ⎿ Running… <span class="comment">(18s · ↓ 4.2k tokens · esc to interrupt)</span></pre>
-      <ul>
-        <li>実行中は <strong>エージェント名・経過時間・消費トークン</strong> が表示され、終わると <strong>結果のサマリーだけ</strong> がメイン会話に差し込まれる（途中の大量の読み込み・diff は残らない）</li>
-        <li><code class="inline">/agents</code> の <strong>Running</strong> タブで、実行中／最近終わったサブエージェントの一覧・停止・中身の確認ができる</li>
-        <li><code class="inline">Esc</code> で実行を中断できる</li>
-      </ul>
-      <h3>演習5</h3>
-      <div class="prompt-box">
-        <span class="label">やってみよう</span>
-        <p>/agents で「テスト失敗の原因だけを切り分けるデバッガー」サブエージェントを作り、わざとテストを壊して呼び出してみる</p>
       </div>
     </section>
 
