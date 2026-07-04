@@ -1237,11 +1237,11 @@ $ claude
 修正をコミットし、クローン元（`kimotuki/laravel-chat-app`）へ PR を作成する。クローン元には書き込み権限がないので、**自分のアカウントへ fork してから PR を出す**:
 
 ```
-!git checkout -b improve-chat-app
+!git checkout -b feature/conversation-history
 !git add -A && git commit -m "Improve chat app"
 # 自分のアカウントへ fork し、リモートを付け替える（クローン元 → upstream / fork → origin）
 !gh repo fork --remote
-!git push -u origin improve-chat-app
+!git push -u origin feature/conversation-history
 # クローン元 (kimotuki/laravel-chat-app) に向けた PR を作成
 !gh pr create --fill
 ```
