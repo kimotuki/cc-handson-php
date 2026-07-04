@@ -744,18 +744,15 @@ $ claude</pre>
       </ul>
 
       <h3>7-8. リポジトリへコミット、PR 作成（4分）</h3>
-      <p>修正をコミットし、クローン元（<code class="inline">kimotuki/laravel-chat-app</code>）へ PR を作成する。クローン元には書き込み権限がないので、<strong>自分のアカウントへ fork してから PR を出す</strong>:</p>
+      <p>修正をコミットし、クローン元（<code class="inline">kimotuki/laravel-chat-app</code>）へ PR を作成する:</p>
 <pre>!git checkout -b feature/conversation-history
 !git add -A && git commit -m "Improve chat app"
-<span class="comment"># 自分のアカウントへ fork し、リモートを付け替える（クローン元 → upstream / fork → origin）</span>
-!gh repo fork --remote
-!git push -u origin feature/conversation-history
 <span class="comment"># クローン元 (kimotuki/laravel-chat-app) に向けた PR を作成</span>
 !gh pr create --fill</pre>
       <ul>
-        <li><code class="inline">gh repo fork --remote</code> は fork の作成とリモートの付け替えを一度にやってくれる（初回のみ <code class="inline">gh auth login</code>）</li>
-        <li><code class="inline">gh pr create --fill</code> はコミットメッセージから PR のタイトル・本文を自動生成する。base repository を聞かれたら <code class="inline">kimotuki/laravel-chat-app</code> を選ぶ</li>
-        <li>ブランチ名・コミットメッセージ・PR 本文は Claude に任せてもよい（「fork してクローン元に PR を作って」）</li>
+        <li>クローン元には書き込み権限がないため、<code class="inline">gh pr create</code> が push 先を聞いてくる — <strong>「Create a fork of kimotuki/laravel-chat-app」を選ぶ</strong> と、fork の作成 → push → PR 作成まで一気に進む（初回のみ <code class="inline">gh auth login</code>）</li>
+        <li><code class="inline">--fill</code> はコミットメッセージから PR のタイトル・本文を自動生成する</li>
+        <li>ブランチ名・コミットメッセージ・PR 本文は Claude に任せてもよい（「クローン元に PR を作って」）</li>
       </ul>
     </section>
 

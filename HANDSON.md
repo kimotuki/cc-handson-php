@@ -1166,21 +1166,18 @@ $ claude
 
 #### 7-8. リポジトリへコミット、PR 作成（4分）
 
-修正をコミットし、クローン元（`kimotuki/laravel-chat-app`）へ PR を作成する。クローン元には書き込み権限がないので、**自分のアカウントへ fork してから PR を出す**:
+修正をコミットし、クローン元（`kimotuki/laravel-chat-app`）へ PR を作成する:
 
 ```
 !git checkout -b feature/conversation-history
 !git add -A && git commit -m "Improve chat app"
-# 自分のアカウントへ fork し、リモートを付け替える（クローン元 → upstream / fork → origin）
-!gh repo fork --remote
-!git push -u origin feature/conversation-history
 # クローン元 (kimotuki/laravel-chat-app) に向けた PR を作成
 !gh pr create --fill
 ```
 
-* `gh repo fork --remote` は fork の作成とリモートの付け替えを一度にやってくれる（初回のみ `gh auth login`）
-* `gh pr create --fill` はコミットメッセージから PR のタイトル・本文を自動生成する。base repository を聞かれたら `kimotuki/laravel-chat-app` を選ぶ
-* ブランチ名・コミットメッセージ・PR 本文は Claude に任せてもよい（「fork してクローン元に PR を作って」）
+* クローン元には書き込み権限がないため、`gh pr create` が push 先を聞いてくる — **「Create a fork of kimotuki/laravel-chat-app」を選ぶ** と、fork の作成 → push → PR 作成まで一気に進む（初回のみ `gh auth login`）
+* `--fill` はコミットメッセージから PR のタイトル・本文を自動生成する
+* ブランチ名・コミットメッセージ・PR 本文は Claude に任せてもよい（「クローン元に PR を作って」）
 
 ### 8. まとめ（10分）
 
