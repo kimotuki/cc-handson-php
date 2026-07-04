@@ -192,7 +192,7 @@
         <li><code class="inline">CLAUDE.md</code>・メモリ・<code class="inline">settings.json</code> の仕組みを理解し、設定が効いているかを確認できる</li>
         <li>プラグインで機能を追加し、skill-creator で自作スキルを作れる。Hooks で品質担保を自動化できる</li>
         <li>MCP で外部サービス（Figma）を接続し、デザインからコード生成を体験できる</li>
-        <li>新規 Laravel アプリの作成から機能追加・レビュー・GitHub への push まで、Claude Code との会話で完遂できる</li>
+        <li>新規 Laravel アプリの作成から機能追加・レビュー・PR 作成まで、Claude Code との会話で完遂できる</li>
       </ul>
       <h3>時間配分（120分）</h3>
       <table>
@@ -679,7 +679,7 @@ exit 0</pre>
 
     <section id="sec7">
       <h2 class="step"><span class="step-num">7</span>実践：Laravel アプリ開発の一連フロー（28分）</h2>
-      <p><strong>個人開発のフロー</strong> を最初から最後まで回す。Hello World で動作確認 → 題材アプリをクローン → 機能追加（改修） → レビュー → セキュリティレビュー → 修正 → 自分のリポジトリへ push まで、すべて Claude Code との会話で進める。</p>
+      <p><strong>個人開発のフロー</strong> を最初から最後まで回す。Hello World で動作確認 → 題材アプリをクローン → 機能追加（改修） → レビュー → セキュリティレビュー → 修正 → クローン元リポジトリへの PR 作成まで、すべて Claude Code との会話で進める。</p>
 
       <h3>7-1. 環境確認（2分）</h3>
       <p>devcontainer に PHP / Laravel / gh が入っていることを確認する。</p>
@@ -691,6 +691,8 @@ exit 0</pre>
       </ul>
 
       <h3>7-2. Laravel の Hello World アプリの作成（2分）</h3>
+      <p>作業ディレクトリで <code class="inline">claude</code> を起動する:</p>
+<pre>$ claude</pre>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
         <p>PHP と Laravel で「Hello World」を表示する Web アプリを作って。プロジェクト名は hello-laravel で。</p>
@@ -724,7 +726,8 @@ exit 0</pre>
       <h3>7-3. 題材アプリ（Laravel × Prism チャットアプリ）をクローン（2分）</h3>
       <p>Hello World で Laravel の動作を確認したら、以降の <strong>改修は題材の Laravel × Prism チャットアプリ</strong> で行う。GitHub からクローンして準備する:</p>
 <pre>$ git clone https://github.com/kimotuki/laravel-chat-app
-$ cd laravel-chat-app</pre>
+$ cd laravel-chat-app
+$ claude</pre>
       <ul>
         <li>以降のステップ（機能追加・レビュー・修正）は、この <strong>クローンしたアプリを対象</strong> に進める</li>
         <li>第1回の「ソースコード解析」と同じ題材なので、構造を把握済みならスムーズに改修へ入れる</li>
@@ -755,16 +758,6 @@ $ cd laravel-chat-app</pre>
         CLAUDE.md は書いたら終わりではなく、<strong>生成コードに効いているかを確認</strong> する。守られていない規約があれば、表現を強めるのではなく <strong>理由を添える</strong> 形で書き直す（2-4 のコツ）。
       </div>
 
-      <h3>演習6（オプション）：自分の好きな機能を追加する</h3>
-      <div class="prompt-box">
-        <span class="label">やってみよう</span>
-        <p>チャットアプリに、自分で考えた機能を1つ追加する（例：メッセージの文字数制限、送信履歴の絞り込み、簡単なバリデーション追加など）。Plan Mode で計画 → 承認 → 実装の流れで進める。</p>
-      </div>
-      <div class="callout warn">
-        <strong>⚠️ 機能を追加したら必ず AI レビューを</strong>
-        実装が終わったら、次に進む前に <strong>必ず <code class="inline">/code-review</code>（必要に応じて <code class="inline">/security-review</code>）で AI レビューを実行</strong> する。自分で考えた機能ほど、バグやセキュリティ観点の見落としが起きやすい。次の 7-5・7-6 はまさにこのレビュー工程にあたる。
-      </div>
-
       <h3>7-5. 組み込みスキルでレビュー（4分）</h3>
       <p>3-5 で紹介した組み込みスキル <code class="inline">/code-review</code> でレビューする。</p>
 <pre>/code-review</pre>
@@ -782,19 +775,28 @@ $ cd laravel-chat-app</pre>
         <li>3章で <code class="inline">security-guidance</code> プラグインを入れていれば、編集のたびに <strong>自動でも</strong> 同様のチェックが走る</li>
       </ul>
 
-      <h3>7-7. レビュー内容を修正して自分のリポジトリへコミット & push（6分）</h3>
+      <h3>7-7. レビュー内容を修正（2分）</h3>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
         <p>レビュー指摘のうち、○番と○番を直して</p>
       </div>
-      <p>修正の差分を確認したら、<strong>自分の GitHub リポジトリ</strong> を作成して push する（クローン元は他人のリポジトリなので、そのままでは push できない）:</p>
-<pre>!git add -A && git commit -m "Improve chat app"
-<span class="comment"># クローン元(他人のorigin)を外し、自分のリポジトリを作成して push</span>
-!git remote remove origin
-!gh repo create laravel-chat-app --private --source=. --remote=origin --push</pre>
       <ul>
-        <li>コミットメッセージは Claude に書かせてもよい（「変更をコミットして push して」）</li>
-        <li><code class="inline">gh repo create --source=. --push</code> で、新規リポジトリ作成〜push までが会話だけで完結する（初回のみ <code class="inline">gh auth login</code>）</li>
+        <li>修正の差分を確認する。直した内容が新たな指摘を生んでいないか、必要なら再度 <code class="inline">/code-review</code> をかける</li>
+      </ul>
+
+      <h3>7-8. リポジトリへコミット、PR 作成（4分）</h3>
+      <p>修正をコミットし、クローン元（<code class="inline">kimotuki/laravel-chat-app</code>）へ PR を作成する。クローン元には書き込み権限がないので、<strong>自分のアカウントへ fork してから PR を出す</strong>:</p>
+<pre>!git checkout -b improve-chat-app
+!git add -A && git commit -m "Improve chat app"
+<span class="comment"># 自分のアカウントへ fork し、リモートを付け替える（クローン元 → upstream / fork → origin）</span>
+!gh repo fork --remote
+!git push -u origin improve-chat-app
+<span class="comment"># クローン元 (kimotuki/laravel-chat-app) に向けた PR を作成</span>
+!gh pr create --fill</pre>
+      <ul>
+        <li><code class="inline">gh repo fork --remote</code> は fork の作成とリモートの付け替えを一度にやってくれる（初回のみ <code class="inline">gh auth login</code>）</li>
+        <li><code class="inline">gh pr create --fill</code> はコミットメッセージから PR のタイトル・本文を自動生成する。base repository を聞かれたら <code class="inline">kimotuki/laravel-chat-app</code> を選ぶ</li>
+        <li>ブランチ名・コミットメッセージ・PR 本文は Claude に任せてもよい（「fork してクローン元に PR を作って」）</li>
       </ul>
     </section>
 
