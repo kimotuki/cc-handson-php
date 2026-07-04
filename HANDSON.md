@@ -618,12 +618,12 @@ Mermaid のシーケンス図で出力して。
 | `<repo>/CLAUDE.local.md`  | プロジェクト個人用（git 管理外） |
 
 > 💡 **TIPS：AGENTS.md — エージェント指示の業界標準**
-> `AGENTS.md` は Cursor / GitHub Copilot / Gemini CLI など 30 以上の AI コーディングツールが共通で読む、ツール非依存の指示ファイル（Markdown・リポジトリルート配置）。**Claude Code はこれをネイティブでは読み込まず、`CLAUDE.md` だけを読む。** 複数ツールを併用するチームでは、指示を二重管理しないよう次のいずれかで橋渡しする:
-> - **import（推奨）**：`CLAUDE.md` に `@AGENTS.md` の1行を書いて取り込む。Claude 固有のルールは `CLAUDE.md` 側に足せる
-> - **symlink**：`ln -s AGENTS.md CLAUDE.md`（`AGENTS.md` をそのまま使う。Claude 固有ルールが不要なとき）
-> - **`/init`**：既存の `AGENTS.md` があれば読み込んで `CLAUDE.md` に統合してくれる
+> `AGENTS.md` は Cursor / GitHub Copilot / Gemini CLI など 30 以上の AI コーディングツールが共通で読む、ツール非依存の指示ファイルです（Markdown・リポジトリルート配置）。**Claude Code はこれをネイティブでは読み込まず、`CLAUDE.md` だけを読みます。** 複数ツールを併用するチームでは、指示を二重管理しないよう次のいずれかで橋渡しします:
+> - **import（推奨）**：`CLAUDE.md` に `@AGENTS.md` の1行を書いて取り込みます。Claude 固有のルールは `CLAUDE.md` 側に足せます
+> - **symlink**：`ln -s AGENTS.md CLAUDE.md`（`AGENTS.md` をそのまま使います。Claude 固有ルールが不要なときに向いています）
+> - **`/init`**：既存の `AGENTS.md` があれば読み込んで `CLAUDE.md` に統合してくれます
 >
-> 出典：`https://code.claude.com/docs/en/memory`
+> 参照：`https://code.claude.com/docs/en/memory`
 
 #### 2-2. メモリ（2分）
 

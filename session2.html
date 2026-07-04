@@ -227,13 +227,13 @@
 
       <div class="callout tip">
         <strong>💡 TIPS：AGENTS.md — エージェント指示の業界標準</strong>
-        <p><code class="inline">AGENTS.md</code> は Cursor / GitHub Copilot / Gemini CLI など 30 以上の AI コーディングツールが共通で読む、ツール非依存の指示ファイル（Markdown・リポジトリルート配置）。<strong>Claude Code はこれをネイティブでは読み込まず、<code class="inline">CLAUDE.md</code> だけを読む。</strong> 複数ツールを併用するチームでは、指示を二重管理しないよう次のいずれかで橋渡しする:</p>
+        <p><code class="inline">AGENTS.md</code> は Cursor / GitHub Copilot / Gemini CLI など 30 以上の AI コーディングツールが共通で読む、ツール非依存の指示ファイルです（Markdown・リポジトリルート配置）。<strong>Claude Code はこれをネイティブでは読み込まず、<code class="inline">CLAUDE.md</code> だけを読みます。</strong> 複数ツールを併用するチームでは、指示を二重管理しないよう次のいずれかで橋渡しします:</p>
         <ul>
-          <li><strong>import（推奨）</strong>：<code class="inline">CLAUDE.md</code> に <code class="inline">@AGENTS.md</code> の1行を書いて取り込む。Claude 固有のルールは <code class="inline">CLAUDE.md</code> 側に足せる</li>
-          <li><strong>symlink</strong>：<code class="inline">ln -s AGENTS.md CLAUDE.md</code>（<code class="inline">AGENTS.md</code> をそのまま使う。Claude 固有ルールが不要なとき）</li>
-          <li><strong><code class="inline">/init</code></strong>：既存の <code class="inline">AGENTS.md</code> があれば読み込んで <code class="inline">CLAUDE.md</code> に統合してくれる</li>
+          <li><strong>import（推奨）</strong>：<code class="inline">CLAUDE.md</code> に <code class="inline">@AGENTS.md</code> の1行を書いて取り込みます。Claude 固有のルールは <code class="inline">CLAUDE.md</code> 側に足せます</li>
+          <li><strong>symlink</strong>：<code class="inline">ln -s AGENTS.md CLAUDE.md</code>（<code class="inline">AGENTS.md</code> をそのまま使います。Claude 固有ルールが不要なときに向いています）</li>
+          <li><strong><code class="inline">/init</code></strong>：既存の <code class="inline">AGENTS.md</code> があれば読み込んで <code class="inline">CLAUDE.md</code> に統合してくれます</li>
         </ul>
-        <p>出典：<code class="inline">https://code.claude.com/docs/en/memory</code></p>
+        <p>参照：<code class="inline">https://code.claude.com/docs/en/memory</code></p>
       </div>
 
       <h3>2-2. メモリ（2分）</h3>
