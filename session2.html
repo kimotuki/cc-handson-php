@@ -423,6 +423,42 @@ allowed-tools: Read, Edit, Bash
         <li>妥当な指摘があれば「指摘の1番を修正して」と依頼し、修正された差分を確認する</li>
         <li>レビューは組み込みスキル、テスト生成は自作 <code class="inline">/test-gen</code>（3-3）のように、<strong>組み込みでカバーされない定型作業を自作スキルが埋める</strong> 役割分担を意識する</li>
       </ol>
+
+      <div class="callout tip">
+        <strong>💡 TIPS：公式マーケットプレイス（claude-plugins-official）の主要プラグイン</strong>
+        <p><code class="inline">/plugin</code> から導入できる Anthropic 公式マーケットプレイスの主なプラグインです。</p>
+        <p><strong>UI・フロントエンド</strong></p>
+        <ul>
+          <li><code class="inline">frontend-design</code>：ありがちな AI 生成っぽさを避けた本番向け UI を作るためのプラグインです</li>
+          <li><code class="inline">playground</code>：視覚的に試せる HTML プレイグラウンドを作る用途です</li>
+        </ul>
+        <p><strong>開発関連</strong></p>
+        <ul>
+          <li><code class="inline">agent-sdk-dev</code>：Claude Agent SDK のアプリ開発・検証向けです</li>
+          <li><code class="inline">commit-commands</code>：コミット、push、PR 作成をコマンド化します</li>
+          <li><code class="inline">feature-dev</code>：7段階の機能開発フローを支援します</li>
+          <li><code class="inline">ralph-loop</code>：自己参照的な AI 開発ループを回すためのものです</li>
+        </ul>
+        <p><strong>コードレビュー・品質管理</strong></p>
+        <ul>
+          <li><code class="inline">code-review</code>：複数エージェントで PR を自動レビューします</li>
+          <li><code class="inline">code-simplifier</code>：コードを読みやすく整理します</li>
+          <li><code class="inline">pr-review-toolkit</code>：コメント、テスト、エラー処理などに特化したレビューをします</li>
+          <li><code class="inline">security-guidance</code>：危険な編集やセキュリティ上の注意を知らせます</li>
+        </ul>
+        <p><strong>Claude Code の拡張開発</strong></p>
+        <ul>
+          <li><code class="inline">example-plugin</code>：機能サンプルです</li>
+          <li><code class="inline">plugin-dev</code>：hooks、MCP、構造、公開までを扱う開発キットです</li>
+          <li><code class="inline">skill-creator</code>：スキル作成・改善・評価に使います</li>
+        </ul>
+        <p><strong>設定・管理</strong></p>
+        <ul>
+          <li><code class="inline">claude-code-setup</code>：コードベースを見て、Claude Code の自動化を提案します</li>
+          <li><code class="inline">claude-md-management</code>：CLAUDE.md の保守を支援します</li>
+          <li><code class="inline">hookify</code>：会話パターンや指示からフックを作ります</li>
+        </ul>
+      </div>
     </section>
 
     <section id="sec4">
@@ -692,13 +728,7 @@ $ claude</pre>
         <li>第1回の「ソースコード解析」と同じ題材なので、構造を把握済みならスムーズに改修へ入れる</li>
       </ul>
 
-      <h3>7-4. コーディング規約を追記して機能追加（8分）</h3>
-      <p>まず、<code class="inline">CLAUDE.md</code> にコーディング規約を追記する（<code class="inline">#</code> プレフィックスを使うと早い）:</p>
-      <div class="prompt-box">
-        <span class="label">あなたの指示</span>
-        <p># コーディング規約: ルートには必ず名前を付ける（-&gt;name()）。コントローラは薄く保ち、バリデーションは FormRequest を使う。</p>
-      </div>
-      <p>次に、Plan Mode（<code class="inline">Shift + Tab</code>）で計画してから実装する。</p>
+      <h3>7-4. 「会話履歴」機能を追加（8分）</h3>
       <div class="prompt-box">
         <span class="label">あなたの指示（Plan Mode で）</span>
         <p>このLaravel + Prismチャットアプリに「会話履歴」機能を追加してください。</p>
@@ -707,11 +737,6 @@ $ claude</pre>
         <li><strong>計画の段階で規約が反映されているか</strong> を確認する（例: 履歴のルートに <code class="inline">-&gt;name('chat.history')</code> を付ける計画になっているか、保存処理のバリデーションは FormRequest か）</li>
         <li>計画をレビュー → 承認 → 実装 → 動作確認（ブラウザでチャットを送り、履歴が表示されるか。<code class="inline">!php artisan test</code> も可）</li>
       </ul>
-      <p>実装後、生成されたコードが規約に従っているかを確認する:</p>
-      <div class="prompt-box">
-        <span class="label">あなたの指示</span>
-        <p>@routes/web.php このルート定義が CLAUDE.md のコーディング規約に従っているか確認して</p>
-      </div>
       <div class="callout tip">
         <strong>💡 規約は「効いているか」まで確認する</strong>
         CLAUDE.md は書いたら終わりではなく、<strong>生成コードに効いているかを確認</strong> する。守られていない規約があれば、表現を強めるのではなく <strong>理由を添える</strong> 形で書き直す（2-4 のコツ）。
