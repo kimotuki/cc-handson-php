@@ -503,6 +503,7 @@ allowed-tools: Read, Edit, Bash
           <li><strong>コンテキスト節約</strong>：大量出力（検索結果・diff・ログ）を別コンテキストに隔離し、メイン会話にはサマリーだけ返る → 本筋の文脈が長持ちする</li>
           <li><strong>専門化で精度向上</strong>：観点を絞ったシステムプロンプト＋必要なツールだけに制限でき、レビュー／調査／デバッグなど用途特化の質が上がる</li>
           <li><strong>並列化で高速</strong>：複数のサブエージェントを同時に走らせ、調査やレビューをまとめて進められる</li>
+          <li><strong>時間のかかるタスクに有効</strong>：全テスト実行や大規模なログ調査など長時間かかる処理をバックグラウンドで任せられ、その間もメイン会話で別の作業を進められる</li>
           <li><strong>再利用・共有</strong>：<code class="inline">.claude/agents/</code> に置けばプロジェクト／チームで使い回せる</li>
           <li><strong>安全性</strong>：ツール権限を絞れる（例：読み取り専用のレビュアーにして書き込みをさせない）</li>
         </ul>
@@ -555,11 +556,6 @@ model: sonnet
         <li><code class="inline">/agents</code> の <strong>Running</strong> タブで、実行中／最近終わったサブエージェントの一覧・停止・中身の確認ができる</li>
         <li><code class="inline">Esc</code> で実行を中断できる</li>
       </ul>
-      <h3>演習5</h3>
-      <div class="prompt-box">
-        <span class="label">やってみよう</span>
-        <p>/agents で「テスト失敗の原因だけを切り分けるデバッガー」サブエージェントを作り、わざとテストを壊して呼び出してみる</p>
-      </div>
     </section>
 
     <section id="sec6">
@@ -613,40 +609,6 @@ exit 0</pre>
       </ul>
 
       <h3>6-3. コード品質を高める Hooks 実例（4分）</h3>
-      <h4>静的解析の自動実行（Larastan）</h4>
-      <p><a href="https://github.com/larastan/larastan" target="_blank" rel="noopener">Larastan</a> は、PHP の静的解析ツール PHPStan の <strong>Laravel 特化拡張</strong>。Eloquent モデルのプロパティや Facade、リレーションといった「Laravel の魔法」を理解した上で型チェックできるため、素の PHPStan より誤検知が少なく Laravel プロジェクトの実態に合った指摘が得られる。</p>
-<pre><span class="prompt">$</span> composer require --dev "larastan/larastan"</pre>
-      <p>導入後も実行コマンドは PHPStan のもの（Larastan は PHPStan の拡張として動く）:</p>
-<pre>{
-  <span class="str">"hooks"</span>: {
-    <span class="str">"PostToolUse"</span>: [
-      {
-        <span class="str">"matcher"</span>: <span class="str">"Edit|Write"</span>,
-        <span class="str">"hooks"</span>: [
-          { <span class="str">"type"</span>: <span class="str">"command"</span>, <span class="str">"command"</span>: <span class="str">"vendor/bin/phpstan analyse --no-progress"</span> }
-        ]
-      }
-    ]
-  }
-}</pre>
-      <ul>
-        <li>編集のたびに型エラー・未定義変数・<strong>存在しないモデルプロパティやリレーションの参照</strong> などを検出。エラーは Claude にフィードバックされ、<strong>指示しなくても自分で直す</strong></li>
-      </ul>
-      <h4>作業の区切りでテストを自動実行（Stop）</h4>
-<pre>{
-  <span class="str">"hooks"</span>: {
-    <span class="str">"Stop"</span>: [
-      {
-        <span class="str">"hooks"</span>: [
-          { <span class="str">"type"</span>: <span class="str">"command"</span>, <span class="str">"command"</span>: <span class="str">"php artisan test"</span> }
-        ]
-      }
-    ]
-  }
-}</pre>
-      <ul>
-        <li>Claude が応答を終えるたびにテストが走る — <strong>壊れた状態で作業が「完了」したことにならない</strong></li>
-      </ul>
       <h4>危険なコマンドのブロック（PreToolUse）</h4>
 <pre>{
   <span class="str">"hooks"</span>: {
@@ -706,18 +668,15 @@ exit 0</pre>
         <li>ブラウザで <code class="inline">http://localhost:8000</code> → Hello World が表示されれば OK</li>
       </ul>
 
-      <h4>補足: devcontainer 内のサーバーにホスト PC からアクセスできないとき</h4>
-      <p>devcontainer 内で起動したサーバー（例: <code class="inline">http://127.0.0.1:8000</code>）にホスト PC のブラウザからアクセスできない場合は、サーバーの <strong>バインド先</strong> を確認する。</p>
-      <ul>
-        <li><strong>原因</strong>：<code class="inline">--host=127.0.0.1</code> で起動するとコンテナ内のループバックにしかバインドされず、<code class="inline">docker-compose.yml</code> に <code class="inline">ports: "8000:8000"</code> の公開設定があっても、ポートマッピング経由（コンテナのネットワーク IP 宛て）の接続を受け付けられない</li>
-        <li><strong>対処</strong>：<code class="inline">0.0.0.0</code> にバインドして起動する</li>
-      </ul>
-<pre>php artisan serve --host=0.0.0.0 --port=8000</pre>
-      <p>検証結果（例）：</p>
-      <ul>
-        <li>コンテナ内 <code class="inline">127.0.0.1:8000</code> → 200 ✅</li>
-        <li>コンテナ IP <code class="inline">172.18.0.2:8000</code> → 200 ✅（ホストからのポートマッピングが通る経路）</li>
-      </ul>
+      <div class="callout tip">
+        <strong>💡 補足：devcontainer 内のサーバーにホスト PC からアクセスできないとき</strong>
+        <p>devcontainer 内で起動したサーバー（例: <code class="inline">http://127.0.0.1:8000</code>）にホスト PC のブラウザからアクセスできない場合は、サーバーの <strong>バインド先</strong> を確認する。</p>
+        <ul>
+          <li><strong>原因</strong>：<code class="inline">--host=127.0.0.1</code> で起動するとコンテナ内のループバックにしかバインドされず、<code class="inline">docker-compose.yml</code> に <code class="inline">ports: "8000:8000"</code> の公開設定があっても、ポートマッピング経由（コンテナのネットワーク IP 宛て）の接続を受け付けられない</li>
+          <li><strong>対処</strong>：<code class="inline">0.0.0.0</code> にバインドして起動する — <code class="inline">php artisan serve --host=0.0.0.0 --port=8000</code></li>
+          <li><strong>検証結果（例）</strong>：コンテナ内 <code class="inline">127.0.0.1:8000</code> → 200 ✅ / コンテナ IP <code class="inline">172.18.0.2:8000</code> → 200 ✅（ホストからのポートマッピングが通る経路）</li>
+        </ul>
+      </div>
       <div class="callout warn">
         <strong>⚠️ 手動起動時も <code class="inline">--host=0.0.0.0</code> を忘れずに</strong>
         <code class="inline">devcontainer.json</code> に <code class="inline">"onAutoForward": "ignore"</code> があると VS Code の自動ポート転送は無効になるが、docker-compose の明示的なポート公開があれば問題ない。ただし <code class="inline">php artisan serve</code> のまま起動するとホストから見えないので注意。
@@ -742,11 +701,11 @@ $ claude</pre>
       <p>次に、Plan Mode（<code class="inline">Shift + Tab</code>）で計画してから実装する。</p>
       <div class="prompt-box">
         <span class="label">あなたの指示（Plan Mode で）</span>
-        <p>/greet/{name} にアクセスすると「Hello, {name}!」と表示されるページを追加したい。まず実装計画を立てて。</p>
+        <p>このLaravel + Prismチャットアプリに「会話履歴」機能を追加してください。</p>
       </div>
       <ul>
-        <li><strong>計画の段階で規約が反映されているか</strong> を確認する（例: ルートに <code class="inline">-&gt;name('greet')</code> を付ける計画になっているか）</li>
-        <li>計画をレビュー → 承認 → 実装 → 動作確認（ブラウザ or <code class="inline">!php artisan test</code>）</li>
+        <li><strong>計画の段階で規約が反映されているか</strong> を確認する（例: 履歴のルートに <code class="inline">-&gt;name('chat.history')</code> を付ける計画になっているか、保存処理のバリデーションは FormRequest か）</li>
+        <li>計画をレビュー → 承認 → 実装 → 動作確認（ブラウザでチャットを送り、履歴が表示されるか。<code class="inline">!php artisan test</code> も可）</li>
       </ul>
       <p>実装後、生成されたコードが規約に従っているかを確認する:</p>
       <div class="prompt-box">
