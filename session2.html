@@ -743,14 +743,12 @@ $ claude</pre>
         <span class="label">あなたの指示（Plan Mode で）</span>
         <p>このLaravel + Prismチャットアプリに「会話履歴」機能を追加してください。</p>
       </div>
+      <p>実装が終わったら、どのような変更が入ったかを <code class="inline">git diff</code> で <strong>人の目で確認する</strong>:</p>
+<pre>!git status
+!git diff</pre>
       <ul>
-        <li><strong>計画の段階で規約が反映されているか</strong> を確認する（例: 履歴のルートに <code class="inline">-&gt;name('chat.history')</code> を付ける計画になっているか、保存処理のバリデーションは FormRequest か）</li>
-        <li>計画をレビュー → 承認 → 実装 → 動作確認（ブラウザでチャットを送り、履歴が表示されるか。<code class="inline">!php artisan test</code> も可）</li>
+        <li>新規ファイルの一覧は <code class="inline">git status</code>、既存ファイルの差分は <code class="inline">git diff</code> で見る。意図しない変更が混ざっていないかを確認する</li>
       </ul>
-      <div class="callout tip">
-        <strong>💡 規約は「効いているか」まで確認する</strong>
-        CLAUDE.md は書いたら終わりではなく、<strong>生成コードに効いているかを確認</strong> する。守られていない規約があれば、表現を強めるのではなく <strong>理由を添える</strong> 形で書き直す（2-4 のコツ）。
-      </div>
 
       <h3>7-5. 組み込みスキルでレビュー（4分）</h3>
       <p>3-5 で紹介した組み込みスキル <code class="inline">/code-review</code> でレビューする。</p>
@@ -774,8 +772,10 @@ $ claude</pre>
         <span class="label">あなたの指示</span>
         <p>レビュー指摘のうち、○番と○番を直して</p>
       </div>
+      <p>修正が終わったら、変更内容を <code class="inline">git diff</code> で <strong>人の目で確認する</strong>:</p>
+<pre>!git diff</pre>
       <ul>
-        <li>修正の差分を確認する。直した内容が新たな指摘を生んでいないか、必要なら再度 <code class="inline">/code-review</code> をかける</li>
+        <li>直した内容が新たな指摘を生んでいないか、必要なら再度 <code class="inline">/code-review</code> をかける</li>
       </ul>
 
       <h3>7-8. リポジトリへコミット、PR 作成（4分）</h3>
