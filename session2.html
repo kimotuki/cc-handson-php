@@ -236,6 +236,16 @@
         <p>参照：<code class="inline">https://code.claude.com/docs/en/memory</code></p>
       </div>
 
+      <h3>演習1</h3>
+      <div class="prompt-box">
+        <span class="label">やってみよう</span>
+        <p>CLAUDE.md の内容を確認する。まだ生成していなければ /init を実行する</p>
+      </div>
+      <ol>
+        <li><code class="inline">CLAUDE.md</code> の内容を確認する（<code class="inline">/memory</code> から開くか、「@CLAUDE.md の内容を要約して」と聞いてもよい）</li>
+        <li><code class="inline">CLAUDE.md</code> がまだ無い場合（<code class="inline">/init</code> が未実行）は、<code class="inline">/init</code> を実行して生成する</li>
+      </ol>
+
       <h3>2-2. メモリ（2分）</h3>
       <p><code class="inline">#</code> プレフィックスでセッション中に得た知見をその場で追記できる。</p>
 <pre># このプロジェクトのテストは php artisan test で実行する</pre>
@@ -291,7 +301,7 @@
         <li>守られなかった指示は <strong>表現を強める</strong> より <strong>理由を添える</strong> ほうが効く</li>
       </ul>
 
-      <h3>演習1</h3>
+      <h3>演習2</h3>
       <div class="prompt-box">
         <span class="label">やってみよう</span>
         <p>前回の解析結果をもとに CLAUDE.md に「テストコマンド」「コーディング規約」を追記する</p>
@@ -334,7 +344,7 @@
         <li><code class="inline">/plugin</code> を実行すると <strong>Discover / Installed / Marketplaces / Errors</strong> のタブ型 UI で管理できる</li>
         <li><code class="inline">security-guidance</code> は導入後、Claude のコード変更を自動でレビューし、見つけた問題をその場で直すよう促す（明示的に呼び出さなくても効く）</li>
       </ul>
-      <h3>演習2</h3>
+      <h3>演習3</h3>
       <div class="prompt-box">
         <span class="label">やってみよう</span>
         <p>security-guidance を install → /reload-plugins → /plugin の Installed タブで入ったことを確認する</p>
@@ -410,7 +420,7 @@ allowed-tools: Read, Edit, Bash
         <strong>💡 ハンズオンで試すなら</strong>
         題材のチャットアプリなら、<code class="inline">/security-review</code> や <code class="inline">/code-review</code> を試す価値がある。
       </div>
-      <h3>演習3：/code-review を試す</h3>
+      <h3>演習4：/code-review を試す</h3>
       <ol>
         <li>レビュー対象の差分を作るため、チャットアプリに小さな変更を入れる</li>
       </ol>
@@ -513,7 +523,7 @@ allowed-tools: Read, Edit, Bash
       <ul>
         <li>Claude が figma の <code class="inline">get_design_context</code>（コード生成）・<code class="inline">get_variable_defs</code>（色/サイズ等のトークン抽出）・<code class="inline">get_screenshot</code>（選択範囲の画像）などのツールを呼び、デザインからコードを生成する</li>
       </ul>
-      <h3>演習4</h3>
+      <h3>演習5</h3>
       <div class="prompt-box">
         <span class="label">やってみよう</span>
         <p>複製した Simple Design System から任意のコンポーネントを選び、リンクを渡してコード生成を試す</p>
