@@ -896,7 +896,9 @@ Figma 公式の MCP（リモート）を、3章で学んだ **プラグイン機
 
 続いて `/mcp` を実行し、認証（OAuth）を済ませる:
 
-![/mcp コマンドを実行](Image/mcp-command.png)
+```
+/mcp
+```
 
 サーバー一覧が表示される。導入直後の `plugin:figma:figma` は **needs authentication**（要認証）の状態:
 
