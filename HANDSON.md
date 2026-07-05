@@ -894,32 +894,73 @@ Figma 公式の MCP（リモート）を、3章で学んだ **プラグイン機
 /reload-plugins
 ```
 
-* `/mcp` を開き `figma` を選んで **Authenticate** → ブラウザで Figma にログインして認可（OAuth）
-* `/mcp` で `figma` が **connected** になれば OK。リモート方式なので **デスクトップアプリ不要・無料プランでも試せる**
+続いて `/mcp` を実行し、認証（OAuth）を済ませる:
+
+![/mcp コマンドを実行](Image/mcp-command.png)
+
+サーバー一覧が表示される。導入直後の `plugin:figma:figma` は **needs authentication**（要認証）の状態:
+
+![導入直後は plugin:figma:figma が needs authentication と表示される](Image/mcp-figma-needs-auth.png)
+
+`plugin:figma:figma` を選ぶとサーバーの詳細が表示されるので、**1. Authenticate** を実行する:
+
+![サーバー詳細で 1. Authenticate を選択](Image/mcp-figma-authenticate.png)
+
+ブラウザで Figma の認可画面が開く。内容を確認して **「同意してアクセスを許可する」** をクリック:
+
+![ブラウザに表示される Figma の OAuth 認可画面](Image/figma-oauth-consent.png)
+
+**Authentication successful** が表示されたら、タブを閉じて Claude Code に戻る:
+
+![認証成功の画面 — タブを閉じて Claude Code に戻る](Image/figma-auth-success.png)
+
+再度 `/mcp` を開き、`plugin:figma:figma` が **connected**（例: 25 tools）になっていれば接続完了。リモート方式なので **デスクトップアプリ不要・無料プランでも試せる**:
+
+![plugin:figma:figma が connected · 25 tools になれば接続完了](Image/mcp-figma-connected.png)
 
 > 💡 プラグインを使わず直接追加する場合: `claude mcp add --transport http figma https://mcp.figma.com/mcp`
 > 💡 ローカル（デスクトップ）方式は Figma デスクトップアプリ＋Dev 席（有料プラン）が必要。
 
-#### 4-3. ハンズオン：公開サンプルを複製してデザイン → コード（4分）
+#### 4-3. ハンズオン：サンプルデザイン（AI Chat）をコードにする（4分）
 
-自分の Figma ファイルがなくても試せるよう、Figma 公式の公開サンプル **Simple Design System** を複製（クローン）して使う。
+自分でデザインを用意しなくても試せるよう、Figma 標準ライブラリ **Simple Design System** のサンプル画面（Examples/AI Chat）を使う。
 
-1. 公式サンプルを開く：<https://www.figma.com/community/file/1380235722331273046/simple-design-system>
-2. **Get a copy（複製を取得）** をクリック → 自分の下書き（Drafts）にコピーされる（ファイル名に `(Community)` が付く）
-   * URL の末尾に `/duplicate` を付けて開いても複製できる
-3. 複製したファイルでコンポーネント（例：ボタンやカード）を選択 → 右クリック **Copy link to selection** でリンクを取得
-4. 以下をClaude Code に貼り付けて依頼:
+まず Figma で **新規デザインファイル** を作成し（ドラフト・無料プランで OK）、左サイドバーの **アセット** タブから **Simple Design System / Examples** を開く。About / AI Chat / Article / Contact Us などのサンプル画面が並んでいる:
+
+![アセットパネルから Simple Design System / Examples を開く](Image/figma-assets-panel.png)
+
+**AI Chat** を選び、詳細パネルの **「インスタンスを挿入」** をクリックする:
+
+![AI Chat の詳細パネルで「インスタンスを挿入」をクリック](Image/figma-insert-instance.png)
+
+キャンバスに AI チャット画面のサンプル（Examples/AI Chat）が配置される:
+
+![キャンバスに配置された Examples/AI Chat のデザイン](Image/figma-ai-chat-design.png)
+
+あとで Claude に指示しやすいよう、ファイル名を「無題」から **AI Chat** に変更しておく（ファイル名横の ∨ メニュー → **名前を変更**）:
+
+![ファイル名メニューから「名前を変更」を選ぶ](Image/figma-rename-menu.png)
+
+![ファイル名を AI Chat に変更した状態 — レイヤーに Examples/AI Chat が入っている](Image/figma-file-renamed.png)
+
+準備ができたら、Claude Code に実装を依頼する:
 
 ```
-このFigmaデザインを HTML + Tailwind CSS で実装して（リンク貼り付け）。
-色やスペーシングはデザインのトークンに合わせて。
+Figmaの「AI Chat」ファイルのExamples/AI Chatの内容をもとにHTML + Tailwind CSS
+で実装して（リンク貼り付け）。色やスペーシングはデザインのトークンに合わせて。
 ```
+
+![Claude Code に実装を依頼するプロンプト](Image/figma-code-prompt.png)
+
+「（リンク貼り付け）」の部分には、Examples/AI Chat のフレームを選択した状態でコピーした **node-id 付き URL**（例: `https://www.figma.com/design/xxxx/AI-Chat?node-id=1-1402`）を貼る。貼り忘れても Claude が URL を求めてくるので、そこで渡せばよい:
+
+![URL を渡すと Claude がデザインの取得を開始する](Image/figma-code-url.png)
 
 * Claude が figma の `get_design_context`（コード生成）・`get_variable_defs`（色/サイズ等のトークン抽出）・`get_screenshot`（選択範囲の画像）などのツールを呼び、デザインからコードを生成する
 
 ##### 演習5
 
-* 複製した Simple Design System から任意のコンポーネントを選び、リンクを渡してコード生成を試す
+* アセットに並ぶ他のサンプル（Article・Contact Us など）を挿入し、同じ流れでコード生成を試す
 
 ### 5. SubAgent（サブエージェント）（12分）
 

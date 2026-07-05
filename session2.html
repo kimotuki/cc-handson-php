@@ -148,6 +148,14 @@
   }
   .lesson h4 { margin: 0 0 8px; color: #b45309; font-size: 15px; }
   .lesson ul { margin: 0; padding-left: 20px; }
+  .shot { margin: 18px 0; }
+  .shot img {
+    max-width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.08);
+  }
+  .shot figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
   @media (max-width: 860px) {
     nav { display: none; }
     main { padding: 24px; }
@@ -498,35 +506,83 @@ allowed-tools: Read, Edit, Bash
       <p>Figma 公式の MCP（リモート）を、3章で学んだ <strong>プラグイン機構</strong> で導入する:</p>
 <pre>/plugin install figma@claude-plugins-official
 /reload-plugins</pre>
-      <ul>
-        <li><code class="inline">/mcp</code> を開き <code class="inline">figma</code> を選んで <strong>Authenticate</strong> → ブラウザで Figma にログインして認可（OAuth）</li>
-        <li><code class="inline">/mcp</code> で <code class="inline">figma</code> が <strong>connected</strong> になれば OK。リモート方式なので <strong>デスクトップアプリ不要・無料プランでも試せる</strong></li>
-      </ul>
+      <p>続いて <code class="inline">/mcp</code> を実行し、認証（OAuth）を済ませる:</p>
+      <figure class="shot">
+        <img src="Image/mcp-command.png" alt="/mcp コマンドを実行">
+        <figcaption><code class="inline">/mcp</code> コマンドを実行</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="Image/mcp-figma-needs-auth.png" alt="plugin:figma:figma が needs authentication の状態">
+        <figcaption>サーバー一覧が表示される。導入直後の <code class="inline">plugin:figma:figma</code> は <strong>needs authentication</strong>（要認証）の状態</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="Image/mcp-figma-authenticate.png" alt="サーバー詳細で 1. Authenticate を選択">
+        <figcaption><code class="inline">plugin:figma:figma</code> を選ぶと詳細が表示されるので、<strong>1. Authenticate</strong> を実行する</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="Image/figma-oauth-consent.png" alt="ブラウザに表示される Figma の OAuth 認可画面">
+        <figcaption>ブラウザで Figma の認可画面が開く。内容を確認して <strong>「同意してアクセスを許可する」</strong> をクリック</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="Image/figma-auth-success.png" alt="認証成功の画面">
+        <figcaption><strong>Authentication successful</strong> が表示されたら、タブを閉じて Claude Code に戻る</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="Image/mcp-figma-connected.png" alt="plugin:figma:figma が connected になった状態">
+        <figcaption>再度 <code class="inline">/mcp</code> を開き、<strong>connected</strong>（例: 25 tools）になっていれば接続完了。リモート方式なので <strong>デスクトップアプリ不要・無料プランでも試せる</strong></figcaption>
+      </figure>
       <div class="callout tip">
         <strong>💡 別の接続方法</strong>
         プラグインを使わず直接追加する場合は <code class="inline">claude mcp add --transport http figma https://mcp.figma.com/mcp</code>。<br>
         ローカル（デスクトップ）方式は Figma デスクトップアプリ＋Dev 席（有料プラン）が必要。
       </div>
 
-      <h3>4-3. ハンズオン：公開サンプルを複製してデザイン → コード（4分）</h3>
-      <p>自分の Figma ファイルがなくても試せるよう、Figma 公式の公開サンプル <strong>Simple Design System</strong> を複製（クローン）して使う。</p>
-      <ol>
-        <li>公式サンプルを開く：<a href="https://www.figma.com/community/file/1380235722331273046/simple-design-system" target="_blank" rel="noopener">figma.com/community/file/…/simple-design-system</a></li>
-        <li><strong>Get a copy（複製を取得）</strong> をクリック → 自分の下書き（Drafts）にコピーされる（ファイル名に <code class="inline">(Community)</code> が付く）。URL の末尾に <code class="inline">/duplicate</code> を付けて開いても複製できる</li>
-        <li>複製したファイルでコンポーネント（例：ボタンやカード）を選択 → 右クリック <strong>Copy link to selection</strong> でリンクを取得</li>
-        <li>以下をClaude Code に貼り付けて依頼:</li>
-      </ol>
+      <h3>4-3. ハンズオン：サンプルデザイン（AI Chat）をコードにする（4分）</h3>
+      <p>自分でデザインを用意しなくても試せるよう、Figma 標準ライブラリ <strong>Simple Design System</strong> のサンプル画面（Examples/AI Chat）を使う。</p>
+      <p>まず Figma で <strong>新規デザインファイル</strong> を作成し（ドラフト・無料プランで OK）、左サイドバーの <strong>アセット</strong> タブから <strong>Simple Design System / Examples</strong> を開く。About / AI Chat / Article / Contact Us などのサンプル画面が並んでいる:</p>
+      <figure class="shot">
+        <img src="Image/figma-assets-panel.png" alt="アセットパネルから Simple Design System / Examples を開く">
+        <figcaption>アセットパネルから Simple Design System / Examples を開く</figcaption>
+      </figure>
+      <p><strong>AI Chat</strong> を選び、詳細パネルの <strong>「インスタンスを挿入」</strong> をクリックする:</p>
+      <figure class="shot">
+        <img src="Image/figma-insert-instance.png" alt="AI Chat の詳細パネルで「インスタンスを挿入」をクリック">
+        <figcaption>AI Chat の詳細パネルで「インスタンスを挿入」をクリック</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="Image/figma-ai-chat-design.png" alt="キャンバスに配置された Examples/AI Chat のデザイン">
+        <figcaption>キャンバスに AI チャット画面のサンプル（Examples/AI Chat）が配置される</figcaption>
+      </figure>
+      <p>あとで Claude に指示しやすいよう、ファイル名を「無題」から <strong>AI Chat</strong> に変更しておく（ファイル名横の ∨ メニュー → <strong>名前を変更</strong>）:</p>
+      <figure class="shot">
+        <img src="Image/figma-rename-menu.png" alt="ファイル名メニューから「名前を変更」を選ぶ">
+        <figcaption>ファイル名メニューから「名前を変更」を選ぶ</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="Image/figma-file-renamed.png" alt="ファイル名を AI Chat に変更した状態">
+        <figcaption>ファイル名を AI Chat に変更した状態 — レイヤーに Examples/AI Chat が入っている</figcaption>
+      </figure>
+      <p>準備ができたら、Claude Code に実装を依頼する:</p>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
-        <p>このFigmaデザインを HTML + Tailwind CSS で実装して（リンク貼り付け）。色やスペーシングはデザインのトークンに合わせて。</p>
+        <p>Figmaの「AI Chat」ファイルのExamples/AI Chatの内容をもとにHTML + Tailwind CSS で実装して（リンク貼り付け）。色やスペーシングはデザインのトークンに合わせて。</p>
       </div>
+      <figure class="shot">
+        <img src="Image/figma-code-prompt.png" alt="Claude Code に実装を依頼するプロンプト">
+        <figcaption>Claude Code に実装を依頼するプロンプト</figcaption>
+      </figure>
+      <p>「（リンク貼り付け）」の部分には、Examples/AI Chat のフレームを選択した状態でコピーした <strong>node-id 付き URL</strong>（例: <code class="inline">https://www.figma.com/design/xxxx/AI-Chat?node-id=1-1402</code>）を貼る。貼り忘れても Claude が URL を求めてくるので、そこで渡せばよい:</p>
+      <figure class="shot">
+        <img src="Image/figma-code-url.png" alt="URL を渡すと Claude がデザインの取得を開始する">
+        <figcaption>URL を渡すと Claude がデザインの取得を開始する</figcaption>
+      </figure>
       <ul>
         <li>Claude が figma の <code class="inline">get_design_context</code>（コード生成）・<code class="inline">get_variable_defs</code>（色/サイズ等のトークン抽出）・<code class="inline">get_screenshot</code>（選択範囲の画像）などのツールを呼び、デザインからコードを生成する</li>
       </ul>
       <h3>演習5</h3>
       <div class="prompt-box">
         <span class="label">やってみよう</span>
-        <p>複製した Simple Design System から任意のコンポーネントを選び、リンクを渡してコード生成を試す</p>
+        <p>アセットに並ぶ他のサンプル（Article・Contact Us など）を挿入し、同じ流れでコード生成を試す</p>
       </div>
     </section>
 
