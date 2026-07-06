@@ -259,7 +259,36 @@
         <li><code class="inline">/memory</code> で保存先（CLAUDE.md など）を選択・編集できる</li>
       </ul>
 
-      <h3>2-3. settings.json と設定の確認（8分）</h3>
+      <h3>2-3. 書き方のコツ（4分）</h3>
+      <ul>
+        <li><strong>簡潔に・宣言的に</strong>。長文の経緯説明より「○○するときは△△を使う」</li>
+        <li>コードから読み取れること（ファイル構成そのもの等）は書かない — コンテキストの無駄</li>
+        <li>守られなかった指示は <strong>表現を強める</strong> より <strong>理由を添える</strong> ほうが効く</li>
+      </ul>
+
+      <h3>演習2</h3>
+      <div class="prompt-box">
+        <span class="label">やってみよう</span>
+        <p>前回の解析結果をもとに CLAUDE.md に「テストコマンド」「コーディング規約」を追記する</p>
+      </div>
+      <p>記入例（PHP / Laravel の場合）:</p>
+<pre><span class="comment">## テストコマンド</span>
+
+- 全テスト実行: `php artisan test`
+- 単一ファイル: `php artisan test tests/Feature/ChatTest.php`
+- 名前で絞り込み: `php artisan test --filter=ChatControllerTest`
+- 静的解析: `vendor/bin/phpstan analyse`
+- コード整形: `vendor/bin/pint --dirty`
+
+<span class="comment">## コーディング規約</span>
+
+- コードスタイルは PSR-12 準拠（Laravel Pint で整形する）
+- コントローラは薄く保つ — ビジネスロジックはサービスクラスへ
+- バリデーションは FormRequest を使う（コントローラ内の inline validate は避ける）
+- ルートには必ず名前を付ける（`-&gt;name('chat.send')` 形式）
+- Eloquent は N+1 を避ける（`with()` で eager loading）</pre>
+
+      <h3>2-4. settings.json と設定の確認（8分）</h3>
       <p><strong>パーミッション許可リスト・Hooks・環境変数など、ハーネスの動作設定</strong> を JSON で定義する。</p>
       <table>
         <tr><th>配置場所</th><th>スコープ</th></tr>
@@ -306,35 +335,6 @@
         <strong>💡 settings.json と CLAUDE.md の役割分担</strong>
         組織が配布する managed settings は最優先で、個人設定では上書きできない。<code class="inline">settings.json</code> は <strong>JSON でハーネスを強制設定</strong> するもの、<code class="inline">CLAUDE.md</code> は <strong>Markdown で Claude に指示</strong> するもの、と意識する。
       </div>
-
-      <h3>2-4. 書き方のコツ（4分）</h3>
-      <ul>
-        <li><strong>簡潔に・宣言的に</strong>。長文の経緯説明より「○○するときは△△を使う」</li>
-        <li>コードから読み取れること（ファイル構成そのもの等）は書かない — コンテキストの無駄</li>
-        <li>守られなかった指示は <strong>表現を強める</strong> より <strong>理由を添える</strong> ほうが効く</li>
-      </ul>
-
-      <h3>演習2</h3>
-      <div class="prompt-box">
-        <span class="label">やってみよう</span>
-        <p>前回の解析結果をもとに CLAUDE.md に「テストコマンド」「コーディング規約」を追記する</p>
-      </div>
-      <p>記入例（PHP / Laravel の場合）:</p>
-<pre><span class="comment">## テストコマンド</span>
-
-- 全テスト実行: `php artisan test`
-- 単一ファイル: `php artisan test tests/Feature/ChatTest.php`
-- 名前で絞り込み: `php artisan test --filter=ChatControllerTest`
-- 静的解析: `vendor/bin/phpstan analyse`
-- コード整形: `vendor/bin/pint --dirty`
-
-<span class="comment">## コーディング規約</span>
-
-- コードスタイルは PSR-12 準拠（Laravel Pint で整形する）
-- コントローラは薄く保つ — ビジネスロジックはサービスクラスへ
-- バリデーションは FormRequest を使う（コントローラ内の inline validate は避ける）
-- ルートには必ず名前を付ける（`-&gt;name('chat.send')` 形式）
-- Eloquent は N+1 を避ける（`with()` で eager loading）</pre>
 
     </section>
 
@@ -735,7 +735,7 @@ exit 0</pre>
 
     <section id="sec7">
       <h2 class="step"><span class="step-num">7</span>実践：Laravel アプリ開発の一連フロー（28分）</h2>
-      <p><strong>個人開発のフロー</strong> を最初から最後まで回す。Hello World で動作確認 → 題材アプリをクローン → 機能追加（改修） → レビュー → テスト生成 → セキュリティレビュー → 修正 → クローン元リポジトリへの PR 作成まで、すべて Claude Code との会話で進める。</p>
+      <p><strong>個人開発のフロー</strong> を最初から最後まで回す。Hello World で動作確認 → 題材アプリをクローン → 機能追加（改修） → レビュー → 修正 → テスト生成 → セキュリティレビュー → クローン元リポジトリへの PR 作成まで、すべて Claude Code との会話で進める。</p>
 
       <h3>7-1. 環境確認（2分）</h3>
       <p>devcontainer に PHP / Laravel / gh が入っていることを確認する。</p>
@@ -806,24 +806,7 @@ $ claude</pre>
         <li>妥当な指摘があれば「指摘の1番を修正して」と依頼し、修正された差分を確認する</li>
       </ul>
 
-      <h3>7-6. 自作スキルでテストを生成してレビュー（2分）</h3>
-      <p>3-3 で作った自作スキル <code class="inline">/test-gen</code> で、追加した会話履歴機能のテストを生成して検証する。</p>
-<pre>/test-gen ChatController</pre>
-      <ul>
-        <li>正常系・異常系の Feature テストが <code class="inline">tests/Feature/</code> に生成され、<code class="inline">php artisan test</code> が通るまで修正される</li>
-        <li>レビューは組み込みスキル、テスト生成は自作 <code class="inline">/test-gen</code> のように、<strong>組み込みでカバーされない定型作業を自作スキルが埋める</strong> 役割分担を意識する</li>
-      </ul>
-
-      <h3>7-7. 組み込みスキルでセキュリティレビュー（4分）</h3>
-      <p>組み込みスキル <code class="inline">/security-review</code> で、現在のブランチの変更にセキュリティ上の問題がないかをレビューする。</p>
-<pre>/security-review</pre>
-      <ul>
-        <li>SQL インジェクション・XSS・認証/認可漏れ・機密情報のハードコードなど、<strong>脆弱性の観点</strong> でレビューしてくれる</li>
-        <li><code class="inline">/code-review</code>（バグ・改善点）と <code class="inline">/security-review</code>（セキュリティ）は <strong>観点が違う</strong> — 両方かけると安心</li>
-        <li>3章で <code class="inline">security-guidance</code> プラグインを入れていれば、編集のたびに <strong>自動でも</strong> 同様のチェックが走る</li>
-      </ul>
-
-      <h3>7-8. レビュー内容を修正（2分）</h3>
+      <h3>7-6. レビュー内容を修正（2分）</h3>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
         <p>レビュー指摘のうち、○番と○番を直して</p>
@@ -832,6 +815,23 @@ $ claude</pre>
 <pre>!git diff</pre>
       <ul>
         <li>直した内容が新たな指摘を生んでいないか、必要なら再度 <code class="inline">/code-review</code> をかける</li>
+      </ul>
+
+      <h3>7-7. 自作スキルでテストを生成してレビュー（2分）</h3>
+      <p>3-3 で作った自作スキル <code class="inline">/test-gen</code> で、追加した会話履歴機能のテストを生成して検証する。</p>
+<pre>/test-gen ChatController</pre>
+      <ul>
+        <li>正常系・異常系の Feature テストが <code class="inline">tests/Feature/</code> に生成され、<code class="inline">php artisan test</code> が通るまで修正される</li>
+        <li>レビューは組み込みスキル、テスト生成は自作 <code class="inline">/test-gen</code> のように、<strong>組み込みスキルでカバーされない定型作業は自作スキルで作っていく</strong></li>
+      </ul>
+
+      <h3>7-8. 組み込みスキルでセキュリティレビュー（4分）</h3>
+      <p>組み込みスキル <code class="inline">/security-review</code> で、現在のブランチの変更にセキュリティ上の問題がないかをレビューする。</p>
+<pre>/security-review</pre>
+      <ul>
+        <li>SQL インジェクション・XSS・認証/認可漏れ・機密情報のハードコードなど、<strong>脆弱性の観点</strong> でレビューしてくれる</li>
+        <li><code class="inline">/code-review</code>（バグ・改善点）と <code class="inline">/security-review</code>（セキュリティ）は <strong>観点が違う</strong> — 両方かけると安心</li>
+        <li>3章で <code class="inline">security-guidance</code> プラグインを入れていれば、編集のたびに <strong>自動でも</strong> 同様のチェックが走る</li>
       </ul>
 
       <h3>7-9. リポジトリへコミット、PR 作成（4分）</h3>
