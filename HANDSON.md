@@ -607,7 +607,7 @@ Mermaid のシーケンス図で出力して。
 
 * セッション開始時に **自動で読み込まれる** プロジェクトの説明書
 * 書くべきこと：ビルド・テストコマンド / コーディング規約 / ディレクトリ構成 / 注意事項
-* `/init` で雛形を自動生成できる（第1回で実施済み）
+* `/init` で雛形を自動生成できる
 
 ##### 配置場所と優先順位
 
@@ -618,16 +618,14 @@ Mermaid のシーケンス図で出力して。
 | `<repo>/CLAUDE.local.md`  | プロジェクト個人用（git 管理外） |
 
 > 💡 **TIPS：AGENTS.md — エージェント指示の業界標準**
-> `AGENTS.md` は Cursor / GitHub Copilot / Gemini CLI など 30 以上の AI コーディングツールが共通で読む、ツール非依存の指示ファイルです（Markdown・リポジトリルート配置）。**Claude Code はこれをネイティブでは読み込まず、`CLAUDE.md` だけを読みます。** 複数ツールを併用するチームでは、指示を二重管理しないよう次のいずれかで橋渡しします:
-> - **import（推奨）**：`CLAUDE.md` に `@AGENTS.md` の1行を書いて取り込みます。Claude 固有のルールは `CLAUDE.md` 側に足せます
-> - **symlink**：`ln -s AGENTS.md CLAUDE.md`（`AGENTS.md` をそのまま使います。Claude 固有ルールが不要なときに向いています）
-> - **`/init`**：既存の `AGENTS.md` があれば読み込んで `CLAUDE.md` に統合してくれます
+> `AGENTS.md` は Cursor / GitHub Copilot / Gemini CLI など 30 以上の AI コーディングツールが共通で読む、ツール非依存の指示ファイルです（Markdown・リポジトリルート配置）。**Claude Code はこれをネイティブでは読み込まず、`CLAUDE.md` だけを読みます。** 複数ツールを併用するチームでは、指示を二重管理しないよう次の方法で橋渡しします:
+> - **import**：`CLAUDE.md` に `@AGENTS.md` の1行を書いて取り込みます。Claude 固有のルールは `CLAUDE.md` 側に足せます
 >
 > 参照：`https://code.claude.com/docs/en/memory`
 
 ##### 演習1
 
-1. `CLAUDE.md` の内容を確認する（`/memory` から開くか、「@CLAUDE.md の内容を要約して」と聞いてもよい）
+1. `CLAUDE.md` の内容を確認する（`!cat CLAUDE.md` で表示する）
 2. `CLAUDE.md` がまだ無い場合（`/init` が未実行）は、`/init` を実行して生成する
 
 #### 2-2. メモリ（2分）
@@ -823,18 +821,6 @@ test-gen/
 
 > 💡 ハンズオン題材のチャットアプリなら、`/security-review` や `/code-review` を試す価値がある。
 
-##### 演習4：`/code-review` を試す
-
-1. レビュー対象の差分を作るため、チャットアプリに小さな変更を入れる
-
-```
-ChatController のシステムプロンプトに「回答は3文以内で簡潔に」という指示を追加して
-```
-
-2. `/code-review` を実行する — 未コミットの差分に対して、バグ・エッジケース・改善点のレビューが返ってくる
-3. 妥当な指摘があれば「指摘の1番を修正して」と依頼し、修正された差分を確認する
-4. レビューは組み込みスキル、テスト生成は自作 `/test-gen`（演習3）のように、**組み込みでカバーされない定型作業を自作スキルが埋める** 役割分担を意識する
-
 > 💡 **TIPS：公式マーケットプレイス（claude-plugins-official）の主要プラグイン**
 > `/plugin` から導入できる Anthropic 公式マーケットプレイスの主なプラグインです。
 >
@@ -960,7 +946,7 @@ Figmaの「AI Chat」ファイルのExamples/AI Chatの内容をもとにHTML + 
 
 * Claude が figma の `get_design_context`（コード生成）・`get_variable_defs`（色/サイズ等のトークン抽出）・`get_screenshot`（選択範囲の画像）などのツールを呼び、デザインからコードを生成する
 
-##### 演習5
+##### 演習4
 
 * アセットに並ぶ他のサンプル（Article・Contact Us など）を挿入し、同じ流れでコード生成を試す
 
@@ -1209,6 +1195,9 @@ $ claude
 /code-review
 ```
 
+* `/code-review` を実行する — 未コミットの差分に対して、バグ・エッジケース・改善点のレビューが返ってくる
+* 妥当な指摘があれば「指摘の1番を修正して」と依頼し、修正された差分を確認する
+
 > 💡 自作スキル（3-3 で作った `/test-gen` 等）は `~/.claude/skills/` に置いておくと **どのプロジェクトでも呼び出せる**（リポジトリ内の `.claude/skills/` はそのプロジェクト専用）。
 
 #### 7-6. 組み込みスキルでセキュリティレビュー（4分）
@@ -1242,8 +1231,8 @@ $ claude
 修正をコミットし、クローン元（`kimotuki/laravel-chat-app`）へ PR を作成する:
 
 ```
-!git checkout -b feature/conversation-history
-!git add -A && git commit -m "Improve chat app"
+!git checkout -b feature/conversation-history-[自分の名前]
+!git add -A && git commit -m "会話履歴機能の追加 by [自分の名前]"
 # クローン元 (kimotuki/laravel-chat-app) に向けた PR を作成
 !gh pr create --fill
 ```

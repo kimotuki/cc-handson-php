@@ -223,7 +223,7 @@
       <ul>
         <li>セッション開始時に <strong>自動で読み込まれる</strong> プロジェクトの説明書</li>
         <li>書くべきこと：ビルド・テストコマンド / コーディング規約 / ディレクトリ構成 / 注意事項</li>
-        <li><code class="inline">/init</code> で雛形を自動生成できる（第1回で実施済み）</li>
+        <li><code class="inline">/init</code> で雛形を自動生成できる</li>
       </ul>
       <h4>配置場所と優先順位</h4>
       <table>
@@ -235,11 +235,9 @@
 
       <div class="callout tip">
         <strong>💡 TIPS：AGENTS.md — エージェント指示の業界標準</strong>
-        <p><code class="inline">AGENTS.md</code> は Cursor / GitHub Copilot / Gemini CLI など 30 以上の AI コーディングツールが共通で読む、ツール非依存の指示ファイルです（Markdown・リポジトリルート配置）。<strong>Claude Code はこれをネイティブでは読み込まず、<code class="inline">CLAUDE.md</code> だけを読みます。</strong> 複数ツールを併用するチームでは、指示を二重管理しないよう次のいずれかで橋渡しします:</p>
+        <p><code class="inline">AGENTS.md</code> は Cursor / GitHub Copilot / Gemini CLI など 30 以上の AI コーディングツールが共通で読む、ツール非依存の指示ファイルです（Markdown・リポジトリルート配置）。<strong>Claude Code はこれをネイティブでは読み込まず、<code class="inline">CLAUDE.md</code> だけを読みます。</strong> 複数ツールを併用するチームでは、指示を二重管理しないよう次の方法で橋渡しします:</p>
         <ul>
-          <li><strong>import（推奨）</strong>：<code class="inline">CLAUDE.md</code> に <code class="inline">@AGENTS.md</code> の1行を書いて取り込みます。Claude 固有のルールは <code class="inline">CLAUDE.md</code> 側に足せます</li>
-          <li><strong>symlink</strong>：<code class="inline">ln -s AGENTS.md CLAUDE.md</code>（<code class="inline">AGENTS.md</code> をそのまま使います。Claude 固有ルールが不要なときに向いています）</li>
-          <li><strong><code class="inline">/init</code></strong>：既存の <code class="inline">AGENTS.md</code> があれば読み込んで <code class="inline">CLAUDE.md</code> に統合してくれます</li>
+          <li><strong>import</strong>：<code class="inline">CLAUDE.md</code> に <code class="inline">@AGENTS.md</code> の1行を書いて取り込みます。Claude 固有のルールは <code class="inline">CLAUDE.md</code> 側に足せます</li>
         </ul>
         <p>参照：<code class="inline">https://code.claude.com/docs/en/memory</code></p>
       </div>
@@ -250,7 +248,7 @@
         <p>CLAUDE.md の内容を確認する。まだ生成していなければ /init を実行する</p>
       </div>
       <ol>
-        <li><code class="inline">CLAUDE.md</code> の内容を確認する（<code class="inline">/memory</code> から開くか、「@CLAUDE.md の内容を要約して」と聞いてもよい）</li>
+        <li><code class="inline">CLAUDE.md</code> の内容を確認する（<code class="inline">!cat CLAUDE.md</code> で表示する）</li>
         <li><code class="inline">CLAUDE.md</code> がまだ無い場合（<code class="inline">/init</code> が未実行）は、<code class="inline">/init</code> を実行して生成する</li>
       </ol>
 
@@ -428,20 +426,6 @@ allowed-tools: Read, Edit, Bash
         <strong>💡 ハンズオンで試すなら</strong>
         題材のチャットアプリなら、<code class="inline">/security-review</code> や <code class="inline">/code-review</code> を試す価値がある。
       </div>
-      <h3>演習4：/code-review を試す</h3>
-      <ol>
-        <li>レビュー対象の差分を作るため、チャットアプリに小さな変更を入れる</li>
-      </ol>
-      <div class="prompt-box">
-        <span class="label">あなたの指示</span>
-        <p>ChatController のシステムプロンプトに「回答は3文以内で簡潔に」という指示を追加して</p>
-      </div>
-      <ol start="2">
-        <li><code class="inline">/code-review</code> を実行する — 未コミットの差分に対して、バグ・エッジケース・改善点のレビューが返ってくる</li>
-        <li>妥当な指摘があれば「指摘の1番を修正して」と依頼し、修正された差分を確認する</li>
-        <li>レビューは組み込みスキル、テスト生成は自作 <code class="inline">/test-gen</code>（3-3）のように、<strong>組み込みでカバーされない定型作業を自作スキルが埋める</strong> 役割分担を意識する</li>
-      </ol>
-
       <div class="callout tip">
         <strong>💡 TIPS：公式マーケットプレイス（claude-plugins-official）の主要プラグイン</strong>
         <p><code class="inline">/plugin</code> から導入できる Anthropic 公式マーケットプレイスの主なプラグインです。</p>
@@ -576,7 +560,7 @@ allowed-tools: Read, Edit, Bash
       <ul>
         <li>Claude が figma の <code class="inline">get_design_context</code>（コード生成）・<code class="inline">get_variable_defs</code>（色/サイズ等のトークン抽出）・<code class="inline">get_screenshot</code>（選択範囲の画像）などのツールを呼び、デザインからコードを生成する</li>
       </ul>
-      <h3>演習5</h3>
+      <h3>演習4</h3>
       <div class="prompt-box">
         <span class="label">やってみよう</span>
         <p>アセットに並ぶ他のサンプル（Article・Contact Us など）を挿入し、同じ流れでコード生成を試す</p>
@@ -806,6 +790,10 @@ $ claude</pre>
       <h3>7-5. 組み込みスキルでレビュー（4分）</h3>
       <p>3-5 で紹介した組み込みスキル <code class="inline">/code-review</code> でレビューする。</p>
 <pre>/code-review</pre>
+      <ul>
+        <li><code class="inline">/code-review</code> を実行する — 未コミットの差分に対して、バグ・エッジケース・改善点のレビューが返ってくる</li>
+        <li>妥当な指摘があれば「指摘の1番を修正して」と依頼し、修正された差分を確認する</li>
+      </ul>
       <div class="callout tip">
         <strong>💡 スキルの置き場所</strong>
         自作スキル（3-3 で作った <code class="inline">/test-gen</code> 等）は <code class="inline">~/.claude/skills/</code> に置いておくと <strong>どのプロジェクトでも呼び出せる</strong>（リポジトリ内の <code class="inline">.claude/skills/</code> はそのプロジェクト専用）。
@@ -833,8 +821,8 @@ $ claude</pre>
 
       <h3>7-8. リポジトリへコミット、PR 作成（4分）</h3>
       <p>修正をコミットし、クローン元（<code class="inline">kimotuki/laravel-chat-app</code>）へ PR を作成する:</p>
-<pre>!git checkout -b feature/conversation-history
-!git add -A && git commit -m "Improve chat app"
+<pre>!git checkout -b feature/conversation-history-[自分の名前]
+!git add -A && git commit -m "会話履歴機能の追加 by [自分の名前]"
 <span class="comment"># クローン元 (kimotuki/laravel-chat-app) に向けた PR を作成</span>
 !gh pr create --fill</pre>
       <ul>
