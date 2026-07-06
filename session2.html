@@ -615,7 +615,11 @@ allowed-tools: Read, Edit, Bash
       </div>
 
       <h3>5-2. サブエージェントの作成（4分）</h3>
-      <p>作り方は2つ: ① <strong>Claude に自然言語で頼む</strong>（「Laravel のコードレビューをするサブエージェントを作って」のように依頼）、② <code class="inline">.claude/agents/</code> に <strong>Markdown ファイルを直接作成する</strong>。</p>
+      <p>作り方は2つ:</p>
+      <ul>
+        <li>① <strong>Claude に自然言語で頼む</strong>（「Laravel のコードレビューをするサブエージェントを作って」のように依頼）</li>
+        <li>② <code class="inline">.claude/agents/</code> に <strong>Markdown ファイルを直接作成する</strong></li>
+      </ul>
       <div class="callout tip">
         <strong>💡 /agents ウィザードは廃止</strong>
         以前あった <code class="inline">/agents</code> ウィザード（対話的な作成 UI）は <strong>廃止された</strong>。<code class="inline">/agents</code> を実行すると、上記2つの方法への案内が表示される。
@@ -626,7 +630,11 @@ allowed-tools: Read, Edit, Bash
         <tr><td><code class="inline">~/.claude/agents/&lt;name&gt;.md</code></td><td>個人（全プロジェクト）</td></tr>
         <tr><td><code class="inline">&lt;repo&gt;/.claude/agents/&lt;name&gt;.md</code></td><td>プロジェクト（チームで共有）</td></tr>
       </table>
-      <p>例：<code class="inline">.claude/agents/laravel-code-reviewer.md</code></p>
+      <p>例として、レビュー専用サブエージェントを Claude に頼んで作る。プロンプトに続けて、ファイルに書く内容も一緒に渡す:</p>
+      <div class="prompt-box">
+        <span class="label">あなたの指示</span>
+        <p>「Laravel のシニアコードレビュアー」を作って。ファイルは .claude/agents/laravel-code-reviewer.md で、内容は以下にして。</p>
+      </div>
 <pre><span class="comment">---
 name: laravel-code-reviewer
 description: Laravel のコードレビュー専門家。コードを書いた/変更した直後に積極的に使う。

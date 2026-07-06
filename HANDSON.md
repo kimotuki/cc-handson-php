@@ -1012,7 +1012,10 @@ Figmaの「AI Chat」ファイルのExamples/AI Chatの内容をもとにHTML + 
 
 #### 5-2. サブエージェントの作成（4分）
 
-作り方は2つ: ① **Claude に自然言語で頼む**（「Laravel のコードレビューをするサブエージェントを作って」のように依頼）、② `.claude/agents/` に **Markdown ファイルを直接作成する**。
+作り方は2つ:
+
+* ① **Claude に自然言語で頼む**（「Laravel のコードレビューをするサブエージェントを作って」のように依頼）
+* ② `.claude/agents/` に **Markdown ファイルを直接作成する**
 
 > 💡 以前あった `/agents` ウィザード（対話的な作成 UI）は **廃止された**。`/agents` を実行すると、上記2つの方法への案内が表示される。
 
@@ -1023,7 +1026,12 @@ Figmaの「AI Chat」ファイルのExamples/AI Chatの内容をもとにHTML + 
 | `~/.claude/agents/<name>.md` | 個人（全プロジェクト） |
 | `<repo>/.claude/agents/<name>.md` | プロジェクト（チームで共有） |
 
-例：`.claude/agents/laravel-code-reviewer.md`
+例として、レビュー専用サブエージェントを Claude に頼んで作る。プロンプトに続けて、ファイルに書く内容も一緒に渡す:
+
+```
+「Laravel のシニアコードレビュアー」を作って。
+ファイルは .claude/agents/laravel-code-reviewer.md で、内容は以下にして。
+```
 
 ```markdown
 ---
