@@ -389,7 +389,7 @@ Do you want to proceed?
 
 | 種類                | 入り方                              | 例                             |
 |---------------------|-------------------------------------|--------------------------------|
-| スラッシュコマンド  | REPL 内で `/` を入力                | `/init`, `/context`, `/agents` |
+| スラッシュコマンド  | REPL 内で `/` を入力                | `/init`, `/context`, `/mcp` |
 | 特殊プレフィックス  | プロンプト先頭で `@`, `!`, `#`       | `@README.md`, `!ls`, `# メモ`  |
 | キーボードショートカット | キー操作                          | `Shift+Tab`, `Esc`, `Ctrl+R`   |
 
@@ -582,8 +582,8 @@ Mermaid のシーケンス図で出力して。
 ## 到達目標
 
 * `CLAUDE.md`・メモリ・`settings.json` の仕組みを理解し、設定が効いているかを確認できる
-* プラグインで機能を追加し、skill-creator で自作スキルを作れる。Hooks で品質担保を自動化できる
-* MCP で外部サービス（Figma）を接続し、デザインからコード生成を体験できる
+* プラグインで機能を追加し、skill-creator で自作スキルを作れる
+* MCP で外部サービス（Figma）を接続し、デザインからコード生成の流れを理解する
 * 新規 Laravel アプリの作成から機能追加・レビュー・PR 作成まで、Claude Code との会話で完遂できる
 
 ## 時間配分（120分）
@@ -625,7 +625,13 @@ Mermaid のシーケンス図で出力して。
 
 ##### 演習1
 
-1. `CLAUDE.md` の内容を確認する（`!cat CLAUDE.md` で表示する）
+1. `CLAUDE.md` の内容を確認する（個人用とプロジェクトの両方を `!cat` で表示する）
+
+   ```
+   !cat ~/.claude/CLAUDE.md
+   !cat CLAUDE.md
+   ```
+
 2. `CLAUDE.md` がまだ無い場合（`/init` が未実行）は、`/init` を実行して生成する
 
 #### 2-2. メモリ（2分）
@@ -647,6 +653,16 @@ Mermaid のシーケンス図で出力して。
 ##### 演習2
 
 * 前回の解析結果をもとに `CLAUDE.md` に「テストコマンド」「コーディング規約」を追記する
+
+`claude` を起動して依頼する:
+
+```
+$ claude
+```
+
+```
+リポジトリのCLAUDE.mdファイルへ以下の記載を追記して
+```
 
 記入例（PHP / Laravel の場合）:
 
@@ -732,7 +748,7 @@ Mermaid のシーケンス図で出力して。
 * **プラグイン** ＝ スキル・サブエージェント・Hooks・MCP 接続などの拡張を **ひとまとめにして配布する入れ物**。`/plugin` で導入・管理する
 * **マーケットプレイス** ＝ プラグインの配布カタログ。Anthropic 公式の **claude-plugins-official** のほか、GitHub リポジトリをマーケットプレイスとして登録すればチーム独自の配布元も持てる（第3回で扱う）
 
-#### 3-2. プラグインを入れて機能を足す（6分）
+#### 3-2. プラグインを入れて機能を足す（5分）
 
 **プラグイン** ＝ スキル・エージェント・Hooks・MCP サーバーをまとめた配布パッケージ。マーケットプレイスから入れる。公式マーケットプレイス `claude-plugins-official` は最初から利用できる。
 
@@ -750,7 +766,7 @@ Mermaid のシーケンス図で出力して。
 
 * `security-guidance` を install → `/reload-plugins` → `/plugin` の **Installed** タブで入ったことを確認する
 
-#### 3-3. skill-creator でスキルを作る（6分）
+#### 3-3. skill-creator でスキルを作る（5分）
 
 手書きで `SKILL.md` を書いてもよいが、**skill-creator** プラグインを使うと **対話的にスキルを作れる**。
 
@@ -840,36 +856,40 @@ test-gen/
 | `claude-api`               | Claude API のリファレンス参照              |
 | `fewer-permission-prompts` | 権限プロンプト削減のための許可リスト生成   |
 
-> 💡 ハンズオン題材のチャットアプリなら、`/security-review` や `/code-review` を試す価値がある。
+#### 3-6. マーケットプレイス（2分）
 
-> 💡 **TIPS：公式マーケットプレイス（claude-plugins-official）の主要プラグイン**
-> `/plugin` から導入できる Anthropic 公式マーケットプレイスの主なプラグインです。
->
-> **UI・フロントエンド**
-> - `frontend-design`：ありがちな AI 生成っぽさを避けた本番向け UI を作るためのプラグインです
-> - `playground`：視覚的に試せる HTML プレイグラウンドを作る用途です
->
-> **開発関連**
-> - `agent-sdk-dev`：Claude Agent SDK のアプリ開発・検証向けです
-> - `commit-commands`：コミット、push、PR 作成をコマンド化します
-> - `feature-dev`：7段階の機能開発フローを支援します
-> - `ralph-loop`：自己参照的な AI 開発ループを回すためのものです
->
-> **コードレビュー・品質管理**
-> - `code-review`：複数エージェントで PR を自動レビューします
-> - `code-simplifier`：コードを読みやすく整理します
-> - `pr-review-toolkit`：コメント、テスト、エラー処理などに特化したレビューをします
-> - `security-guidance`：危険な編集やセキュリティ上の注意を知らせます
->
-> **Claude Code の拡張開発**
-> - `example-plugin`：機能サンプルです
-> - `plugin-dev`：hooks、MCP、構造、公開までを扱う開発キットです
-> - `skill-creator`：スキル作成・改善・評価に使います
->
-> **設定・管理**
-> - `claude-code-setup`：コードベースを見て、Claude Code の自動化を提案します
-> - `claude-md-management`：CLAUDE.md の保守を支援します
-> - `hookify`：会話パターンや指示からフックを作ります
+`/plugin` から導入できる Anthropic 公式マーケットプレイス（claude-plugins-official）の主なプラグイン:
+
+**UI・フロントエンド**
+
+- `frontend-design`：ありがちな AI 生成っぽさを避けた本番向け UI を作るためのプラグインです
+- `playground`：視覚的に試せる HTML プレイグラウンドを作る用途です
+
+**開発関連**
+
+- `agent-sdk-dev`：Claude Agent SDK のアプリ開発・検証向けです
+- `commit-commands`：コミット、push、PR 作成をコマンド化します
+- `feature-dev`：7段階の機能開発フローを支援します
+- `ralph-loop`：自己参照的な AI 開発ループを回すためのものです
+
+**コードレビュー・品質管理**
+
+- `code-review`：複数エージェントで PR を自動レビューします
+- `code-simplifier`：コードを読みやすく整理します
+- `pr-review-toolkit`：コメント、テスト、エラー処理などに特化したレビューをします
+- `security-guidance`：危険な編集やセキュリティ上の注意を知らせます
+
+**Claude Code の拡張開発**
+
+- `example-plugin`：機能サンプルです
+- `plugin-dev`：hooks、MCP、構造、公開までを扱う開発キットです
+- `skill-creator`：スキル作成・改善・評価に使います
+
+**設定・管理**
+
+- `claude-code-setup`：コードベースを見て、Claude Code の自動化を提案します
+- `claude-md-management`：CLAUDE.md の保守を支援します
+- `hookify`：会話パターンや指示からフックを作ります
 
 ### 4. MCP（12分）
 
@@ -992,7 +1012,9 @@ Figmaの「AI Chat」ファイルのExamples/AI Chatの内容をもとにHTML + 
 
 #### 5-2. サブエージェントの作成（4分）
 
-`/agents` を実行 → **Library** タブ → **Create new agent** で対話的に作れる（Personal＝全プロジェクト / Project＝チーム共有 を選択。「Generate with Claude」で雛形を自動生成も可）。
+作り方は2つ: ① **Claude に自然言語で頼む**（「Laravel のコードレビューをするサブエージェントを作って」のように依頼）、② `.claude/agents/` に **Markdown ファイルを直接作成する**。
+
+> 💡 以前あった `/agents` ウィザード（対話的な作成 UI）は **廃止された**。`/agents` を実行すると、上記2つの方法への案内が表示される。
 
 実体は Markdown ファイル。配置場所でスコープが決まる:
 
@@ -1025,7 +1047,7 @@ model: sonnet
 
 #### 5-3. ハンズオン：レビュー専用サブエージェントを使う（4分）
 
-上の `laravel-code-reviewer` を作成し（または `/agents` で生成し）、呼び出してみる。
+上の `laravel-code-reviewer` を作成し（または Claude に「Laravel のコードレビュー用サブエージェントを作って」と頼んで生成し）、呼び出してみる。
 
 ```
 laravel-code-reviewer エージェントで app/Http/Controllers の変更をレビューして
@@ -1044,7 +1066,6 @@ laravel-code-reviewer エージェントで app/Http/Controllers の変更をレ
 ```
 
 * 実行中は **エージェント名・経過時間・消費トークン** が表示され、終わると **結果のサマリーだけ** がメイン会話に差し込まれる（途中の大量の読み込み・diff は残らない）
-* `/agents` の **Running** タブで、実行中／最近終わったサブエージェントの一覧・停止・中身の確認ができる
 * `Esc` で実行を中断できる
 
 ### 6. Hooks（12分）

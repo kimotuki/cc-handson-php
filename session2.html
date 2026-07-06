@@ -198,8 +198,8 @@
       <h3>到達目標</h3>
       <ul>
         <li><code class="inline">CLAUDE.md</code>・メモリ・<code class="inline">settings.json</code> の仕組みを理解し、設定が効いているかを確認できる</li>
-        <li>プラグインで機能を追加し、skill-creator で自作スキルを作れる。Hooks で品質担保を自動化できる</li>
-        <li>MCP で外部サービス（Figma）を接続し、デザインからコード生成を体験できる</li>
+        <li>プラグインで機能を追加し、skill-creator で自作スキルを作れる</li>
+        <li>MCP で外部サービス（Figma）を接続し、デザインからコード生成の流れを理解する</li>
         <li>新規 Laravel アプリの作成から機能追加・レビュー・PR 作成まで、Claude Code との会話で完遂できる</li>
       </ul>
       <h3>時間配分（120分）</h3>
@@ -248,7 +248,10 @@
         <p>CLAUDE.md の内容を確認する。まだ生成していなければ /init を実行する</p>
       </div>
       <ol>
-        <li><code class="inline">CLAUDE.md</code> の内容を確認する（<code class="inline">!cat CLAUDE.md</code> で表示する）</li>
+        <li><code class="inline">CLAUDE.md</code> の内容を確認する（個人用とプロジェクトの両方を <code class="inline">!cat</code> で表示する）
+<pre>!cat ~/.claude/CLAUDE.md
+!cat CLAUDE.md</pre>
+        </li>
         <li><code class="inline">CLAUDE.md</code> がまだ無い場合（<code class="inline">/init</code> が未実行）は、<code class="inline">/init</code> を実行して生成する</li>
       </ol>
 
@@ -270,6 +273,12 @@
       <div class="prompt-box">
         <span class="label">やってみよう</span>
         <p>前回の解析結果をもとに CLAUDE.md に「テストコマンド」「コーディング規約」を追記する</p>
+      </div>
+      <p><code class="inline">claude</code> を起動して依頼する:</p>
+<pre>$ claude</pre>
+      <div class="prompt-box">
+        <span class="label">あなたの指示</span>
+        <p>リポジトリのCLAUDE.mdファイルへ以下の記載を追記して</p>
       </div>
       <p>記入例（PHP / Laravel の場合）:</p>
 <pre><span class="comment">## テストコマンド</span>
@@ -350,7 +359,7 @@
         <li><strong>マーケットプレイス</strong> ＝ プラグインの配布カタログ。Anthropic 公式の <strong>claude-plugins-official</strong> のほか、GitHub リポジトリをマーケットプレイスとして登録すればチーム独自の配布元も持てる（第3回で扱う）</li>
       </ul>
 
-      <h3>3-2. プラグインを入れて機能を足す（6分）</h3>
+      <h3>3-2. プラグインを入れて機能を足す（5分）</h3>
       <p><strong>プラグイン</strong> ＝ スキル・エージェント・Hooks・MCP サーバーをまとめた配布パッケージ。マーケットプレイスから入れる。公式マーケットプレイス <code class="inline">claude-plugins-official</code> は最初から利用できる。</p>
       <p>例として、Claude の変更を自動でセキュリティレビューする <code class="inline">security-guidance</code> を入れてみる:</p>
 <pre>/plugin install security-guidance@claude-plugins-official
@@ -365,7 +374,7 @@
         <p>security-guidance を install → /reload-plugins → /plugin の Installed タブで入ったことを確認する</p>
       </div>
 
-      <h3>3-3. skill-creator でスキルを作る（6分）</h3>
+      <h3>3-3. skill-creator でスキルを作る（5分）</h3>
       <p>手書きで <code class="inline">SKILL.md</code> を書いてもよいが、<strong>skill-creator</strong> プラグインを使うと <strong>対話的にスキルを作れる</strong>。</p>
 <pre>/plugin install skill-creator@claude-plugins-official
 /reload-plugins</pre>
@@ -441,41 +450,39 @@ allowed-tools: Read, Edit, Bash
         <tr><td><code class="inline">claude-api</code></td><td>Claude API のリファレンス参照</td></tr>
         <tr><td><code class="inline">fewer-permission-prompts</code></td><td>権限プロンプト削減のための許可リスト生成</td></tr>
       </table>
-      <div class="callout tip">
-        <strong>💡 TIPS：公式マーケットプレイス（claude-plugins-official）の主要プラグイン</strong>
-        <p><code class="inline">/plugin</code> から導入できる Anthropic 公式マーケットプレイスの主なプラグインです。</p>
-        <p><strong>UI・フロントエンド</strong></p>
+      <h3>3-6. マーケットプレイス（2分）</h3>
+      <p><code class="inline">/plugin</code> から導入できる Anthropic 公式マーケットプレイス（claude-plugins-official）の主なプラグイン:</p>
+      <h4>UI・フロントエンド</h4>
         <ul>
           <li><code class="inline">frontend-design</code>：ありがちな AI 生成っぽさを避けた本番向け UI を作るためのプラグインです</li>
           <li><code class="inline">playground</code>：視覚的に試せる HTML プレイグラウンドを作る用途です</li>
         </ul>
-        <p><strong>開発関連</strong></p>
+      <h4>開発関連</h4>
         <ul>
           <li><code class="inline">agent-sdk-dev</code>：Claude Agent SDK のアプリ開発・検証向けです</li>
           <li><code class="inline">commit-commands</code>：コミット、push、PR 作成をコマンド化します</li>
           <li><code class="inline">feature-dev</code>：7段階の機能開発フローを支援します</li>
           <li><code class="inline">ralph-loop</code>：自己参照的な AI 開発ループを回すためのものです</li>
         </ul>
-        <p><strong>コードレビュー・品質管理</strong></p>
+      <h4>コードレビュー・品質管理</h4>
         <ul>
           <li><code class="inline">code-review</code>：複数エージェントで PR を自動レビューします</li>
           <li><code class="inline">code-simplifier</code>：コードを読みやすく整理します</li>
           <li><code class="inline">pr-review-toolkit</code>：コメント、テスト、エラー処理などに特化したレビューをします</li>
           <li><code class="inline">security-guidance</code>：危険な編集やセキュリティ上の注意を知らせます</li>
         </ul>
-        <p><strong>Claude Code の拡張開発</strong></p>
+      <h4>Claude Code の拡張開発</h4>
         <ul>
           <li><code class="inline">example-plugin</code>：機能サンプルです</li>
           <li><code class="inline">plugin-dev</code>：hooks、MCP、構造、公開までを扱う開発キットです</li>
           <li><code class="inline">skill-creator</code>：スキル作成・改善・評価に使います</li>
         </ul>
-        <p><strong>設定・管理</strong></p>
+      <h4>設定・管理</h4>
         <ul>
           <li><code class="inline">claude-code-setup</code>：コードベースを見て、Claude Code の自動化を提案します</li>
           <li><code class="inline">claude-md-management</code>：CLAUDE.md の保守を支援します</li>
           <li><code class="inline">hookify</code>：会話パターンや指示からフックを作ります</li>
         </ul>
-      </div>
     </section>
 
     <section id="sec4">
@@ -608,7 +615,11 @@ allowed-tools: Read, Edit, Bash
       </div>
 
       <h3>5-2. サブエージェントの作成（4分）</h3>
-      <p><code class="inline">/agents</code> を実行 → <strong>Library</strong> タブ → <strong>Create new agent</strong> で対話的に作れる（Personal＝全プロジェクト / Project＝チーム共有 を選択。「Generate with Claude」で雛形を自動生成も可）。</p>
+      <p>作り方は2つ: ① <strong>Claude に自然言語で頼む</strong>（「Laravel のコードレビューをするサブエージェントを作って」のように依頼）、② <code class="inline">.claude/agents/</code> に <strong>Markdown ファイルを直接作成する</strong>。</p>
+      <div class="callout tip">
+        <strong>💡 /agents ウィザードは廃止</strong>
+        以前あった <code class="inline">/agents</code> ウィザード（対話的な作成 UI）は <strong>廃止された</strong>。<code class="inline">/agents</code> を実行すると、上記2つの方法への案内が表示される。
+      </div>
       <p>実体は Markdown ファイル。配置場所でスコープが決まる:</p>
       <table>
         <tr><th>配置場所</th><th>スコープ</th></tr>
@@ -636,7 +647,7 @@ model: sonnet
       </ul>
 
       <h3>5-3. ハンズオン：レビュー専用サブエージェントを使う（4分）</h3>
-      <p>上の <code class="inline">laravel-code-reviewer</code> を作成し（または <code class="inline">/agents</code> で生成し）、呼び出してみる。</p>
+      <p>上の <code class="inline">laravel-code-reviewer</code> を作成し（または Claude に「Laravel のコードレビュー用サブエージェントを作って」と頼んで生成し）、呼び出してみる。</p>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
         <p>laravel-code-reviewer エージェントで app/Http/Controllers の変更をレビューして</p>
@@ -651,7 +662,6 @@ model: sonnet
   ⎿ Running… <span class="comment">(18s · ↓ 4.2k tokens · esc to interrupt)</span></pre>
       <ul>
         <li>実行中は <strong>エージェント名・経過時間・消費トークン</strong> が表示され、終わると <strong>結果のサマリーだけ</strong> がメイン会話に差し込まれる（途中の大量の読み込み・diff は残らない）</li>
-        <li><code class="inline">/agents</code> の <strong>Running</strong> タブで、実行中／最近終わったサブエージェントの一覧・停止・中身の確認ができる</li>
         <li><code class="inline">Esc</code> で実行を中断できる</li>
       </ul>
     </section>
