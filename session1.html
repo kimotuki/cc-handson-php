@@ -358,7 +358,7 @@
       </table>
       <div class="callout warn">
         <strong>⚠️ 注意</strong>
-        いずれも <strong>インターネットアクセスのないサンドボックス環境でのみ</strong> 推奨。本コースの devcontainer のような隔離環境以外では使わないこと。
+        いずれも <strong>インターネットアクセスのないサンドボックス環境でのみ</strong> 推奨。隔離された環境以外では使わないこと。
       </div>
       <h3>3-3. スラッシュコマンド（7分）</h3>
       <p>まず最初に実施しておきたいコマンドを順に紹介する。</p>
@@ -473,7 +473,7 @@
 
     <section id="sec4">
       <h2 class="step"><span class="step-num">4</span>Claude Code を使ってみよう！（5分）</h2>
-      <p>ここまでの内容を使って、実際に Claude Code でアプリを1本作ってみる。題材は PHP の「Hello world」。承認モードは Default モードにしておく。</p>
+      <p>ここまでの内容を使って、実際に Claude Code でアプリを1本作ってみる。題材はシェルスクリプトの「Hello world」。承認モードは Default モードにしておく。</p>
 
       <h3>4-1. 起動して依頼する（2分）</h3>
       <p>空のディレクトリを作って <code class="inline">claude</code> を起動し、自然言語で依頼する。</p>
@@ -481,13 +481,13 @@
 <span class="prompt">$</span> claude</pre>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
-        <p>PHP で「Hello world」を表示するアプリを作って</p>
+        <p>「Hello world」と表示するシェルスクリプトを作って</p>
       </div>
 
       <h3>4-2. 承認して作らせる（2分）</h3>
       <ul>
         <li>Claude がファイル作成の承認を求めてくる → 内容を確認して承認（<strong>Default モードの承認フロー</strong> を体験）</li>
-        <li>作成されたファイル（例：<code class="inline">hello.php</code>）の中身を確認する</li>
+        <li>作成されたファイル（例：<code class="inline">hello.sh</code>）の中身を確認する</li>
       </ul>
 
       <h3>4-3. 実行して確認する（1分）</h3>
@@ -498,24 +498,24 @@
       <p>実行前に、以下のような <strong>承認ダイアログ</strong> が表示される。</p>
 <pre><span class="prompt">Bash command</span>
 
-  php hello-world/hello.php
-  <span class="comment">Run hello.php to verify output</span>
+  bash hello-world/hello.sh
+  <span class="comment">Run hello.sh to verify output</span>
 
 This command requires approval
 
 Do you want to proceed?
 <span class="prompt">❯ 1.</span> Yes
-  <span class="prompt">2.</span> Yes, and don't ask again for: php *
+  <span class="prompt">2.</span> Yes, and don't ask again for: bash *
   <span class="prompt">3.</span> No</pre>
       <ul>
         <li><strong>何のコマンドが・何のために</strong> 実行されるかが表示される — 内容を確認してから <code class="inline">1. Yes</code> で許可する</li>
-        <li><code class="inline">2. Yes, and don't ask again for: php *</code> を選ぶと、以後 <code class="inline">php</code> コマンドは確認なしで実行される（許可リストに追加される）</li>
+        <li><code class="inline">2. Yes, and don't ask again for: bash *</code> を選ぶと、以後 <code class="inline">bash</code> コマンドは確認なしで実行される（許可リストに追加される）</li>
         <li>心当たりのないコマンドなら <code class="inline">3. No</code> で拒否できる — これが第2章で学んだ <strong>承認モデル（ハーネス）</strong> の実物</li>
       </ul>
-<pre><span class="prompt">$</span> php hello.php
+<pre><span class="prompt">$</span> bash hello.sh
 Hello world</pre>
       <ul>
-        <li>Claude が <code class="inline">php hello.php</code> を実行し、<code class="inline">Hello world</code> が表示されることを確認する</li>
+        <li>Claude が <code class="inline">bash hello.sh</code> を実行し、<code class="inline">Hello world</code> が表示されることを確認する</li>
         <li><strong>依頼 → 作成 → 実行 → 確認</strong> — 第2章で学んだエージェントループの一周を最小サイズで体験できた</li>
       </ul>
       <div class="callout tip">
@@ -554,17 +554,17 @@ Hello world</pre>
       <h3>5-2. 特殊プレフィックス（2分）</h3>
       <h4><code class="inline">!</code> — Bash 実行モード</h4>
 <pre>!git status
-!php --version</pre>
+!sqlite3 --version</pre>
       <ul>
         <li>プロンプトとして送らず <strong>シェルだけ実行</strong>。手元の状態を Claude に渡したいときに便利。</li>
       </ul>
       <h4><code class="inline">#</code> — メモリ追記</h4>
-<pre># このプロジェクトのテストは php artisan test で実行する</pre>
+<pre># このプロジェクトのテストは bats tests/ で実行する</pre>
       <ul>
         <li>セッション内メモリに追記される。<code class="inline">/memory</code> で管理。</li>
       </ul>
       <h4><code class="inline">@</code> — ファイル / ディレクトリ参照</h4>
-<pre>@routes/web.php に定義されているルートとコントローラの対応を教えて</pre>
+<pre>@README.md このプロジェクトの概要を3行でまとめて</pre>
       <ul>
         <li>該当ファイルを <strong>明示的に読ませる</strong>。曖昧さが減ってコンテキストも節約。</li>
       </ul>
@@ -584,7 +584,7 @@ Hello world</pre>
         <p>非対話モード（<code class="inline">-p</code>）を実際に試す。</p>
         <div class="prompt-box" style="margin-bottom:0;">
           <span class="label">実行してみよう</span>
-          <p>claude -p "composer.json の主要な依存パッケージを3行で要約して"</p>
+          <p>claude -p "README.md の内容を3行で要約して"</p>
         </div>
       </div>
     </section>
@@ -607,14 +607,14 @@ Hello world</pre>
       </ul>
 <pre>{
   <span class="str">"permissions"</span>: {
-    <span class="str">"allow"</span>: [<span class="str">"Bash(php artisan test:*)"</span>]
+    <span class="str">"allow"</span>: [<span class="str">"Bash(bats:*)"</span>]
   }
 }</pre>
       <ul>
-        <li>この例の意味：<strong><code class="inline">php artisan test</code> で始まる Bash コマンドは承認なしで自動実行してよい</strong></li>
+        <li>この例の意味：<strong><code class="inline">bats</code> で始まる Bash コマンドは承認なしで自動実行してよい</strong></li>
         <li><code class="inline">permissions.allow</code> … 承認ダイアログを出さずに実行を許可するルールのリスト</li>
         <li><code class="inline">Bash(...)</code> … Bash の実行のうち、カッコ内のパターンに一致するもの</li>
-        <li><code class="inline">php artisan test:*</code> … <code class="inline">:*</code> は末尾ワイルドカード。<code class="inline">php artisan test --filter=Foo</code> のように後ろに何が続いても一致する（<code class="inline">php artisan migrate</code> など別コマンドは対象外）</li>
+        <li><code class="inline">bats:*</code> … <code class="inline">:*</code> は末尾ワイルドカード。<code class="inline">bats tests/test_send.bats</code> のように後ろに何が続いても一致する（<code class="inline">bash</code> など別コマンドは対象外）</li>
         <li>よく使う安全なコマンドを登録しておくと、<strong>承認ダイアログの往復が減ってテンポが上がる</strong>（承認時に「Yes, and don't ask again」を選ぶと、ここに自動追記される）</li>
       </ul>
 
@@ -721,7 +721,7 @@ Hello world</pre>
 
     <footer>
       <p>Claude Code ハンズオン — 第1回：Claude Code の基本<br>Copyright © AI-Driven Development Study Group</p>
-      <p><a href="index.html">← コースポータル</a> ／ <a href="laravel-prism.html">第1回 実践教材</a> ／ <a href="session2.html">第2回 →</a></p>
+      <p><a href="index.html">← コースポータル</a> ／ <a href="session2.html">第2回 →</a></p>
     </footer>
   </main>
 </div>

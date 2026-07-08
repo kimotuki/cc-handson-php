@@ -200,7 +200,7 @@
         <li><code class="inline">CLAUDE.md</code>・メモリ・<code class="inline">settings.json</code> の仕組みを理解し、設定が効いているかを確認できる</li>
         <li>プラグインで機能を追加し、skill-creator で自作スキルを作れる</li>
         <li>MCP で外部サービス（Figma）を接続し、デザインからコード生成の流れを理解する</li>
-        <li>新規 Laravel アプリの作成から機能追加・レビュー・PR 作成まで、Claude Code との会話で完遂できる</li>
+        <li>題材の OSS（agmsg）への機能追加からレビュー・PR 作成まで、Claude Code との会話で完遂できる</li>
       </ul>
       <h3>時間配分（120分）</h3>
       <table>
@@ -257,7 +257,7 @@
 
       <h3>2-2. メモリ（2分）</h3>
       <p><code class="inline">#</code> プレフィックスでセッション中に得た知見をその場で追記できる。</p>
-<pre># このプロジェクトのテストは php artisan test で実行する</pre>
+<pre># このプロジェクトのテストは bats tests/ で実行する</pre>
       <ul>
         <li><code class="inline">/memory</code> で保存先（CLAUDE.md など）を選択・編集できる</li>
       </ul>
@@ -280,22 +280,19 @@
         <span class="label">あなたの指示</span>
         <p>リポジトリのCLAUDE.mdファイルへ以下の記載を追記して</p>
       </div>
-      <p>記入例（PHP / Laravel の場合）:</p>
+      <p>記入例（agmsg の場合）:</p>
 <pre><span class="comment">## テストコマンド</span>
 
-- 全テスト実行: `php artisan test`
-- 単一ファイル: `php artisan test tests/Feature/ChatTest.php`
-- 名前で絞り込み: `php artisan test --filter=ExampleTest`
-- 静的解析: `vendor/bin/phpstan analyse`
-- コード整形: `vendor/bin/pint --dirty`
+- 全テスト実行: `bats tests/`
+- 単一ファイル: `bats tests/test_send.bats`
+- 静的解析: `shellcheck scripts/*.sh`
 
 <span class="comment">## コーディング規約</span>
 
-- コードスタイルは PSR-12 準拠（Laravel Pint で整形する）
-- コントローラは薄く保つ — ビジネスロジックはサービスクラスへ
-- バリデーションは FormRequest を使う（コントローラ内の inline validate は避ける）
-- ルートには必ず名前を付ける（`-&gt;name('chat.send')` 形式）
-- Eloquent は N+1 を避ける（`with()` で eager loading）</pre>
+- シェルスクリプトは先頭で `set -euo pipefail` を宣言する
+- 変数展開は必ずダブルクォートで囲む（`"$var"`）
+- SQLite への値の埋め込みは文字列連結ではなくパラメータ化する
+- 新しいスクリプトには対応する bats テストを追加する</pre>
 
       <h3>2-4. settings.json と設定の確認（8分）</h3>
       <p><strong>パーミッション許可リスト・Hooks・環境変数など、ハーネスの動作設定</strong> を JSON で定義する。</p>
@@ -321,7 +318,7 @@
       <p><code class="inline">permissions</code> は allow / deny / ask の3種で書く:</p>
 <pre>{
   <span class="str">"permissions"</span>: {
-    <span class="str">"allow"</span>: [<span class="str">"Bash(php artisan test:*)"</span>],
+    <span class="str">"allow"</span>: [<span class="str">"Bash(bats:*)"</span>],
     <span class="str">"deny"</span>: [<span class="str">"Read(./.env)"</span>, <span class="str">"Bash(rm -rf *)"</span>],
     <span class="str">"ask"</span>: [<span class="str">"Bash(git push:*)"</span>]
   }
@@ -617,7 +614,7 @@ allowed-tools: Read, Edit, Bash
       <h3>5-2. サブエージェントの作成（4分）</h3>
       <p>作り方は2つ:</p>
       <ul>
-        <li>① <strong>Claude に自然言語で頼む</strong>（「Laravel のコードレビューをするサブエージェントを作って」のように依頼）</li>
+        <li>① <strong>Claude に自然言語で頼む</strong>（「シェルスクリプトのコードレビューをするサブエージェントを作って」のように依頼）</li>
         <li>② <code class="inline">.claude/agents/</code> に <strong>Markdown ファイルを直接作成する</strong></li>
       </ul>
       <div class="callout tip">
@@ -633,20 +630,20 @@ allowed-tools: Read, Edit, Bash
       <p>例として、レビュー専用サブエージェントを Claude に頼んで作る。プロンプトに続けて、ファイルに書く内容も一緒に渡す:</p>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
-        <p>「Laravel のシニアコードレビュアー」を作って。ファイルは .claude/agents/laravel-code-reviewer.md で、内容は以下にして。</p>
+        <p>「シェルスクリプトのシニアコードレビュアー」を作って。ファイルは .claude/agents/shell-code-reviewer.md で、内容は以下にして。</p>
       </div>
 <pre><span class="comment">---
-name: laravel-code-reviewer
-description: Laravel のコードレビュー専門家。コードを書いた/変更した直後に積極的に使う。
+name: shell-code-reviewer
+description: シェルスクリプトのコードレビュー専門家。コードを書いた/変更した直後に積極的に使う。
 tools: Read, Grep, Glob, Bash
 model: sonnet
 ---</span>
 
-あなたは Laravel のシニアコードレビュアーです。次の観点でレビューしてください：
-1. コントローラは薄いか（ロジックはサービスへ）
-2. Eloquent の N+1（eager loading で回避）
-3. バリデーションは FormRequest を使っているか
-4. セキュリティ（SQLインジェクション・CSRF・mass assignment・認可）
+あなたはシェルスクリプトのシニアコードレビュアーです。次の観点でレビューしてください：
+1. クォート漏れ（変数展開が "$var" になっているか）
+2. エラーハンドリング（set -euo pipefail、失敗時の後始末）
+3. SQLite への値の埋め込み（文字列連結によるインジェクションがないか）
+4. 移植性（macOS / Linux での挙動差、bash 依存の明示）
 5. テストの不足
 
 指摘ごとに「観点 / 該当ファイル・行 / 問題のコード / 理由 / 修正案」を示すこと。</pre>
@@ -655,10 +652,10 @@ model: sonnet
       </ul>
 
       <h3>5-3. ハンズオン：レビュー専用サブエージェントを使う（4分）</h3>
-      <p>上の <code class="inline">laravel-code-reviewer</code> を作成し（または Claude に「Laravel のコードレビュー用サブエージェントを作って」と頼んで生成し）、呼び出してみる。</p>
+      <p>上の <code class="inline">shell-code-reviewer</code> を作成し（または Claude に「シェルスクリプトのコードレビュー用サブエージェントを作って」と頼んで生成し）、呼び出してみる。</p>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
-        <p>laravel-code-reviewer エージェントで app/Http/Controllers の変更をレビューして</p>
+        <p>shell-code-reviewer エージェントで scripts/ の変更をレビューして</p>
       </div>
       <ul>
         <li>サブエージェントが別コンテキストで該当コードを読み込み・レビューし、<strong>メイン会話には結果のサマリーだけ</strong> 返ることを観察する</li>
@@ -666,7 +663,7 @@ model: sonnet
       </ul>
       <h4>実行中の表示</h4>
       <p>委譲すると、メイン画面に <strong>別タスクとして実行中の状態</strong> が表示される:</p>
-<pre>● laravel-code-reviewer<span class="comment">(app/Http/Controllers の変更をレビュー)</span>
+<pre>● shell-code-reviewer<span class="comment">(scripts/ の変更をレビュー)</span>
   ⎿ Running… <span class="comment">(18s · ↓ 4.2k tokens · esc to interrupt)</span></pre>
       <ul>
         <li>実行中は <strong>エージェント名・経過時間・消費トークン</strong> が表示され、終わると <strong>結果のサマリーだけ</strong> がメイン会話に差し込まれる（途中の大量の読み込み・diff は残らない）</li>
@@ -744,59 +741,19 @@ exit 0</pre>
       <h4>レシピまとめ</h4>
       <table>
         <tr><th>目的</th><th>フック</th><th>コマンド例</th></tr>
-        <tr><td>コード整形の強制</td><td><code class="inline">PostToolUse</code>（Edit/Write）</td><td><code class="inline">vendor/bin/pint --dirty</code></td></tr>
-        <tr><td>静的解析（Larastan）</td><td><code class="inline">PostToolUse</code>（Edit/Write）</td><td><code class="inline">vendor/bin/phpstan analyse</code></td></tr>
-        <tr><td>テストの自動実行</td><td><code class="inline">Stop</code></td><td><code class="inline">php artisan test</code></td></tr>
+        <tr><td>コード整形の強制</td><td><code class="inline">PostToolUse</code>（Edit/Write）</td><td><code class="inline">shfmt -w scripts/</code></td></tr>
+        <tr><td>静的解析（ShellCheck）</td><td><code class="inline">PostToolUse</code>（Edit/Write）</td><td><code class="inline">shellcheck scripts/*.sh</code></td></tr>
+        <tr><td>テストの自動実行</td><td><code class="inline">Stop</code></td><td><code class="inline">bats tests/</code></td></tr>
         <tr><td>危険コマンドのブロック</td><td><code class="inline">PreToolUse</code>（Bash）</td><td>検知スクリプトで <code class="inline">exit 2</code></td></tr>
       </table>
     </section>
 
     <section id="sec7">
       <h2 class="step"><span class="step-num">7</span>実践：アプリ開発の一連フロー（28分）</h2>
-      <p><strong>個人開発のフロー</strong> を最初から最後まで回す。Hello World で動作確認 → 題材の agmsg をクローン → 機能追加（メッセージ検索） → レビュー → 修正 → テスト生成 → セキュリティレビュー → クローン元リポジトリへの PR 作成まで、すべて Claude Code との会話で進める。</p>
+      <p><strong>個人開発のフロー</strong> を最初から最後まで回す。題材の agmsg をクローン → 機能追加（メッセージ検索） → レビュー → 修正 → テスト生成 → セキュリティレビュー → クローン元リポジトリへの PR 作成まで、すべて Claude Code との会話で進める。</p>
 
-      <h3>7-1. 環境確認（2分）</h3>
-      <p>devcontainer に PHP / Laravel / sqlite3 / gh が入っていることを確認する。</p>
-<pre>!php -v
-!composer -V
-!sqlite3 --version
-!gh auth status</pre>
-      <ul>
-        <li>Claude に聞いてもよい：「この環境に PHP と Laravel が入っているか確認して」</li>
-      </ul>
-
-      <h3>7-2. Laravel の Hello World アプリの作成（2分）</h3>
-      <p>作業ディレクトリで <code class="inline">claude</code> を起動する:</p>
-<pre>$ claude</pre>
-      <div class="prompt-box">
-        <span class="label">あなたの指示</span>
-        <p>PHP と Laravel で「Hello World」を表示する Web アプリを作って。プロジェクト名は hello-laravel で。</p>
-      </div>
-      <ul>
-        <li>雛形の作成からルート定義まで Claude が実行する</li>
-        <li>起動して動作確認：</li>
-      </ul>
-<pre>!php artisan serve --host=0.0.0.0 --port=8000</pre>
-      <ul>
-        <li>ブラウザで <code class="inline">http://localhost:8000</code> → Hello World が表示されれば OK</li>
-      </ul>
-
-      <div class="callout tip">
-        <strong>💡 補足：devcontainer 内のサーバーにホスト PC からアクセスできないとき</strong>
-        <p>devcontainer 内で起動したサーバー（例: <code class="inline">http://127.0.0.1:8000</code>）にホスト PC のブラウザからアクセスできない場合は、サーバーの <strong>バインド先</strong> を確認する。</p>
-        <ul>
-          <li><strong>原因</strong>：<code class="inline">--host=127.0.0.1</code> で起動するとコンテナ内のループバックにしかバインドされず、<code class="inline">docker-compose.yml</code> に <code class="inline">ports: "8000:8000"</code> の公開設定があっても、ポートマッピング経由（コンテナのネットワーク IP 宛て）の接続を受け付けられない</li>
-          <li><strong>対処</strong>：<code class="inline">0.0.0.0</code> にバインドして起動する — <code class="inline">php artisan serve --host=0.0.0.0 --port=8000</code></li>
-          <li><strong>検証結果（例）</strong>：コンテナ内 <code class="inline">127.0.0.1:8000</code> → 200 ✅ / コンテナ IP <code class="inline">172.18.0.2:8000</code> → 200 ✅（ホストからのポートマッピングが通る経路）</li>
-        </ul>
-      </div>
-      <div class="callout warn">
-        <strong>⚠️ 手動起動時も <code class="inline">--host=0.0.0.0</code> を忘れずに</strong>
-        <code class="inline">devcontainer.json</code> に <code class="inline">"onAutoForward": "ignore"</code> があると VS Code の自動ポート転送は無効になるが、docker-compose の明示的なポート公開があれば問題ない。ただし <code class="inline">php artisan serve</code> のまま起動するとホストから見えないので注意。
-      </div>
-
-      <h3>7-3. 題材（agmsg）をクローン（2分）</h3>
-      <p>Hello World で新規開発を体験したら、以降の <strong>改修は題材の agmsg</strong>（第1回のソースコード解析で使った、CLI AI エージェント間のメッセージングツール）で行う。GitHub からクローンして準備する:</p>
+      <h3>7-1. 題材（agmsg）をクローン（2分）</h3>
+      <p>改修の題材は <strong>agmsg</strong>（第1回のソースコード解析で使った、CLI AI エージェント間のメッセージングツール）。GitHub からクローンして準備する:</p>
 <pre>$ git clone https://github.com/kimotuki/agmsg
 $ cd agmsg
 $ claude</pre>
@@ -805,7 +762,7 @@ $ claude</pre>
         <li>第1回の「ソースコード解析」と同じ題材なので、構造を把握済みならスムーズに改修へ入れる</li>
       </ul>
 
-      <h3>7-4. 「メッセージ検索」機能を追加（6分）</h3>
+      <h3>7-2. 「メッセージ検索」機能を追加（8分）</h3>
       <div class="prompt-box">
         <span class="label">あなたの指示（Plan Mode で）</span>
         <p>このagmsgに「メッセージ検索」機能を追加してください。scripts/search.sh として、キーワードで過去のメッセージを検索できるようにして。</p>
@@ -816,12 +773,8 @@ $ claude</pre>
       <ul>
         <li>新規ファイルの一覧は <code class="inline">git status</code>、既存ファイルの差分は <code class="inline">git diff</code> で見る。意図しない変更が混ざっていないかを確認する</li>
       </ul>
-      <h4>オプション課題</h4>
-      <ul>
-        <li>余裕があれば「メッセージ統計」機能も追加する — 「エージェントごとの送信数を集計する scripts/stats.sh を追加して」</li>
-      </ul>
 
-      <h3>7-5. 組み込みスキルでレビュー（4分）</h3>
+      <h3>7-3. 組み込みスキルでレビュー（4分）</h3>
       <p>3-5 で紹介した組み込みスキル <code class="inline">/code-review</code> でレビューする。</p>
 <pre>/code-review</pre>
       <ul>
@@ -829,7 +782,7 @@ $ claude</pre>
         <li>妥当な指摘があれば「指摘の1番を修正して」と依頼し、修正された差分を確認する</li>
       </ul>
 
-      <h3>7-6. レビュー内容を修正（2分）</h3>
+      <h3>7-4. レビュー内容を修正（3分）</h3>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
         <p>レビュー指摘のうち、○番と○番を直して</p>
@@ -840,7 +793,7 @@ $ claude</pre>
         <li>直した内容が新たな指摘を生んでいないか、必要なら再度 <code class="inline">/code-review</code> をかける</li>
       </ul>
 
-      <h3>7-7. 自作スキルでテストを生成してレビュー（2分）</h3>
+      <h3>7-5. 自作スキルでテストを生成してレビュー（3分）</h3>
       <p>3-3 で作った自作スキル <code class="inline">/test-gen</code> で、追加した検索機能のテストを生成して検証する。</p>
 <pre>/test-gen scripts/search.sh</pre>
       <ul>
@@ -848,7 +801,7 @@ $ claude</pre>
         <li>レビューは組み込みスキル、テスト生成は自作 <code class="inline">/test-gen</code> のように、<strong>組み込みスキルでカバーされない定型作業は自作スキルで作っていく</strong></li>
       </ul>
 
-      <h3>7-8. 組み込みスキルでセキュリティレビュー（4分）</h3>
+      <h3>7-6. 組み込みスキルでセキュリティレビュー（4分）</h3>
       <p>組み込みスキル <code class="inline">/security-review</code> で、現在のブランチの変更にセキュリティ上の問題がないかをレビューする。</p>
 <pre>/security-review</pre>
       <ul>
@@ -857,7 +810,7 @@ $ claude</pre>
         <li>3章で <code class="inline">security-guidance</code> プラグインを入れていれば、編集のたびに <strong>自動でも</strong> 同様のチェックが走る</li>
       </ul>
 
-      <h3>7-9. リポジトリへコミット、PR 作成（4分）</h3>
+      <h3>7-7. リポジトリへコミット、PR 作成（4分）</h3>
       <p>修正をコミットし、クローン元（<code class="inline">kimotuki/agmsg</code>）へ PR を作成する:</p>
 <pre>!git checkout -b feature/message-search-[自分の名前]
 !git add -A && git commit -m "メッセージ検索機能の追加 by [自分の名前]"
@@ -867,6 +820,11 @@ $ claude</pre>
         <li>クローン元には書き込み権限がないため、<code class="inline">gh pr create</code> が push 先を聞いてくる — <strong>「Create a fork of kimotuki/agmsg」を選ぶ</strong> と、fork の作成 → push → PR 作成まで一気に進む（初回のみ <code class="inline">gh auth login</code>）</li>
         <li><code class="inline">--fill</code> はコミットメッセージから PR のタイトル・本文を自動生成する</li>
         <li>ブランチ名・コミットメッセージ・PR 本文は Claude に任せてもよい（「クローン元に PR を作って」）</li>
+      </ul>
+
+      <h3>7-8. オプション課題</h3>
+      <ul>
+        <li>余裕があれば「メッセージ統計」機能も追加する — 「エージェントごとの送信数を集計する scripts/stats.sh を追加して」</li>
       </ul>
     </section>
 
