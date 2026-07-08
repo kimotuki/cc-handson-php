@@ -5,45 +5,45 @@
     </marker>
   </defs>
 
-  <rect x="1" y="1" width="818" height="478" fill="#fafaf9"/>
+  <rect x="1" y="1" width="818" height="478" fill="#f5f3ee"/>
 
   <!-- マーケットプレイス -->
-  <rect x="20" y="18" width="780" height="296" rx="14" fill="#fffbeb" stroke="#d97706" stroke-width="2"/>
-  <text x="42" y="50" font-size="18" font-weight="700" fill="#b45309">マーケットプレイス</text>
+  <rect x="20" y="18" width="780" height="296" rx="14" fill="#fbf3ec" stroke="#d97757" stroke-width="2"/>
+  <text x="42" y="50" font-size="18" font-weight="700" fill="#a84e32">マーケットプレイス</text>
   <text x="42" y="72" font-size="12.5" fill="#78716c">プラグインの配布カタログ（実体は GitHub リポジトリ。例: claude-plugins-official）</text>
 
   <!-- プラグイン（展開） -->
-  <rect x="42" y="92" width="500" height="198" rx="12" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+  <rect x="42" y="92" width="500" height="198" rx="12" fill="#ffffff" stroke="#d97757" stroke-width="1.5"/>
   <text x="62" y="122" font-size="16" font-weight="700" fill="#292524">プラグイン</text>
   <text x="62" y="142" font-size="12" fill="#78716c">拡張をひとまとめにした「配布の入れ物」</text>
 
   <!-- 中身チップ -->
-  <rect x="62" y="160" width="108" height="66" rx="9" fill="#fde68a" stroke="#b45309" stroke-width="2"/>
+  <rect x="62" y="160" width="108" height="66" rx="9" fill="#f0c9b4" stroke="#a84e32" stroke-width="2"/>
   <text x="116" y="188" font-size="14" font-weight="700" fill="#292524" text-anchor="middle">Skill</text>
   <text x="116" y="208" font-size="11" fill="#78716c" text-anchor="middle">SKILL.md（手順書）</text>
 
-  <rect x="182" y="160" width="108" height="66" rx="9" fill="#fef3c7" stroke="#d97706" stroke-width="1"/>
+  <rect x="182" y="160" width="108" height="66" rx="9" fill="#f7e4d8" stroke="#d97757" stroke-width="1"/>
   <text x="236" y="188" font-size="14" font-weight="600" fill="#292524" text-anchor="middle">SubAgent</text>
   <text x="236" y="208" font-size="11" fill="#78716c" text-anchor="middle">agents/*.md</text>
 
-  <rect x="302" y="160" width="108" height="66" rx="9" fill="#fef3c7" stroke="#d97706" stroke-width="1"/>
+  <rect x="302" y="160" width="108" height="66" rx="9" fill="#f7e4d8" stroke="#d97757" stroke-width="1"/>
   <text x="356" y="188" font-size="14" font-weight="600" fill="#292524" text-anchor="middle">Hooks</text>
   <text x="356" y="208" font-size="11" fill="#78716c" text-anchor="middle">自動実行の設定</text>
 
-  <rect x="422" y="160" width="100" height="66" rx="9" fill="#fef3c7" stroke="#d97706" stroke-width="1"/>
+  <rect x="422" y="160" width="100" height="66" rx="9" fill="#f7e4d8" stroke="#d97757" stroke-width="1"/>
   <text x="472" y="188" font-size="14" font-weight="600" fill="#292524" text-anchor="middle">MCP 接続</text>
   <text x="472" y="208" font-size="11" fill="#78716c" text-anchor="middle">外部サービス</text>
 
   <text x="62" y="266" font-size="11.5" fill="#78716c">※ 全部入りである必要はない — Skill 1つだけのプラグインも普通</text>
 
   <!-- 他のプラグイン（折りたたみ） -->
-  <rect x="562" y="92" width="216" height="56" rx="12" fill="#ffffff" stroke="#d97706" stroke-width="1" stroke-dasharray="5 4"/>
+  <rect x="562" y="92" width="216" height="56" rx="12" fill="#ffffff" stroke="#d97757" stroke-width="1" stroke-dasharray="5 4"/>
   <text x="670" y="125" font-size="13" fill="#78716c" text-anchor="middle">プラグイン（security-guidance …）</text>
 
-  <rect x="562" y="162" width="216" height="56" rx="12" fill="#ffffff" stroke="#d97706" stroke-width="1" stroke-dasharray="5 4"/>
+  <rect x="562" y="162" width="216" height="56" rx="12" fill="#ffffff" stroke="#d97757" stroke-width="1" stroke-dasharray="5 4"/>
   <text x="670" y="195" font-size="13" fill="#78716c" text-anchor="middle">プラグイン（skill-creator …）</text>
 
-  <rect x="562" y="232" width="216" height="56" rx="12" fill="#ffffff" stroke="#d97706" stroke-width="1" stroke-dasharray="5 4"/>
+  <rect x="562" y="232" width="216" height="56" rx="12" fill="#ffffff" stroke="#d97757" stroke-width="1" stroke-dasharray="5 4"/>
   <text x="670" y="265" font-size="13" fill="#78716c" text-anchor="middle">プラグイン …</text>
 
   <!-- 配布フロー -->
@@ -54,8 +54,8 @@
   <line x1="210" y1="412" x2="315" y2="412" stroke="#78716c" stroke-width="1.5" marker-end="url(#arrow)"/>
   <text x="262" y="400" font-size="11.5" fill="#78716c" text-anchor="middle">登録・公開</text>
 
-  <rect x="320" y="380" width="190" height="64" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
-  <text x="415" y="407" font-size="14" font-weight="700" fill="#b45309" text-anchor="middle">マーケットプレイス</text>
+  <rect x="320" y="380" width="190" height="64" rx="10" fill="#f7e4d8" stroke="#d97757" stroke-width="1.5"/>
+  <text x="415" y="407" font-size="14" font-weight="700" fill="#a84e32" text-anchor="middle">マーケットプレイス</text>
   <text x="415" y="427" font-size="11.5" fill="#78716c" text-anchor="middle">GitHub リポジトリ</text>
 
   <line x1="510" y1="412" x2="608" y2="412" stroke="#78716c" stroke-width="1.5" marker-end="url(#arrow)"/>
