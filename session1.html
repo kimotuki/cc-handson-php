@@ -644,10 +644,10 @@ Hello world</pre>
 
     <section id="sec7">
       <h2 class="step"><span class="step-num">7</span>実践：ソースコードの解析（12分）</h2>
-      <p>題材は <strong>Laravel × Prism チャットアプリ</strong> を使う。まず GitHub からクローンして準備する:</p>
-<pre><span class="prompt">$</span> git clone https://github.com/kimotuki/laravel-chat-app
-<span class="prompt">$</span> cd laravel-chat-app</pre>
-      <p>「構造把握 → 該当箇所の特定 → 深掘り質問 → サマリ取得」の一連の流れを体験する。アプリの作り方そのものに興味があれば <a href="laravel-prism.html">実践教材</a> を参照。</p>
+      <p>題材は <strong>agmsg</strong> — Claude Code・Codex・Gemini CLI などの CLI AI エージェント同士が、共有の SQLite データベースを介してメッセージを交換できるようにする OSS（Bash + SQLite 製）。まず GitHub からクローンして準備する:</p>
+<pre><span class="prompt">$</span> git clone https://github.com/fujibee/agmsg
+<span class="prompt">$</span> cd agmsg</pre>
+      <p>「構造把握 → 該当箇所の特定 → 深掘り質問 → サマリ取得」の一連の流れを体験する。</p>
       <div class="callout tip">
         <strong>💡 ポイント</strong>
         解析だけが目的なので、<code class="inline">Shift + Tab</code> で <strong>Plan Mode</strong> にしておくと安全（読み取り専用ツールしか使わない）。
@@ -660,7 +660,7 @@ Hello world</pre>
         <p>このリポジトリの全体構造と技術スタックを教えて。ディレクトリごとの役割も簡潔にまとめて。</p>
       </div>
       <ul>
-        <li>Claude が <code class="inline">composer.json</code> や <code class="inline">routes/</code>、<code class="inline">app/</code> を自分で読んで回答することを観察する</li>
+        <li>Claude が <code class="inline">README.md</code> や <code class="inline">ARCHITECTURE.md</code>、<code class="inline">scripts/</code> を自分で読んで回答することを観察する</li>
         <li><strong>何のファイルを読んだか</strong> がツール実行ログに出る — エージェントループの実物</li>
       </ul>
 
@@ -668,10 +668,10 @@ Hello world</pre>
       <p>機能から逆引きで実装箇所を特定させる。</p>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
-        <p>チャットメッセージを送信したとき、リクエストがどこで受け取られ、どこで LLM が呼ばれているか、該当ファイルと行を特定して。</p>
+        <p>エージェントがメッセージを送信したとき、どのスクリプトが実行され、どこで SQLite データベースに書き込まれるか、該当ファイルと行を特定して。</p>
       </div>
       <ul>
-        <li>ルーティング（<code class="inline">routes/web.php</code>）→ Controller → Prism 呼び出し、と追跡されることを確認</li>
+        <li><code class="inline">scripts/send.sh</code> → SQLite への書き込み、と追跡されることを確認</li>
         <li>grep 相当の探索を Claude が自律的に行う様子を観察する</li>
       </ul>
 
@@ -679,7 +679,7 @@ Hello world</pre>
       <p><code class="inline">@</code> プレフィックスで対象を明示して、ピンポイントに聞く。</p>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
-        <p>@app/Http/Controllers/ChatController.php<br>このコントローラで Prism がどのように使われているか、エラーハンドリングの有無も含めて説明して。</p>
+        <p>@scripts/send.sh<br>このスクリプトがメッセージをどのように保存しているか、複数エージェントが同時に書き込んだ場合の考慮も含めて説明して。</p>
       </div>
       <ul>
         <li><code class="inline">@</code> でファイルを渡すと <strong>曖昧さが減り、探索分のコンテキストも節約</strong> できる</li>
@@ -689,7 +689,7 @@ Hello world</pre>
       <p>最後に、解析結果をドキュメントとして残せる形で出力させる。</p>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
-        <p>チャット送信から応答表示までの処理フローを Mermaid のシーケンス図で出力して。</p>
+        <p>あるエージェントがメッセージを送信してから、別のエージェントが受信するまでの流れを Mermaid のシーケンス図で出力して。</p>
       </div>
 
       <div class="exercise">
