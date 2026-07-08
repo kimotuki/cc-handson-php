@@ -146,6 +146,14 @@
   }
   .lesson h4 { margin: 0 0 8px; color: #b45309; font-size: 15px; }
   .lesson ul { margin: 0; padding-left: 20px; }
+  .shot { margin: 18px 0; }
+  .shot img {
+    max-width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.08);
+  }
+  .shot figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
   @media (max-width: 860px) {
     nav { display: none; }
     main { padding: 24px; }
@@ -161,10 +169,11 @@
     <ol>
       <li><a href="#goal">1. 到達目標・時間配分</a></li>
       <li><a href="#sec2">2. チームでの CLAUDE.md 運用</a></li>
-      <li><a href="#sec3">3. Skills・設定の共有</a></li>
+      <li><a href="#sec3">3. Skills の共有</a></li>
       <li><a href="#sec4">4. コンテキスト管理</a></li>
       <li><a href="#sec5">5. 実践：チーム開発フロー</a></li>
-      <li><a href="#sec6">6. まとめ・コース総括</a></li>
+      <li><a href="#sec6">6. 実践：チーム開発フローの自動化</a></li>
+      <li><a href="#sec7">7. まとめ・コース総括</a></li>
     </ol>
   </nav>
 
@@ -194,10 +203,11 @@
         <tr><th>#</th><th>内容</th><th>時間</th></tr>
         <tr><td>1</td><td>オープニング（到達目標・時間配分の説明）</td><td>5分</td></tr>
         <tr><td>2</td><td>チームでの CLAUDE.md 運用</td><td>10分</td></tr>
-        <tr><td>3</td><td>Skills・設定の共有</td><td>10分</td></tr>
-        <tr><td>4</td><td>コンテキスト管理</td><td>15分</td></tr>
-        <tr><td>5</td><td>実践：チーム開発フロー</td><td>15分</td></tr>
-        <tr><td>6</td><td>まとめ・コース総括</td><td>5分</td></tr>
+        <tr><td>3</td><td>Skills の共有</td><td>10分</td></tr>
+        <tr><td>4</td><td>コンテキスト管理</td><td>12分</td></tr>
+        <tr><td>5</td><td>実践：チーム開発フロー</td><td>12分</td></tr>
+        <tr><td>6</td><td>実践：チーム開発フローの自動化</td><td>6分</td></tr>
+        <tr><td>7</td><td>まとめ・コース総括</td><td>5分</td></tr>
       </table>
     </section>
 
@@ -221,7 +231,7 @@
     </section>
 
     <section id="sec3">
-      <h2 class="step"><span class="step-num">3</span>Skills・設定の共有（10分）</h2>
+      <h2 class="step"><span class="step-num">3</span>Skills の共有（10分）</h2>
 
       <h3>3-1. 共有できるもの（4分）</h3>
       <table>
@@ -246,6 +256,16 @@
 
       <h3>3-3. プラグイン（3分）</h3>
       <p>Skills / Hooks / 設定を <strong>まとめて配布できる単位</strong> が <strong>プラグイン</strong>。<code class="inline">.claude/</code> への手動コミットより、バージョン管理・更新が楽で、マーケットプレイス経由で導入できる。</p>
+      <figure class="shot">
+        <img src="Image/skill-plugin-marketplace.svg" alt="Skill・プラグイン・マーケットプレイスの関係">
+        <figcaption>Skill・プラグイン・マーケットプレイスの関係 — マーケットプレイスがプラグインを並べ、プラグインが Skill 等を同梱する</figcaption>
+      </figure>
+      <ul>
+        <li><strong>Skill</strong> ＝ 手順書の最小単位（<code class="inline">SKILL.md</code>）。プラグインに同梱して配布できる</li>
+        <li><strong>プラグイン</strong> ＝ Skills・SubAgent・Hooks・MCP 接続を <strong>ひとまとめにした配布の入れ物</strong></li>
+        <li><strong>マーケットプレイス</strong> ＝ プラグインの <strong>配布カタログ</strong>（実体は GitHub リポジトリ。例: <code class="inline">claude-plugins-official</code>）</li>
+        <li>共有の流れ：作成者がプラグインをマーケットプレイスに登録 → 利用者は <code class="inline">/plugin marketplace add</code> で登録 → <code class="inline">/plugin install</code> で導入</li>
+      </ul>
       <h4>セキュリティレビューを自動化する <code class="inline">security-guidance</code> プラグイン</h4>
       <p>公式マーケットプレイス（<code class="inline">claude-plugins-official</code>）の <code class="inline">security-guidance</code> プラグインは、<strong>Claude が行う各変更を脆弱性観点でレビューし、見つけた問題を同じセッション内で修正させる</strong>。チーム全員が入れておけば、誰が書いても一定のセキュリティ水準が担保される。</p>
       <h4>基本インストール</h4>
@@ -277,7 +297,7 @@
     </section>
 
     <section id="sec4">
-      <h2 class="step"><span class="step-num">4</span>コンテキスト管理（15分）</h2>
+      <h2 class="step"><span class="step-num">4</span>コンテキスト管理（12分）</h2>
 
       <h3>4-1. なぜ管理が必要か（3分）</h3>
       <ul>
@@ -285,8 +305,20 @@
         <li>埋まると自動コンパクション（要約圧縮）が走り、<strong>細部の情報が失われる</strong></li>
         <li>長いセッションで「さっき言ったことを忘れる」のは大半これが原因</li>
       </ul>
+      <h4>主要モデルのコンテキストウィンドウ</h4>
+      <table>
+        <tr><th>モデル</th><th>コンテキストウィンドウ</th><th>最大出力</th></tr>
+        <tr><td>Claude Fable 5</td><td>100万トークン</td><td>128K</td></tr>
+        <tr><td>Claude Opus 4.8</td><td>100万トークン</td><td>128K</td></tr>
+        <tr><td>Claude Sonnet 5</td><td>100万トークン</td><td>128K</td></tr>
+        <tr><td>Claude Haiku 4.5</td><td>20万トークン</td><td>64K</td></tr>
+      </table>
+      <ul>
+        <li>コンテキストウィンドウ ＝ モデルが一度に扱える情報量の上限。<strong>会話履歴だけでなく、CLAUDE.md・読み込んだスキル・ツールの実行結果もすべてここを消費する</strong></li>
+        <li>上限はモデルごとに異なり、大きいモデルでも「無限」ではない</li>
+      </ul>
 
-      <h3>4-2. 3つのコマンド（7分）</h3>
+      <h3>4-2. 3つのコマンド（5分）</h3>
       <table>
         <tr><th>コマンド</th><th>動作</th><th>使いどころ</th></tr>
         <tr><td><code class="inline">/context</code></td><td>現在のコンテキスト使用量を可視化</td><td>長い作業の途中で残量チェック</td></tr>
@@ -295,12 +327,16 @@
       </table>
 <pre>/compact 実装方針とテスト結果は残して、探索の過程は要約して</pre>
 
-      <h3>4-3. 運用のコツ（5分）</h3>
+      <h3>4-3. 運用のコツ（4分）</h3>
       <ul>
         <li><strong>1タスク1セッション</strong> が基本 — タスクが変わったら <code class="inline">/clear</code></li>
         <li>大事な決定事項は <code class="inline">#</code> で CLAUDE.md に書き出してから <code class="inline">/clear</code> する（<strong>外部メモリ化</strong>）</li>
         <li>コンパクションに頼るより、<strong>自分で要点を保存して新しいセッションを始める</strong> ほうが品質が安定する</li>
       </ul>
+      <div class="callout tip">
+        <strong>💡 TIPS：設定もコンテキストを消費する</strong>
+        CLAUDE.md の肥大化や Skill を多く登録することも、セッション開始時からコンテキストを消費する。適時最小化を心掛けながら環境を整えていくことが重要。
+      </div>
 
       <h3>演習2</h3>
       <div class="prompt-box">
@@ -310,13 +346,17 @@
     </section>
 
     <section id="sec5">
-      <h2 class="step"><span class="step-num">5</span>実践：チーム開発フロー（15分）</h2>
-      <p>題材：チーム共有のリポジトリ（例：第2回で作った <code class="inline">hello-laravel</code> を1つ選ぶ）に対して、<strong>Issue 起点の開発フロー</strong> を一周する。</p>
+      <h2 class="step"><span class="step-num">5</span>実践：チーム開発フロー（12分）</h2>
+      <p>題材：チーム共有のリポジトリ（例：第2回で使った <code class="inline">agmsg</code> の fork から1つ選ぶ）に対して、<strong>Issue 起点の開発フロー</strong> を一周する。</p>
+      <figure class="shot">
+        <img src="Image/issue-flow.svg" alt="Issue 起点の開発フロー — Issue 作成 → ブランチ作成 → fix 実装 → レビュー・PR → 相互レビュー・マージ">
+        <figcaption>Issue 起点の開発フロー — マージ時の「Closes #N」で Issue が自動クローズし、フローが一周する</figcaption>
+      </figure>
 
       <h3>5-1. gh で Issue を作成（2分）</h3>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
-        <p>「/greet/{name} の挨拶を日本語にも対応してほしい」という Issue を gh で作成して</p>
+        <p>「README に日本語のクイックスタートを追記してほしい」という Issue を gh で作成して</p>
       </div>
       <ul>
         <li><code class="inline">gh issue create</code> が実行される — タイトル・本文も Claude が整えてくれる</li>
@@ -336,7 +376,7 @@
         <li><code class="inline">gh issue view 1</code> で内容を確認し、<code class="inline">fix/issue-1</code> のようなブランチが作られる</li>
       </ul>
 
-      <h3>5-3. Issue に対する fix を実装（4分）</h3>
+      <h3>5-3. Issue に対する fix を実装（3分）</h3>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
         <p>Issue #1 を読んで、Plan Mode で対応方針を立ててから修正して</p>
@@ -346,7 +386,7 @@
         <li>人間は <strong>計画と差分のレビュー</strong> に集中する</li>
       </ul>
 
-      <h3>5-4. スキルでレビューして PR を作成（3分）</h3>
+      <h3>5-4. スキルでレビューして PR を作成（2分）</h3>
       <p>push する前に、組み込みスキルで自己レビューする。</p>
 <pre>/code-review</pre>
       <p>指摘があれば修正してから PR を作成：</p>
@@ -358,7 +398,7 @@
         <li>PR 本文に <code class="inline">Closes #1</code> が入り、<strong>マージすると Issue が自動クローズ</strong> される</li>
       </ul>
 
-      <h3>5-5. 他の人の PR をレビューしてマージ（4分）</h3>
+      <h3>5-5. 他の人の PR をレビューしてマージ（3分）</h3>
       <p>受講者同士で PR 番号を交換し、互いの PR をレビューする。<code class="inline">claude --from-pr &lt;N&gt;</code> で <strong>PR の文脈（差分・説明文・レビューコメント）を読み込んだ状態</strong> でセッションを開始できる。</p>
 <pre><span class="prompt">$</span> claude --from-pr &lt;N&gt;   <span class="comment"># N はレビューする PR 番号</span></pre>
 <pre>/review</pre>
@@ -377,6 +417,27 @@
     </section>
 
     <section id="sec6">
+      <h2 class="step"><span class="step-num">6</span>実践：チーム開発フローの自動化（6分）</h2>
+      <p>5章で回した「Issue 起点の開発フロー」は毎回同じ手順の繰り返し — つまり <strong>スキル化の好対象</strong>。フロー全体を1つのスキルに落とし込み、1コマンドで回せるようにする。</p>
+      <div class="prompt-box">
+        <span class="label">あなたの指示</span>
+        <p>issue-flow というスキルを作って。Issue 番号を引数で受け取り、<br>
+        1. gh issue view で Issue の内容を確認<br>
+        2. fix/issue-&lt;番号&gt; ブランチを作成<br>
+        3. Plan Mode で対応方針を立ててから修正を実装<br>
+        4. /code-review でレビューし、妥当な指摘を修正<br>
+        5. コミットして PR を作成（本文に Closes #&lt;番号&gt; を入れる）<br>
+        という手順にして。</p>
+      </div>
+      <p>作成できたら、新しい Issue を1つ作って実行してみる:</p>
+<pre>/issue-flow 2</pre>
+      <ul>
+        <li>定型フローをスキル化すれば、<strong>チームの誰でも同じ品質のフローを1コマンドで再現</strong> できる</li>
+        <li><code class="inline">.claude/skills/issue-flow/</code> をコミットすれば、3章で学んだとおりチーム全員に共有される</li>
+      </ul>
+    </section>
+
+    <section id="sec7">
       <h2 class="step"><span class="step-num">✓</span>まとめ・コース総括（5分）</h2>
       <h3>第3回のまとめ</h3>
       <ul>
