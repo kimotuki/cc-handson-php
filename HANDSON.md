@@ -596,7 +596,7 @@ cd agmsg
 | 4  | MCP                           | 12分  |
 | 5  | SubAgent（サブエージェント）  | 12分  |
 | 6  | Hooks                         | 12分  |
-| 7  | 実践：Laravel アプリ開発の一連フロー | 28分 |
+| 7  | 実践：アプリ開発の一連フロー | 28分 |
 | 8  | まとめ                        | 10分  |
 
 ---
@@ -671,7 +671,7 @@ $ claude
 
 - 全テスト実行: `php artisan test`
 - 単一ファイル: `php artisan test tests/Feature/ChatTest.php`
-- 名前で絞り込み: `php artisan test --filter=ChatControllerTest`
+- 名前で絞り込み: `php artisan test --filter=ExampleTest`
 - 静的解析: `vendor/bin/phpstan analyse`
 - コード整形: `vendor/bin/pint --dirty`
 
@@ -778,9 +778,9 @@ $ claude
 `/skill-creator` を呼び出し、作りたいスキルを言葉で伝える:
 
 ```
-Feature テストを生成する test-gen というスキルを作って。
-対象のコントローラを引数で受け取り、正常系・異常系のテストを
-tests/Feature/ に作成して、php artisan test が通るまで直す手順にして。
+テストを生成する test-gen というスキルを作って。
+対象のファイルを引数で受け取り、リポジトリの既存テスト形式に合わせて
+正常系・異常系のテストを作成し、テストが通るまで直す手順にして。
 ```
 
 * skill-creator が `SKILL.md` と必要な補助ファイルを生成してくれる
@@ -811,7 +811,7 @@ tests/Feature/ に作成して、php artisan test が通るまで直す手順に
 ```markdown
 ---
 name: test-gen
-description: 指定した機能の Feature テストを生成する。テスト追加を頼まれたときに使う。
+description: 指定したファイルのテストを生成する。テスト追加を頼まれたときに使う。
 allowed-tools: Read, Edit, Bash
 ---
 
@@ -1161,17 +1161,18 @@ exit 0
 | テストの自動実行         | `Stop`                      | `php artisan test`               |
 | 危険コマンドのブロック   | `PreToolUse`（Bash）        | 検知スクリプトで `exit 2`        |
 
-### 7. 実践：Laravel アプリ開発の一連フロー（28分）
+### 7. 実践：アプリ開発の一連フロー（28分）
 
-**個人開発のフロー** を最初から最後まで回す。Hello World で動作確認 → 題材アプリをクローン → 機能追加（改修） → レビュー → 修正 → テスト生成 → セキュリティレビュー → クローン元リポジトリへの PR 作成まで、すべて Claude Code との会話で進める。
+**個人開発のフロー** を最初から最後まで回す。Hello World で動作確認 → 題材の agmsg をクローン → 機能追加（メッセージ検索） → レビュー → 修正 → テスト生成 → セキュリティレビュー → クローン元リポジトリへの PR 作成まで、すべて Claude Code との会話で進める。
 
 #### 7-1. 環境確認（2分）
 
-devcontainer に PHP / Laravel / gh が入っていることを確認する。
+devcontainer に PHP / Laravel / sqlite3 / gh が入っていることを確認する。
 
 ```
 !php -v
 !composer -V
+!sqlite3 --version
 !gh auth status
 ```
 
@@ -1207,23 +1208,24 @@ PHP と Laravel で「Hello World」を表示する Web アプリを作って。
 
 > ⚠️ **手動起動時も `--host=0.0.0.0` を忘れずに**：`devcontainer.json` に `"onAutoForward": "ignore"` があると VS Code の自動ポート転送は無効になるが、docker-compose の明示的なポート公開があれば問題ない。ただし `php artisan serve` のまま起動するとホストから見えないので注意。
 
-#### 7-3. 題材アプリ（Laravel × Prism チャットアプリ）をクローン（2分）
+#### 7-3. 題材（agmsg）をクローン（2分）
 
-Hello World で Laravel の動作を確認したら、以降の **改修は題材の Laravel × Prism チャットアプリ** で行う。GitHub からクローンして準備する:
+Hello World で新規開発を体験したら、以降の **改修は題材の agmsg**（第1回のソースコード解析で使った、CLI AI エージェント間のメッセージングツール）で行う。GitHub からクローンして準備する:
 
 ```
-$ git clone https://github.com/kimotuki/laravel-chat-app
-$ cd laravel-chat-app
+$ git clone https://github.com/kimotuki/agmsg
+$ cd agmsg
 $ claude
 ```
 
-* 以降のステップ（機能追加・レビュー・修正）は、この **クローンしたアプリを対象** に進める
-* 改修の前に「このアプリの全体構造を教えて」と聞き、第1回で学んだ解析の型で構造を掴んでおくとスムーズ
+* 以降のステップ（機能追加・レビュー・修正）は、この **クローンしたリポジトリを対象** に進める
+* 第1回の「ソースコード解析」と同じ題材なので、構造を把握済みならスムーズに改修へ入れる
 
-#### 7-4. 「会話履歴」機能を追加（6分）
+#### 7-4. 「メッセージ検索」機能を追加（6分）
 
 ```
-このLaravel + Prismチャットアプリに「会話履歴」機能を追加してください。
+このagmsgに「メッセージ検索」機能を追加してください。
+scripts/search.sh として、キーワードで過去のメッセージを検索できるようにして。
 ```
 
 実装が終わったら、どのような変更が入ったかを `git diff` で **人の目で確認する**:
@@ -1234,6 +1236,10 @@ $ claude
 ```
 
 * 新規ファイルの一覧は `git status`、既存ファイルの差分は `git diff` で見る。意図しない変更が混ざっていないかを確認する
+
+##### オプション課題
+
+* 余裕があれば「メッセージ統計」機能も追加する — 「エージェントごとの送信数を集計する scripts/stats.sh を追加して」
 
 #### 7-5. 組み込みスキルでレビュー（4分）
 
@@ -1262,13 +1268,13 @@ $ claude
 
 #### 7-7. 自作スキルでテストを生成してレビュー（2分）
 
-3-3 で作った自作スキル `/test-gen` で、追加した会話履歴機能のテストを生成して検証する。
+3-3 で作った自作スキル `/test-gen` で、追加した検索機能のテストを生成して検証する。
 
 ```
-/test-gen ChatController
+/test-gen scripts/search.sh
 ```
 
-* 正常系・異常系の Feature テストが `tests/Feature/` に生成され、`php artisan test` が通るまで修正される
+* 正常系・異常系のテストが `tests/` に生成され（agmsg のテストは bats 形式）、テストが通るまで修正される
 * レビューは組み込みスキル、テスト生成は自作 `/test-gen` のように、**組み込みスキルでカバーされない定型作業は自作スキルで作っていく**
 
 #### 7-8. 組み込みスキルでセキュリティレビュー（4分）
@@ -1285,16 +1291,16 @@ $ claude
 
 #### 7-9. リポジトリへコミット、PR 作成（4分）
 
-修正をコミットし、クローン元（`kimotuki/laravel-chat-app`）へ PR を作成する:
+修正をコミットし、クローン元（`kimotuki/agmsg`）へ PR を作成する:
 
 ```
-!git checkout -b feature/conversation-history-[自分の名前]
-!git add -A && git commit -m "会話履歴機能の追加 by [自分の名前]"
-# クローン元 (kimotuki/laravel-chat-app) に向けた PR を作成
+!git checkout -b feature/message-search-[自分の名前]
+!git add -A && git commit -m "メッセージ検索機能の追加 by [自分の名前]"
+# クローン元 (kimotuki/agmsg) に向けた PR を作成
 !gh pr create --fill
 ```
 
-* クローン元には書き込み権限がないため、`gh pr create` が push 先を聞いてくる — **「Create a fork of kimotuki/laravel-chat-app」を選ぶ** と、fork の作成 → push → PR 作成まで一気に進む（初回のみ `gh auth login`）
+* クローン元には書き込み権限がないため、`gh pr create` が push 先を聞いてくる — **「Create a fork of kimotuki/agmsg」を選ぶ** と、fork の作成 → push → PR 作成まで一気に進む（初回のみ `gh auth login`）
 * `--fill` はコミットメッセージから PR のタイトル・本文を自動生成する
 * ブランチ名・コミットメッセージ・PR 本文は Claude に任せてもよい（「クローン元に PR を作って」）
 
