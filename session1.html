@@ -276,7 +276,8 @@
       <p>ここでは Large Language Model (LLM) を指す。Anthropic 社が提供するモデルファミリー：</p>
       <table>
         <tr><th>モデル</th><th>特徴</th></tr>
-        <tr><td>Opus</td><td>最も高性能。複雑な設計判断・大規模なリファクタリング向け</td></tr>
+        <tr><td>Fable</td><td>最上位。最も難しい推論・長時間の自律的なエージェント作業向け</td></tr>
+        <tr><td>Opus</td><td>高性能。複雑な設計判断・大規模なリファクタリング向け</td></tr>
         <tr><td>Sonnet</td><td>性能と速度のバランス型。日常的な開発タスクの主力</td></tr>
         <tr><td>Haiku</td><td>最速・低コスト。簡単な質問や定型作業向け</td></tr>
       </table>
@@ -545,7 +546,7 @@ Hello world</pre>
     <section id="sec5">
       <h2 class="step"><span class="step-num">5</span>コマンド（10分）</h2>
 
-      <h3>5-1. 体系 — 3 種類（3分）</h3>
+      <h3>5-1. 体系 — 3 種類（4分）</h3>
       <table>
         <tr><th>種類</th><th>入り方</th><th>例</th></tr>
         <tr><td>スラッシュコマンド</td><td>REPL 内で <code class="inline">/</code> を入力</td><td><code class="inline">/init</code>, <code class="inline">/context</code>, <code class="inline">/mcp</code></td></tr>
@@ -555,8 +556,7 @@ Hello world</pre>
 
       <h3>5-2. 特殊プレフィックス（3分）</h3>
       <h4><code class="inline">!</code> — Bash 実行モード</h4>
-<pre>!git status
-!sqlite3 --version</pre>
+<pre>!pwd</pre>
       <ul>
         <li>プロンプトとして送らず <strong>シェルだけ実行</strong>。手元の状態を Claude に渡したいときに便利。</li>
       </ul>
@@ -571,7 +571,7 @@ Hello world</pre>
         <li>該当ファイルを <strong>明示的に読ませる</strong>。曖昧さが減ってコンテキストも節約。</li>
       </ul>
 
-      <h3>5-3. キーボードショートカット（2分）</h3>
+      <h3>5-3. キーボードショートカット（3分）</h3>
       <table>
         <tr><th>キー</th><th>動作</th></tr>
         <tr><td><code class="inline">Shift + Tab</code></td><td>パーミッションモード循環</td></tr>
@@ -581,14 +581,6 @@ Hello world</pre>
         <tr><td><code class="inline">Up / Down</code></td><td>履歴ナビゲーション</td></tr>
       </table>
 
-      <div class="exercise">
-        <span class="ex-title">✏️ 演習3（2分）</span>
-        <p>非対話モード（<code class="inline">-p</code>）を実際に試す。</p>
-        <div class="prompt-box" style="margin-bottom:0;">
-          <span class="label">実行してみよう</span>
-          <p>claude -p "README.md の内容を3行で要約して"</p>
-        </div>
-      </div>
     </section>
 
     <section id="sec6">
@@ -693,9 +685,21 @@ Hello world</pre>
         <span class="label">あなたの指示</span>
         <p>あるエージェントがメッセージを送信してから、別のエージェントが受信するまでの流れを Mermaid のシーケンス図で出力して。</p>
       </div>
+      <p>続けて、生成した図をファイルとして残す:</p>
+      <div class="prompt-box">
+        <span class="label">あなたの指示</span>
+        <p>Plan Modeを解除してシーケンス図をファイルに保存して</p>
+      </div>
+      <ul>
+        <li>Plan Mode の解除（書き込み許可）を承認すると、Claude がシーケンス図を Markdown ファイルとして保存する</li>
+      </ul>
+      <div class="callout tip">
+        <strong>💡 Mermaid のビューアが無いとき</strong>
+        エディタに Mermaid 形式のビューアが入っていない場合は、<a href="https://mermaidviewer.com/ja" target="_blank" rel="noopener">Mermaid Viewer</a>（mermaidviewer.com/ja）に出力を貼り付けて図を確認できる。
+      </div>
 
       <div class="exercise">
-        <span class="ex-title">✏️ 演習4</span>
+        <span class="ex-title">✏️ 演習3</span>
         <ul>
           <li>上記 7-1 〜 7-4 を自分の手で実行する</li>
           <li>余裕があれば「このコードの改善点を3つ挙げて」と聞いてみる</li>
