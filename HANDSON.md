@@ -166,6 +166,17 @@ Invoke-RestMethod https://claude.ai/install.ps1 | Invoke-Expression
 curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd
 ```
 
+コマンドを使わず、以下のページからインストーラをダウンロードしてインストールすることもできる:
+
+<https://claude.com/ja/download>
+
+> 💡 **TIPS：gh コマンドが入っていない場合**
+> Windows では winget でインストールできる:
+>
+> ```
+> winget install --id GitHub.cli
+> ```
+
 ##### 動作確認
 
 ```bash
@@ -536,6 +547,8 @@ cd agmsg
 
 #### 7-4. サマリ取得（3分）
 
+* Plan Mode の解除（書き込み許可）を承認すると、Claude がシーケンス図を Markdown ファイルとして保存する
+
 最後に、解析結果をドキュメントとして残せる形で出力させる。
 
 ```
@@ -548,8 +561,6 @@ cd agmsg
 ```
 Plan Modeを解除してシーケンス図をファイルに保存して
 ```
-
-* Plan Mode の解除（書き込み許可）を承認すると、Claude がシーケンス図を Markdown ファイルとして保存する
 
 > 💡 エディタに Mermaid 形式のビューアが入っていない場合は、**Mermaid Viewer**（`https://mermaidviewer.com/ja`）に出力を貼り付けて図を確認できる。
 

@@ -316,6 +316,11 @@
 
 <span class="comment"># CMD</span>
 <span class="prompt">&gt;</span> curl -fsSL https://claude.ai/install.cmd -o install.cmd &amp;&amp; install.cmd</pre>
+      <p>コマンドを使わず、<a href="https://claude.com/ja/download" target="_blank" rel="noopener">claude.com/ja/download</a> からインストーラをダウンロードしてインストールすることもできる。</p>
+      <div class="callout tip">
+        <strong>💡 TIPS：gh コマンドが入っていない場合</strong>
+        Windows では winget でインストールできる: <code class="inline">winget install --id GitHub.cli</code>
+      </div>
       <h4>動作確認</h4>
 <pre><span class="prompt">$</span> cd &lt;あなたのプロジェクト&gt;
 <span class="prompt">$</span> claude</pre>
@@ -680,6 +685,9 @@ Hello world</pre>
       </ul>
 
       <h3>7-4. サマリ取得（3分）</h3>
+      <ul>
+        <li>Plan Mode の解除（書き込み許可）を承認すると、Claude がシーケンス図を Markdown ファイルとして保存する</li>
+      </ul>
       <p>最後に、解析結果をドキュメントとして残せる形で出力させる。</p>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
@@ -690,9 +698,6 @@ Hello world</pre>
         <span class="label">あなたの指示</span>
         <p>Plan Modeを解除してシーケンス図をファイルに保存して</p>
       </div>
-      <ul>
-        <li>Plan Mode の解除（書き込み許可）を承認すると、Claude がシーケンス図を Markdown ファイルとして保存する</li>
-      </ul>
       <div class="callout tip">
         <strong>💡 Mermaid のビューアが無いとき</strong>
         エディタに Mermaid 形式のビューアが入っていない場合は、<a href="https://mermaidviewer.com/ja" target="_blank" rel="noopener">Mermaid Viewer</a>（mermaidviewer.com/ja）に出力を貼り付けて図を確認できる。
