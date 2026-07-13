@@ -191,6 +191,7 @@
       <li><a href="#sec6">6. Claude Code の設定ファイル</a></li>
       <li><a href="#sec7">7. 実践：ソースコード解析</a></li>
       <li><a href="#sec8">8. まとめ</a></li>
+      <li><a href="#sec9">9. 質疑応答</a></li>
     </ol>
   </nav>
 
@@ -199,7 +200,7 @@
       <h1>第1回：Claude Code の基本</h1>
       <p>「目標：Claude Code の基本操作・コマンド体系を理解し、日常業務で利用できるようになる」</p>
       <div class="badges">
-        <span class="badge">60分</span>
+        <span class="badge">90分</span>
         <span class="badge">基本操作</span>
         <span class="badge">スラッシュコマンド</span>
         <span class="badge">ソースコード解析</span>
@@ -214,24 +215,25 @@
         <li>主要なスラッシュコマンド・特殊プレフィックス・キーボードショートカットを使える</li>
         <li>既存リポジトリに対して、構造把握 → 該当箇所の特定 → 質問 → サマリ取得の一連を回せる</li>
       </ul>
-      <h3>時間配分（60分）</h3>
+      <h3>時間配分（90分）</h3>
       <table>
-        <tr><th>#</th><th>内容</th><th>時間</th></tr>
-        <tr><td>1</td><td>オープニング</td><td>3分</td></tr>
-        <tr><td>2</td><td>Claude Code とは？</td><td>10分</td></tr>
-        <tr><td>3</td><td>基本的な使い方</td><td>15分</td></tr>
-        <tr><td>4</td><td>Claude Code を使ってみよう！</td><td>5分</td></tr>
-        <tr><td>5</td><td>コマンド</td><td>8分</td></tr>
-        <tr><td>6</td><td>Claude Code の設定ファイル</td><td>4分</td></tr>
-        <tr><td>7</td><td>実践：ソースコードの解析</td><td>12分</td></tr>
-        <tr><td>8</td><td>まとめ</td><td>3分</td></tr>
+        <tr><th>#</th><th>内容（約1.5時間・手を動かしながら進めます）</th><th>時間</th></tr>
+        <tr><td>1</td><td>オープニング</td><td>4分</td></tr>
+        <tr><td>2</td><td>Claude Code とは？</td><td>12分</td></tr>
+        <tr><td>3</td><td>基本的な使い方</td><td>19分</td></tr>
+        <tr><td>4</td><td>Claude Code を使ってみよう！</td><td>6分</td></tr>
+        <tr><td>5</td><td>コマンド</td><td>10分</td></tr>
+        <tr><td>6</td><td>Claude Code の設定ファイル</td><td>5分</td></tr>
+        <tr><td>7</td><td>実践：ソースコードの解析</td><td>15分</td></tr>
+        <tr><td>8</td><td>まとめ</td><td>4分</td></tr>
+        <tr><td>9</td><td>質疑応答</td><td>15分</td></tr>
       </table>
     </section>
 
     <section id="sec2">
-      <h2 class="step"><span class="step-num">2</span>Claude Code とは？（10分）</h2>
+      <h2 class="step"><span class="step-num">2</span>Claude Code とは？（12分）</h2>
 
-      <h3>2-1. Claude Code（2分）</h3>
+      <h3>2-1. Claude Code（3分）</h3>
       <ul>
         <li>Anthropic が提供する <strong>エージェント型コーディングツール</strong></li>
         <li>CLI（ターミナル）/ VS Code / JetBrains / Claude Desktop / Web (<code class="inline">claude.ai/code</code>) の <strong>5つの入口</strong> がある</li>
@@ -247,7 +249,7 @@
         <tr><td>必要な仕組み</td><td>─</td><td><strong>承認モデル</strong>（ハーネス）</td></tr>
       </table>
 
-      <h3>2-3. エージェントの動き（3分）</h3>
+      <h3>2-3. エージェントの動き（4分）</h3>
       <figure class="shot">
         <img src="Image/agentic-loop.png" alt="エージェントループ">
       </figure>
@@ -298,9 +300,9 @@
     </section>
 
     <section id="sec3">
-      <h2 class="step"><span class="step-num">3</span>基本的な使い方（15分）</h2>
+      <h2 class="step"><span class="step-num">3</span>基本的な使い方（19分）</h2>
 
-      <h3>3-1. インストール（3分）</h3>
+      <h3>3-1. インストール（4分）</h3>
       <h4>macOS / Linux / WSL</h4>
 <pre><span class="comment"># 推奨: 公式インストーラ（auto-update 対応）</span>
 <span class="prompt">$</span> curl -fsSL https://claude.ai/install.sh | bash
@@ -340,7 +342,7 @@
         初回起動時はブラウザが開き、Claude アカウントでのサインイン（サブスクリプションの認証）が行われる。
       </div>
 
-      <h3>3-2. 起動・終了・再開（2分）</h3>
+      <h3>3-2. 起動・終了・再開（3分）</h3>
       <table>
         <tr><th>操作</th><th>方法</th></tr>
         <tr><td>起動</td><td>プロジェクト直下で <code class="inline">claude</code></td></tr>
@@ -360,7 +362,7 @@
         <strong>⚠️ 注意</strong>
         いずれも <strong>インターネットアクセスのないサンドボックス環境でのみ</strong> 推奨。隔離された環境以外では使わないこと。
       </div>
-      <h3>3-3. スラッシュコマンド（7分）</h3>
+      <h3>3-3. スラッシュコマンド（9分）</h3>
       <p>まず最初に実施しておきたいコマンドを順に紹介する。</p>
 
       <h4><code class="inline">/status</code> — セッション状態の確認</h4>
@@ -472,7 +474,7 @@
     </section>
 
     <section id="sec4">
-      <h2 class="step"><span class="step-num">4</span>Claude Code を使ってみよう！（5分）</h2>
+      <h2 class="step"><span class="step-num">4</span>Claude Code を使ってみよう！（6分）</h2>
       <p>ここまでの内容を使って、実際に Claude Code でアプリを1本作ってみる。題材はシェルスクリプトの「Hello world」。承認モードは Default モードにしておく。</p>
 
       <h3>4-1. 起動して依頼する（2分）</h3>
@@ -490,7 +492,7 @@
         <li>作成されたファイル（例：<code class="inline">hello.sh</code>）の中身を確認する</li>
       </ul>
 
-      <h3>4-3. 実行して確認する（1分）</h3>
+      <h3>4-3. 実行して確認する（2分）</h3>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
         <p>作ったアプリを実行して、結果を見せて</p>
@@ -541,9 +543,9 @@ Hello world</pre>
     </section>
 
     <section id="sec5">
-      <h2 class="step"><span class="step-num">5</span>コマンド（8分）</h2>
+      <h2 class="step"><span class="step-num">5</span>コマンド（10分）</h2>
 
-      <h3>5-1. 体系 — 3 種類（2分）</h3>
+      <h3>5-1. 体系 — 3 種類（3分）</h3>
       <table>
         <tr><th>種類</th><th>入り方</th><th>例</th></tr>
         <tr><td>スラッシュコマンド</td><td>REPL 内で <code class="inline">/</code> を入力</td><td><code class="inline">/init</code>, <code class="inline">/context</code>, <code class="inline">/mcp</code></td></tr>
@@ -551,7 +553,7 @@ Hello world</pre>
         <tr><td>キーボードショートカット</td><td>キー操作</td><td><code class="inline">Shift+Tab</code>, <code class="inline">Esc</code>, <code class="inline">Ctrl+R</code></td></tr>
       </table>
 
-      <h3>5-2. 特殊プレフィックス（2分）</h3>
+      <h3>5-2. 特殊プレフィックス（3分）</h3>
       <h4><code class="inline">!</code> — Bash 実行モード</h4>
 <pre>!git status
 !sqlite3 --version</pre>
@@ -590,10 +592,10 @@ Hello world</pre>
     </section>
 
     <section id="sec6">
-      <h2 class="step"><span class="step-num">6</span>Claude Code の設定ファイル（4分）</h2>
+      <h2 class="step"><span class="step-num">6</span>Claude Code の設定ファイル（5分）</h2>
       <p>Claude Code の挙動は、階層化された設定ファイルで制御される。「どこに置くか」でスコープが変わるのがポイント。</p>
 
-      <h3>6-1. settings.json（2分）</h3>
+      <h3>6-1. settings.json（3分）</h3>
       <p>パーミッション許可リスト・Hooks・環境変数など、<strong>ハーネスの動作設定</strong> を JSON で定義する。</p>
       <table>
         <tr><th>配置場所</th><th>スコープ</th></tr>
@@ -643,7 +645,7 @@ Hello world</pre>
     </section>
 
     <section id="sec7">
-      <h2 class="step"><span class="step-num">7</span>実践：ソースコードの解析（12分）</h2>
+      <h2 class="step"><span class="step-num">7</span>実践：ソースコードの解析（15分）</h2>
       <p>題材は <strong>agmsg</strong> — Claude Code・Codex・Gemini CLI などの CLI AI エージェント同士が、共有の SQLite データベースを介してメッセージを交換できるようにする OSS（Bash + SQLite 製）。まず GitHub からクローンして準備する:</p>
 <pre><span class="prompt">$</span> git clone https://github.com/fujibee/agmsg
 <span class="prompt">$</span> cd agmsg</pre>
@@ -653,7 +655,7 @@ Hello world</pre>
         解析だけが目的なので、<code class="inline">Shift + Tab</code> で <strong>Plan Mode</strong> にしておくと安全（読み取り専用ツールしか使わない）。
       </div>
 
-      <h3>7-1. 構造把握（3分）</h3>
+      <h3>7-1. 構造把握（4分）</h3>
       <p>プロジェクト直下で <code class="inline">claude</code> を起動し、まず全体像を聞く。</p>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
@@ -664,7 +666,7 @@ Hello world</pre>
         <li><strong>何のファイルを読んだか</strong> がツール実行ログに出る — エージェントループの実物</li>
       </ul>
 
-      <h3>7-2. 該当箇所の特定（3分）</h3>
+      <h3>7-2. 該当箇所の特定（4分）</h3>
       <p>機能から逆引きで実装箇所を特定させる。</p>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
@@ -675,7 +677,7 @@ Hello world</pre>
         <li>grep 相当の探索を Claude が自律的に行う様子を観察する</li>
       </ul>
 
-      <h3>7-3. 深掘り質問（3分）</h3>
+      <h3>7-3. 深掘り質問（4分）</h3>
       <p><code class="inline">@</code> プレフィックスで対象を明示して、ピンポイントに聞く。</p>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
@@ -702,7 +704,7 @@ Hello world</pre>
     </section>
 
     <section id="sec8">
-      <h2 class="step"><span class="step-num">✓</span>まとめ（3分）</h2>
+      <h2 class="step"><span class="step-num">✓</span>まとめ（4分）</h2>
       <h3>第1回の振り返り</h3>
       <table>
         <tr><th>章</th><th>学んだこと</th></tr>
@@ -717,6 +719,11 @@ Hello world</pre>
         <strong>✅ 明日からの最初の一歩</strong>
         自分の業務リポジトリで <code class="inline">claude</code> を起動 → <code class="inline">/init</code> → 「このリポジトリの全体構造を教えて」。<strong>調査・解析タスクから任せ始める</strong> のが、リスクなく Claude Code に慣れる近道。
       </div>
+    </section>
+
+    <section id="sec9">
+      <h2 class="step"><span class="step-num">💬</span>質疑応答（15分）</h2>
+      <p>ここまでの内容についての質問・疑問に答える。日常業務での適用イメージ（どのタスクから Claude Code に任せるか）もここで相談する。</p>
     </section>
 
     <footer>

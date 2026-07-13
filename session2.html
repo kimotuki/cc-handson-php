@@ -261,6 +261,22 @@
       <ul>
         <li><code class="inline">/memory</code> で保存先（CLAUDE.md など）を選択・編集できる</li>
       </ul>
+      <h4>プロジェクト別メモリ（auto-memory）</h4>
+      <p>CLAUDE.md とは別に、<strong>Claude が自分で書き溜めるプロジェクト別の記憶</strong> もある。保存先は <code class="inline">~/.claude/projects/&lt;作業ディレクトリ名&gt;/memory/</code>:</p>
+<pre>~/.claude/projects/&lt;作業ディレクトリ名&gt;/memory/
+├── MEMORY.md      <span class="comment">← インデックス（セッション開始時に読み込まれる）</span>
+└── &lt;個別メモ&gt;.md   <span class="comment">← 1ファイル1トピックの記憶本体</span></pre>
+      <ul>
+        <li><code class="inline">~/.claude/projects/</code> の下に <strong>作業ディレクトリごと</strong> のフォルダ（パスをハイフン区切りにした名前）が作られる</li>
+        <li>同じディレクトリで新しいセッションを始めると自動的に思い出される。<strong>別のディレクトリでの作業には影響しない</strong></li>
+      </ul>
+      <h4>指示・記憶の置き場所の整理</h4>
+      <table>
+        <tr><th>場所</th><th>役割</th></tr>
+        <tr><td><code class="inline">~/.claude/CLAUDE.md</code></td><td>全プロジェクト共通の <strong>人間からの指示</strong></td></tr>
+        <tr><td><code class="inline">&lt;repo&gt;/CLAUDE.md</code></td><td>リポジトリにコミットする <strong>チーム共有の指示</strong></td></tr>
+        <tr><td><code class="inline">~/.claude/projects/&lt;dir&gt;/memory/</code></td><td><strong>Claude が自分で書き溜める</strong> プロジェクト別の記憶</td></tr>
+      </table>
 
       <h3>2-3. CLAUDE.md の書き方のコツ（4分）</h3>
       <ul>
