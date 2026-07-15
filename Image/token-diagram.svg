@@ -2,7 +2,7 @@
   <rect x="1" y="1" width="818" height="288" fill="#f5f3ee"/>
 
   <!-- 英語 -->
-  <text x="30" y="46" font-size="13" font-weight="700" fill="#a84e32">英語 — 約4文字 ≒ 1トークン</text>
+  <text x="30" y="46" font-size="13" font-weight="700" fill="#a84e32">英語 — 1単語 ≒ 1トークン</text>
 
   <rect x="30" y="60" width="82" height="42" rx="8" fill="#f7e4d8" stroke="#d97757" stroke-width="1"/>
   <text x="71" y="86" font-size="13" fill="#292524" text-anchor="middle" font-family="'SF Mono', Menlo, Consolas, monospace">Claude</text>
