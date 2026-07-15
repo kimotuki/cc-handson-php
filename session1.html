@@ -317,9 +317,19 @@
 <span class="comment"># CMD</span>
 <span class="prompt">&gt;</span> curl -fsSL https://claude.ai/install.cmd -o install.cmd &amp;&amp; install.cmd</pre>
       <p>コマンドを使わず、<a href="https://claude.com/ja/download" target="_blank" rel="noopener">claude.com/ja/download</a> からインストーラをダウンロードしてインストールすることもできる。</p>
+      <div class="callout warn">
+        <strong>⚠️ Windows の注意：デスクトップアプリだけでは CLI は使えない</strong>
+        Windows では、上記ページのデスクトップアプリをダウンロード・インストールしただけでは <code class="inline">claude</code> コマンド（CLI）は使えない。PowerShell で <code class="inline">Invoke-RestMethod https://claude.ai/install.ps1 | Invoke-Expression</code> を実行して CLI をインストールし、実行後に「システムの詳細設定の表示」→「詳細設定」→「環境変数」→「〇〇のユーザー環境変数」の <code class="inline">Path</code> に、インストールされたパスを登録する。
+      </div>
+      <figure class="shot">
+        <img src="Image/win-env-vars.png" alt="環境変数ダイアログでユーザー環境変数の Path を編集する">
+        <figcaption>「環境変数」ダイアログ — ユーザー環境変数の <code class="inline">Path</code> にインストール先を登録</figcaption>
+      </figure>
       <div class="callout tip">
         <strong>💡 TIPS：gh コマンドが入っていない場合</strong>
-        Windows では winget でインストールできる: <code class="inline">winget install --id GitHub.cli</code>
+        macOS では Homebrew でインストールできる: <code class="inline">brew install gh</code><br>
+        Windows では winget でインストールできる: <code class="inline">winget install --id GitHub.cli</code><br>
+        インストールと設定（<code class="inline">gh auth login</code> など）の参考: <a href="https://qiita.com/s_yasunaga/items/110d21828bd4f578850d" target="_blank" rel="noopener">Qiita — GitHub CLI（gh）のインストールと設定</a>
       </div>
       <h4>動作確認</h4>
 <pre><span class="prompt">$</span> cd &lt;あなたのプロジェクト&gt;
@@ -600,22 +610,6 @@ Hello world</pre>
         <tr><td><code class="inline">&lt;repo&gt;/.claude/settings.json</code></td><td>プロジェクト共通（<strong>チームで共有</strong>・コミット対象）</td></tr>
         <tr><td><code class="inline">&lt;repo&gt;/.claude/settings.local.json</code></td><td>プロジェクト個人用（git 管理外）</td></tr>
       </table>
-      <ul>
-        <li>優先順位は <strong>より近い設定が勝つ</strong>：local &gt; プロジェクト &gt; ユーザ</li>
-        <li><code class="inline">/config</code> で変更した内容も settings.json に保存される</li>
-      </ul>
-<pre>{
-  <span class="str">"permissions"</span>: {
-    <span class="str">"allow"</span>: [<span class="str">"Bash(bats:*)"</span>]
-  }
-}</pre>
-      <ul>
-        <li>この例の意味：<strong><code class="inline">bats</code> で始まる Bash コマンドは承認なしで自動実行してよい</strong></li>
-        <li><code class="inline">permissions.allow</code> … 承認ダイアログを出さずに実行を許可するルールのリスト</li>
-        <li><code class="inline">Bash(...)</code> … Bash の実行のうち、カッコ内のパターンに一致するもの</li>
-        <li><code class="inline">bats:*</code> … <code class="inline">:*</code> は末尾ワイルドカード。<code class="inline">bats tests/test_send.bats</code> のように後ろに何が続いても一致する（<code class="inline">bash</code> など別コマンドは対象外）</li>
-        <li>よく使う安全なコマンドを登録しておくと、<strong>承認ダイアログの往復が減ってテンポが上がる</strong>（承認時に「Yes, and don't ask again」を選ぶと、ここに自動追記される）</li>
-      </ul>
 
       <h3>6-2. CLAUDE.md — プロジェクトメモリ（2分）</h3>
       <p>セッション開始時に <strong>自動で読み込まれる</strong>「Claude への指示書」。<code class="inline">/init</code> で雛形を生成でき（3-3 参照）、<code class="inline">#</code> プレフィックスで追記できる。</p>

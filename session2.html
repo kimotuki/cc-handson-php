@@ -318,7 +318,7 @@
         <tr><td><code class="inline">&lt;repo&gt;/.claude/settings.json</code></td><td>プロジェクト共通（チームで共有・コミット対象）</td></tr>
         <tr><td><code class="inline">&lt;repo&gt;/.claude/settings.local.json</code></td><td>プロジェクト個人用（git 管理外）</td></tr>
       </table>
-      <p>第1回で settings.json の配置場所（user / project / local）と <code class="inline">permissions.allow</code> の基本に触れた。ここでは <strong>書ける主な項目</strong> と、<strong>設定が効いているかの確認方法</strong> を押さえる。</p>
+      <p>第1回で settings.json の配置場所（user / project / local）に触れた。ここでは <strong>書ける主な項目</strong> と、<strong>設定が効いているかの確認方法</strong> を押さえる。</p>
       <h4>主な設定キー</h4>
       <table>
         <tr><th>キー</th><th>役割</th></tr>
@@ -341,13 +341,14 @@
 }</pre>
       <ul>
         <li><code class="inline">allow</code>＝確認なしで許可 / <code class="inline">deny</code>＝実行不可 / <code class="inline">ask</code>＝毎回確認</li>
-        <li><code class="inline">:*</code> は末尾ワイルドカード、<code class="inline">**</code> は複数階層のパスにマッチ</li>
+        <li><code class="inline">:*</code> は末尾ワイルドカード。<code class="inline">Bash(bats:*)</code> は <code class="inline">bats tests/test_send.bats</code> のように後ろに何が続いても一致する（<code class="inline">bash</code> など別コマンドは対象外）。<code class="inline">**</code> は複数階層のパスにマッチ</li>
+        <li>よく使う安全なコマンドを <code class="inline">allow</code> に登録しておくと、<strong>承認ダイアログの往復が減ってテンポが上がる</strong>（承認時に「Yes, and don't ask again」を選ぶと自動追記される）</li>
       </ul>
       <h4>設定の確認方法</h4>
       <p>設定は user → project → local の順に重ねられ、<strong>より近い設定が勝つ</strong>（local &gt; project &gt; user）。いま何が効いているかは次のコマンドで確認する。</p>
       <table>
         <tr><th>コマンド</th><th>確認できること</th></tr>
-        <tr><td><code class="inline">/config</code></td><td>現在の設定を UI で確認・変更（model, theme, language など）</td></tr>
+        <tr><td><code class="inline">/config</code></td><td>現在の設定を UI で確認・変更（model, theme, language など）。変更内容は settings.json に保存される</td></tr>
         <tr><td><code class="inline">/permissions</code></td><td>許可/拒否ルールをスコープ別に確認・編集</td></tr>
         <tr><td><code class="inline">/hooks</code></td><td>有効なフック設定を確認</td></tr>
         <tr><td><code class="inline">/memory</code></td><td>読み込まれている <code class="inline">CLAUDE.md</code>・メモリを確認</td></tr>
