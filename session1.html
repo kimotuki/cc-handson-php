@@ -493,22 +493,22 @@
       <h2 class="step"><span class="step-num">4</span>Claude Code の設定ファイル（5分）</h2>
       <p>Claude Code の挙動は、階層化された設定ファイルで制御される。「どこに置くか」でスコープが変わるのがポイント。</p>
 
-      <h3>4-1. settings.json（3分）</h3>
-      <p>パーミッション許可リスト・Hooks・環境変数など、<strong>ハーネスの動作設定</strong> を JSON で定義する。</p>
-      <table>
-        <tr><th>配置場所</th><th>スコープ</th></tr>
-        <tr><td><code class="inline">~/.claude/settings.json</code></td><td>ユーザ共通（全プロジェクトに適用）</td></tr>
-        <tr><td><code class="inline">&lt;repo&gt;/.claude/settings.json</code></td><td>プロジェクト共通（<strong>チームで共有</strong>・コミット対象）</td></tr>
-        <tr><td><code class="inline">&lt;repo&gt;/.claude/settings.local.json</code></td><td>プロジェクト個人用（git 管理外）</td></tr>
-      </table>
-
-      <h3>4-2. CLAUDE.md — プロジェクトメモリ（2分）</h3>
+      <h3>4-1. CLAUDE.md — プロジェクトメモリ（2分）</h3>
       <p>セッション開始時に <strong>自動で読み込まれる</strong>「Claude への指示書」。<code class="inline">/init</code> で雛形を生成でき（3-3 参照）、<code class="inline">#</code> プレフィックスで追記できる。</p>
       <table>
         <tr><th>配置場所</th><th>スコープ</th></tr>
         <tr><td><code class="inline">~/.claude/CLAUDE.md</code></td><td>全プロジェクト共通（個人の指示）</td></tr>
         <tr><td><code class="inline">&lt;repo&gt;/CLAUDE.md</code></td><td>プロジェクト共通（<strong>チームで共有</strong>）</td></tr>
         <tr><td><code class="inline">&lt;repo&gt;/CLAUDE.local.md</code></td><td>プロジェクト個人用（git 管理外）</td></tr>
+      </table>
+
+      <h3>4-2. settings.json（3分）</h3>
+      <p>パーミッション許可リスト・Hooks・環境変数など、<strong>ハーネスの動作設定</strong> を JSON で定義する。</p>
+      <table>
+        <tr><th>配置場所</th><th>スコープ</th></tr>
+        <tr><td><code class="inline">~/.claude/settings.json</code></td><td>ユーザ共通（全プロジェクトに適用）</td></tr>
+        <tr><td><code class="inline">&lt;repo&gt;/.claude/settings.json</code></td><td>プロジェクト共通（<strong>チームで共有</strong>・コミット対象）</td></tr>
+        <tr><td><code class="inline">&lt;repo&gt;/.claude/settings.local.json</code></td><td>プロジェクト個人用（git 管理外）</td></tr>
       </table>
       <h4>settings.json と CLAUDE.md の使い分け</h4>
       <table>

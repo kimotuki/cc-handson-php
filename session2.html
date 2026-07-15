@@ -255,30 +255,7 @@
         <li><code class="inline">CLAUDE.md</code> がまだ無い場合（<code class="inline">/init</code> が未実行）は、<code class="inline">/init</code> を実行して生成する</li>
       </ol>
 
-      <h3>2-2. メモリ（2分）</h3>
-      <p><code class="inline">#</code> プレフィックスでセッション中に得た知見をその場で追記できる。</p>
-<pre># このプロジェクトのテストは bats tests/ で実行する</pre>
-      <ul>
-        <li><code class="inline">/memory</code> で保存先（CLAUDE.md など）を選択・編集できる</li>
-      </ul>
-      <h4>プロジェクト別メモリ（auto-memory）</h4>
-      <p>CLAUDE.md とは別に、<strong>Claude が自分で書き溜めるプロジェクト別の記憶</strong> もある。保存先は <code class="inline">~/.claude/projects/&lt;作業ディレクトリ名&gt;/memory/</code>:</p>
-<pre>~/.claude/projects/&lt;作業ディレクトリ名&gt;/memory/
-├── MEMORY.md      <span class="comment">← インデックス（セッション開始時に読み込まれる）</span>
-└── &lt;個別メモ&gt;.md   <span class="comment">← 1ファイル1トピックの記憶本体</span></pre>
-      <ul>
-        <li><code class="inline">~/.claude/projects/</code> の下に <strong>作業ディレクトリごと</strong> のフォルダ（パスをハイフン区切りにした名前）が作られる</li>
-        <li>同じディレクトリで新しいセッションを始めると自動的に思い出される。<strong>別のディレクトリでの作業には影響しない</strong></li>
-      </ul>
-      <h4>指示・記憶の置き場所の整理</h4>
-      <table>
-        <tr><th>場所</th><th>役割</th></tr>
-        <tr><td><code class="inline">~/.claude/CLAUDE.md</code></td><td>全プロジェクト共通の <strong>人間からの指示</strong></td></tr>
-        <tr><td><code class="inline">&lt;repo&gt;/CLAUDE.md</code></td><td>リポジトリにコミットする <strong>チーム共有の指示</strong></td></tr>
-        <tr><td><code class="inline">~/.claude/projects/&lt;dir&gt;/memory/</code></td><td><strong>Claude が自分で書き溜める</strong> プロジェクト別の記憶</td></tr>
-      </table>
-
-      <h3>2-3. CLAUDE.md の書き方のコツ（4分）</h3>
+      <h3>2-2. CLAUDE.md の書き方のコツ（4分）</h3>
       <ul>
         <li><strong>簡潔に・宣言的に</strong>。長文の経緯説明より「○○するときは△△を使う」</li>
         <li>コードから読み取れること（ファイル構成そのもの等）は書かない — コンテキストの無駄</li>
@@ -310,7 +287,7 @@
 - SQLite への値の埋め込みは文字列連結ではなくパラメータ化する
 - 新しいスクリプトには対応する bats テストを追加する</pre>
 
-      <h3>2-4. settings.json と設定の確認（8分）</h3>
+      <h3>2-3. settings.json と設定の確認（8分）</h3>
       <p><strong>パーミッション許可リスト・Hooks・環境変数など、ハーネスの動作設定</strong> を JSON で定義する。</p>
       <table>
         <tr><th>配置場所</th><th>スコープ</th></tr>
@@ -358,6 +335,29 @@
         <strong>💡 settings.json と CLAUDE.md の役割分担</strong>
         組織が配布する managed settings は最優先で、個人設定では上書きできない。<code class="inline">settings.json</code> は <strong>JSON でハーネスを強制設定</strong> するもの、<code class="inline">CLAUDE.md</code> は <strong>Markdown で Claude に指示</strong> するもの、と意識する。
       </div>
+
+      <h3>2-4. メモリ（2分）</h3>
+      <p><code class="inline">#</code> プレフィックスでセッション中に得た知見をその場で追記できる。</p>
+<pre># このプロジェクトのテストは bats tests/ で実行する</pre>
+      <ul>
+        <li><code class="inline">/memory</code> で保存先（CLAUDE.md など）を選択・編集できる</li>
+      </ul>
+      <h4>プロジェクト別メモリ（auto-memory）</h4>
+      <p>CLAUDE.md とは別に、<strong>Claude が自分で書き溜めるプロジェクト別の記憶</strong> もある。保存先は <code class="inline">~/.claude/projects/&lt;作業ディレクトリ名&gt;/memory/</code>:</p>
+<pre>~/.claude/projects/&lt;作業ディレクトリ名&gt;/memory/
+├── MEMORY.md      <span class="comment">← インデックス（セッション開始時に読み込まれる）</span>
+└── &lt;個別メモ&gt;.md   <span class="comment">← 1ファイル1トピックの記憶本体</span></pre>
+      <ul>
+        <li><code class="inline">~/.claude/projects/</code> の下に <strong>作業ディレクトリごと</strong> のフォルダ（パスをハイフン区切りにした名前）が作られる</li>
+        <li>同じディレクトリで新しいセッションを始めると自動的に思い出される。<strong>別のディレクトリでの作業には影響しない</strong></li>
+      </ul>
+      <h4>指示・記憶の置き場所の整理</h4>
+      <table>
+        <tr><th>場所</th><th>役割</th></tr>
+        <tr><td><code class="inline">~/.claude/CLAUDE.md</code></td><td>全プロジェクト共通の <strong>人間からの指示</strong></td></tr>
+        <tr><td><code class="inline">&lt;repo&gt;/CLAUDE.md</code></td><td>リポジトリにコミットする <strong>チーム共有の指示</strong></td></tr>
+        <tr><td><code class="inline">~/.claude/projects/&lt;dir&gt;/memory/</code></td><td><strong>Claude が自分で書き溜める</strong> プロジェクト別の記憶</td></tr>
+      </table>
 
     </section>
 
@@ -537,11 +537,11 @@ allowed-tools: Read, Edit, Bash
         <figcaption><code class="inline">plugin:figma:figma</code> を選ぶと詳細が表示されるので、<strong>1. Authenticate</strong> を実行する</figcaption>
       </figure>
       <figure class="shot">
-        <img src="Image/figma-oauth-consent.png" alt="ブラウザに表示される Figma の OAuth 認可画面">
+        <img src="Image/figma-oauth-consent.png" alt="ブラウザに表示される Figma の OAuth 認可画面" style="max-width: 240px">
         <figcaption>ブラウザで Figma の認可画面が開く。内容を確認して <strong>「同意してアクセスを許可する」</strong> をクリック</figcaption>
       </figure>
       <figure class="shot">
-        <img src="Image/figma-auth-success.png" alt="認証成功の画面">
+        <img src="Image/figma-auth-success.png" alt="認証成功の画面" style="max-width: 210px">
         <figcaption><strong>Authentication successful</strong> が表示されたら、タブを閉じて Claude Code に戻る</figcaption>
       </figure>
       <figure class="shot">
@@ -563,20 +563,20 @@ allowed-tools: Read, Edit, Bash
       </figure>
       <p><strong>AI Chat</strong> を選び、詳細パネルの <strong>「インスタンスを挿入」</strong> をクリックする:</p>
       <figure class="shot">
-        <img src="Image/figma-insert-instance.png" alt="AI Chat の詳細パネルで「インスタンスを挿入」をクリック">
+        <img src="Image/figma-insert-instance.png" alt="AI Chat の詳細パネルで「インスタンスを挿入」をクリック" style="max-width: 230px">
         <figcaption>AI Chat の詳細パネルで「インスタンスを挿入」をクリック</figcaption>
       </figure>
       <figure class="shot">
-        <img src="Image/figma-ai-chat-design.png" alt="キャンバスに配置された Examples/AI Chat のデザイン">
+        <img src="Image/figma-ai-chat-design.png" alt="キャンバスに配置された Examples/AI Chat のデザイン" style="max-width: 290px">
         <figcaption>キャンバスに AI チャット画面のサンプル（Examples/AI Chat）が配置される</figcaption>
       </figure>
       <p>あとで Claude に指示しやすいよう、ファイル名を「無題」から <strong>AI Chat</strong> に変更しておく（ファイル名横の ∨ メニュー → <strong>名前を変更</strong>）:</p>
       <figure class="shot">
-        <img src="Image/figma-rename-menu.png" alt="ファイル名メニューから「名前を変更」を選ぶ">
+        <img src="Image/figma-rename-menu.png" alt="ファイル名メニューから「名前を変更」を選ぶ" style="max-width: 180px">
         <figcaption>ファイル名メニューから「名前を変更」を選ぶ</figcaption>
       </figure>
       <figure class="shot">
-        <img src="Image/figma-file-renamed.png" alt="ファイル名を AI Chat に変更した状態">
+        <img src="Image/figma-file-renamed.png" alt="ファイル名を AI Chat に変更した状態" style="max-width: 160px">
         <figcaption>ファイル名を AI Chat に変更した状態 — レイヤーに Examples/AI Chat が入っている</figcaption>
       </figure>
       <p>準備ができたら、Claude Code に実装を依頼する:</p>
