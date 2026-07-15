@@ -192,6 +192,7 @@
       <li><a href="#sec7">7. 実践：ソースコード解析</a></li>
       <li><a href="#sec8">8. まとめ</a></li>
       <li><a href="#sec9">9. 質疑応答</a></li>
+      <li><a href="#appendix">付録. Web 記事を HTML 資料にする</a></li>
     </ol>
   </nav>
 
@@ -242,14 +243,14 @@
 
       <h3>2-2. Claude.ai との違い（2分）</h3>
       <table>
-        <tr><th>観点</th><th>Claude.ai（チャット）</th><th>Claude Code（エージェント）</th></tr>
+        <tr><th>観点</th><th>Claude.ai（チャット）</th><th>Claude Code（AIエージェント）</th></tr>
         <tr><td>ファイルアクセス</td><td>コピペで渡した範囲のみ</td><td>ローカルファイルに直接アクセス</td></tr>
         <tr><td>実行</td><td>テキスト返答のみ</td><td>ファイル編集・コマンド実行を自分で行う</td></tr>
         <tr><td>ループ</td><td>人間が結果を貼り戻す</td><td>自分でエラーを読み、自分で直す</td></tr>
         <tr><td>必要な仕組み</td><td>─</td><td><strong>承認モデル</strong>（ハーネス）</td></tr>
       </table>
 
-      <h3>2-3. エージェントの動き（4分）</h3>
+      <h3>2-3. AIエージェントの動き（4分）</h3>
       <figure class="shot">
         <img src="Image/agentic-loop.png" alt="エージェントループ">
       </figure>
@@ -298,6 +299,10 @@
         <li>ツール実行・パーミッション管理・コンテキスト管理（コンパクション）・セッション管理などを担う</li>
         <li><strong>Claude Code = モデル + ハーネス</strong>。同じモデルでもハーネスの出来でエージェントの性能は大きく変わる</li>
       </ul>
+      <figure class="shot">
+        <img src="Image/harness-diagram.svg" alt="ハーネスの図解 — Claude Code = モデル + ハーネス">
+        <figcaption>Claude Code = モデル + ハーネス — ハーネスがモデルを実用的なエージェントとして動かす</figcaption>
+      </figure>
     </section>
 
     <section id="sec3">
@@ -637,6 +642,7 @@ Hello world</pre>
 
     <section id="sec7">
       <h2 class="step"><span class="step-num">7</span>実践：ソースコードの解析（15分）</h2>
+      <p>※ 普段、開発業務を行わない方は「<a href="#appendix">付録：Web 記事を HTML 資料にする</a>」を実施してください。</p>
       <p>題材は <strong>agmsg</strong> — Claude Code・Codex・Gemini CLI などの CLI AI エージェント同士が、共有の SQLite データベースを介してメッセージを交換できるようにする OSS（Bash + SQLite 製）。まず GitHub からクローンして準備する:</p>
 <pre><span class="prompt">$</span> git clone https://github.com/fujibee/agmsg
 <span class="prompt">$</span> cd agmsg</pre>
@@ -687,10 +693,10 @@ Hello world</pre>
         <span class="label">あなたの指示</span>
         <p>あるエージェントがメッセージを送信してから、別のエージェントが受信するまでの流れを Mermaid のシーケンス図で出力して。</p>
       </div>
-      <p>続けて、生成した図をファイルとして残す:</p>
+      <p>続けて、生成した図をファイルとして残す。Plan Mode は解除しておく:</p>
       <div class="prompt-box">
         <span class="label">あなたの指示</span>
-        <p>Plan Modeを解除してシーケンス図をファイルに保存して</p>
+        <p>シーケンス図をファイルに保存して</p>
       </div>
       <div class="callout tip">
         <strong>💡 Mermaid のビューアが無いとき</strong>
@@ -727,6 +733,59 @@ Hello world</pre>
     <section id="sec9">
       <h2 class="step"><span class="step-num">💬</span>質疑応答（15分）</h2>
       <p>ここまでの内容についての質問・疑問に答える。日常業務での適用イメージ（どのタスクから Claude Code に任せるか）もここで相談する。</p>
+    </section>
+
+    <section id="appendix">
+      <h2 class="step"><span class="step-num">付</span>付録：Web 記事を HTML 資料にする</h2>
+      <p>ソフトウェア開発以外の業務でも Claude Code は活用できる。例えば「Webサイトを調べる → 内容を纏める → 資料にする」の流れをそのまま任せられる。ここでは Web の記事を題材に、日本語の HTML 資料を作成し、さらにデザインテンプレートの画像を与えて見た目を更新するまでを体験する。</p>
+      <p>題材の記事（英語。自分で検索して見つけた別の記事でもよい）:<br>
+      <a href="https://claude.com/blog/getting-started-with-loops" target="_blank" rel="noopener">claude.com/blog/getting-started-with-loops</a></p>
+
+      <h3>付録-1. Web 記事を日本語の HTML 資料にする</h3>
+      <p>資料作成用の空フォルダを作って Claude Code を起動する:</p>
+<pre><span class="prompt">$</span> mkdir article-report
+<span class="prompt">$</span> cd article-report
+<span class="prompt">$</span> claude</pre>
+      <p>記事の URL を渡して、日本語の資料化を依頼する:</p>
+      <div class="prompt-box">
+        <span class="label">あなたの指示</span>
+        <p>https://claude.com/blog/getting-started-with-loops の記事を読んで、内容を日本語でわかりやすくまとめた HTML 資料を loops-guide.html という1ファイルで作成してください。開発者でない人にも伝わる表現にしてください。</p>
+      </div>
+      <ul>
+        <li>Web への取得アクセスの承認を求められたら、内容を確認して許可する</li>
+        <li>記事が英語でも、<strong>日本語でと指示すれば日本語の資料</strong> になる</li>
+      </ul>
+      <p>完成したらブラウザで開いて確認する（<code class="inline">!</code> プレフィックスで Claude Code からそのまま実行できる）:</p>
+<pre>!open loops-guide.html</pre>
+      <p>Windows の場合は <code class="inline">!start loops-guide.html</code>。</p>
+
+      <h3>付録-2. デザインテンプレートを与えて見た目を更新する</h3>
+      <p>好みのデザイン（社内の資料テンプレート・気に入っている Web サイトなど）のスクリーンショットを撮り、作業フォルダに <code class="inline">design-template.png</code> として保存する。</p>
+      <p>画像を渡してデザインの更新を依頼する:</p>
+      <div class="prompt-box">
+        <span class="label">あなたの指示</span>
+        <p>design-template.png のデザイン（配色・フォント・レイアウトの雰囲気）に合わせて、loops-guide.html の見た目を更新してください。文章の内容は変えないでください。</p>
+      </div>
+      <ul>
+        <li>画像はターミナルへの <strong>ドラッグ＆ドロップ</strong> でパスを渡すこともできる</li>
+        <li>仕上がりが気に入らなければ「余白をもう少し広く」「見出しの色を控えめに」のように <strong>会話で微調整</strong> する</li>
+      </ul>
+
+      <h3>付録-3. PDF 化して配布できるようにする</h3>
+      <p>資料を配布・印刷しやすいよう、仕上げに PDF へ変換する:</p>
+      <div class="prompt-box">
+        <span class="label">あなたの指示</span>
+        <p>loops-guide.html を A4 縦の PDF に変換して、loops-guide.pdf として保存してください。</p>
+      </div>
+      <ul>
+        <li>Claude が PC にインストール済みのツール（Chrome のヘッドレス印刷など）を探して変換してくれる。使えるツールが無い場合は、代替手順（ブラウザで開いて「印刷 → PDF に保存」）を案内してくれる</li>
+        <li>出来上がったら <code class="inline">!open loops-guide.pdf</code> で確認する（Windows は <code class="inline">!start loops-guide.pdf</code>）</li>
+        <li>「見出しの途中で改ページしないようにして」「余白を広めに」のような <strong>印刷向けの微調整も会話で</strong> 頼める</li>
+      </ul>
+      <div class="callout tip">
+        <strong>💡 ポイント</strong>
+        ここまでコードは1行も書いていない。元ネタ（URL・画像）を渡して、欲しい成果物を日本語で伝えるだけで、調査 → 資料化 → デザイン調整 → 配布用の PDF 化まで Claude Code に任せられる。
+      </div>
     </section>
 
     <footer>
