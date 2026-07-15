@@ -275,6 +275,10 @@
         <li>終了しても履歴は残っており、<code class="inline">claude --continue</code>（直前）や <code class="inline">claude -r</code>（一覧から選択）で再開できる</li>
         <li>セッションが変わるとコンテキストはまっさらになる — <strong>1タスク1セッション</strong> が使い方の基本</li>
       </ul>
+      <figure class="shot">
+        <img src="Image/session-diagram.svg" alt="セッションの図解 — 終了後は再開（--continue / -r）か新規開始かを選べる">
+        <figcaption>セッション — 起動から終了までが1つの対話単位。終了後は「続きを再開」か「まっさらな新規セッション」を選べる</figcaption>
+      </figure>
       <h4>モデル</h4>
       <p>ここでは Large Language Model (LLM) を指す。Anthropic 社が提供するモデルファミリー：</p>
       <table>
@@ -287,6 +291,7 @@
       <h4>コンテキスト</h4>
       <ul>
         <li>会話・ファイル内容・コマンド出力すべてが <strong>コンテキストウィンドウ</strong> に積まれる</li>
+        <li>同じセッションで会話を続けていくと <strong>コンテキストウィンドウを消費していく</strong></li>
         <li>上限に近づくと <strong>自動コンパクション</strong>（要約圧縮）が走る — <strong>情報のロスを伴う</strong></li>
       </ul>
       <figure class="shot">
@@ -313,6 +318,16 @@
       <figure class="shot">
         <img src="Image/harness-diagram.svg" alt="ハーネスの図解 — Claude Code = モデル + ハーネス">
         <figcaption>Claude Code = モデル + ハーネス — ハーネスがモデルを実用的なエージェントとして動かす</figcaption>
+      </figure>
+      <h4>パーミッション</h4>
+      <ul>
+        <li>ツール実行（ファイル編集・コマンド実行など）の前に <strong>ユーザの承認を求める</strong> 仕組み。ハーネスの安全機構</li>
+        <li>読み取り系は確認なしで実行され、<strong>書き込みやコマンド実行は承認が必要</strong>（Default モードの場合）</li>
+        <li>確認の度合いは承認モード（3-4）で切り替えられ、settings.json の <code class="inline">permissions</code>（4-2）で事前にルール化もできる</li>
+      </ul>
+      <figure class="shot">
+        <img src="Image/permission-diagram.svg" alt="パーミッションの図解 — ツール実行前の承認フロー">
+        <figcaption>パーミッション — ツール実行の前に承認を求め、承認された場合だけ実行される</figcaption>
       </figure>
     </section>
 

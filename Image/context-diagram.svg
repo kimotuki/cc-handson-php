@@ -32,6 +32,8 @@
   <rect x="360" y="158" width="140" height="64" rx="10" fill="#f0c9b4" stroke="#a84e32" stroke-width="2"/>
   <text x="430" y="185" font-size="12.5" font-weight="700" fill="#292524" text-anchor="middle">自動コンパクション</text>
   <text x="430" y="204" font-size="10.5" fill="#78716c" text-anchor="middle">履歴を要約して圧縮</text>
+  <text x="430" y="244" font-size="10" fill="#78716c" text-anchor="middle">/compact で明示的に</text>
+  <text x="430" y="260" font-size="10" fill="#78716c" text-anchor="middle">コンパクションも可能</text>
 
   <line x1="508" y1="190" x2="552" y2="190" stroke="#78716c" stroke-width="1.6" marker-end="url(#arrow)"/>
 
