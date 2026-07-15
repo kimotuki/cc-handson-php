@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 290" font-family="-apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif">
+  <rect x="1" y="1" width="818" height="288" fill="#f5f3ee"/>
+
+  <!-- 英語 -->
+  <text x="30" y="46" font-size="13" font-weight="700" fill="#a84e32">英語 — 約4文字 ≒ 1トークン</text>
+
+  <rect x="30" y="60" width="82" height="42" rx="8" fill="#f7e4d8" stroke="#d97757" stroke-width="1"/>
+  <text x="71" y="86" font-size="13" fill="#292524" text-anchor="middle" font-family="'SF Mono', Menlo, Consolas, monospace">Claude</text>
+
+  <rect x="120" y="60" width="72" height="42" rx="8" fill="#f7e4d8" stroke="#d97757" stroke-width="1"/>
+  <text x="156" y="86" font-size="13" fill="#292524" text-anchor="middle" font-family="'SF Mono', Menlo, Consolas, monospace">Code</text>
+
+  <rect x="200" y="60" width="52" height="42" rx="8" fill="#f7e4d8" stroke="#d97757" stroke-width="1"/>
+  <text x="226" y="86" font-size="13" fill="#292524" text-anchor="middle" font-family="'SF Mono', Menlo, Consolas, monospace">is</text>
+
+  <rect x="260" y="60" width="72" height="42" rx="8" fill="#f7e4d8" stroke="#d97757" stroke-width="1"/>
+  <text x="296" y="86" font-size="13" fill="#292524" text-anchor="middle" font-family="'SF Mono', Menlo, Consolas, monospace">help</text>
+
+  <rect x="340" y="60" width="58" height="42" rx="8" fill="#f7e4d8" stroke="#d97757" stroke-width="1"/>
+  <text x="369" y="86" font-size="13" fill="#292524" text-anchor="middle" font-family="'SF Mono', Menlo, Consolas, monospace">ful</text>
+
+  <text x="416" y="86" font-size="12.5" font-weight="600" fill="#78716c">= 5 トークン</text>
+
+  <!-- 日本語 -->
+  <text x="30" y="146" font-size="13" font-weight="700" fill="#a84e32">日本語 — 1〜2文字 ≒ 1トークン</text>
+
+  <rect x="30" y="160" width="58" height="42" rx="8" fill="#f7e4d8" stroke="#d97757" stroke-width="1"/>
+  <text x="59" y="186" font-size="13" fill="#292524" text-anchor="middle">今日</text>
+
+  <rect x="96" y="160" width="44" height="42" rx="8" fill="#f7e4d8" stroke="#d97757" stroke-width="1"/>
+  <text x="118" y="186" font-size="13" fill="#292524" text-anchor="middle">の</text>
+
+  <rect x="148" y="160" width="44" height="42" rx="8" fill="#f7e4d8" stroke="#d97757" stroke-width="1"/>
+  <text x="170" y="186" font-size="13" fill="#292524" text-anchor="middle">天</text>
+
+  <rect x="200" y="160" width="44" height="42" rx="8" fill="#f7e4d8" stroke="#d97757" stroke-width="1"/>
+  <text x="222" y="186" font-size="13" fill="#292524" text-anchor="middle">気</text>
+
+  <rect x="252" y="160" width="44" height="42" rx="8" fill="#f7e4d8" stroke="#d97757" stroke-width="1"/>
+  <text x="274" y="186" font-size="13" fill="#292524" text-anchor="middle">は</text>
+
+  <rect x="304" y="160" width="44" height="42" rx="8" fill="#f7e4d8" stroke="#d97757" stroke-width="1"/>
+  <text x="326" y="186" font-size="13" fill="#292524" text-anchor="middle">晴</text>
+
+  <rect x="356" y="160" width="44" height="42" rx="8" fill="#f7e4d8" stroke="#d97757" stroke-width="1"/>
+  <text x="378" y="186" font-size="13" fill="#292524" text-anchor="middle">れ</text>
+
+  <rect x="408" y="160" width="58" height="42" rx="8" fill="#f7e4d8" stroke="#d97757" stroke-width="1"/>
+  <text x="437" y="186" font-size="13" fill="#292524" text-anchor="middle">です</text>
+
+  <text x="482" y="186" font-size="12.5" font-weight="600" fill="#78716c">= 8 トークン</text>
+
+  <!-- まとめ -->
+  <rect x="30" y="228" width="760" height="42" rx="10" fill="#fbf3ec" stroke="#d97757" stroke-width="1"/>
+  <text x="410" y="254" font-size="12" fill="#292524" text-anchor="middle">コンテキストウィンドウの上限（例：200K）も利用量（レートリミット）も、このトークン数で数える — /usage で確認できる</text>
+</svg>

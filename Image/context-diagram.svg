@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 380" font-family="-apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#78716c"/>
+    </marker>
+  </defs>
+
+  <rect x="1" y="1" width="818" height="378" fill="#f5f3ee"/>
+
+  <!-- 左：コンテキストウィンドウ -->
+  <text x="165" y="36" font-size="14" font-weight="700" fill="#a84e32" text-anchor="middle">コンテキストウィンドウ</text>
+  <rect x="50" y="50" width="230" height="280" rx="12" fill="#ffffff" stroke="#d97757" stroke-width="1.5"/>
+
+  <line x1="58" y1="92" x2="272" y2="92" stroke="#dc2626" stroke-width="1.4" stroke-dasharray="6 4"/>
+  <text x="165" y="82" font-size="10" fill="#dc2626" text-anchor="middle">上限（例：200K トークン）</text>
+
+  <text x="165" y="126" font-size="10.5" fill="#78716c" text-anchor="middle">（残りの空き）</text>
+
+  <rect x="62" y="142" width="206" height="56" rx="9" fill="#f7e4d8" stroke="#d97757" stroke-width="1"/>
+  <text x="165" y="175" font-size="13" font-weight="600" fill="#292524" text-anchor="middle">コマンド出力</text>
+
+  <rect x="62" y="204" width="206" height="56" rx="9" fill="#f7e4d8" stroke="#d97757" stroke-width="1"/>
+  <text x="165" y="237" font-size="13" font-weight="600" fill="#292524" text-anchor="middle">ファイル内容</text>
+
+  <rect x="62" y="266" width="206" height="56" rx="9" fill="#f7e4d8" stroke="#d97757" stroke-width="1"/>
+  <text x="165" y="299" font-size="13" font-weight="600" fill="#292524" text-anchor="middle">会話（指示・応答）</text>
+
+  <!-- 中央：コンパクション -->
+  <line x1="290" y1="190" x2="352" y2="190" stroke="#78716c" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="321" y="176" font-size="10" fill="#78716c" text-anchor="middle">上限に近づくと</text>
+
+  <rect x="360" y="158" width="140" height="64" rx="10" fill="#f0c9b4" stroke="#a84e32" stroke-width="2"/>
+  <text x="430" y="185" font-size="12.5" font-weight="700" fill="#292524" text-anchor="middle">自動コンパクション</text>
+  <text x="430" y="204" font-size="10.5" fill="#78716c" text-anchor="middle">履歴を要約して圧縮</text>
+
+  <line x1="508" y1="190" x2="552" y2="190" stroke="#78716c" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- 右：圧縮後 -->
+  <text x="665" y="36" font-size="14" font-weight="700" fill="#a84e32" text-anchor="middle">圧縮後</text>
+  <rect x="560" y="50" width="210" height="280" rx="12" fill="#ffffff" stroke="#d97757" stroke-width="1.5"/>
+
+  <line x1="568" y1="92" x2="762" y2="92" stroke="#dc2626" stroke-width="1.4" stroke-dasharray="6 4"/>
+
+  <text x="665" y="180" font-size="10.5" fill="#78716c" text-anchor="middle">空きが増え、</text>
+  <text x="665" y="198" font-size="10.5" fill="#78716c" text-anchor="middle">会話を続けられる</text>
+
+  <rect x="572" y="250" width="186" height="72" rx="9" fill="#f7e4d8" stroke="#d97757" stroke-width="1"/>
+  <text x="665" y="282" font-size="12.5" font-weight="600" fill="#292524" text-anchor="middle">要約された履歴</text>
+  <text x="665" y="302" font-size="10.5" fill="#78716c" text-anchor="middle">細部は失われる</text>
+
+  <text x="410" y="366" font-size="11.5" fill="#dc2626" text-anchor="middle">⚠ コンパクションは要約圧縮 — 情報のロスを伴う</text>
+</svg>
