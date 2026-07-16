@@ -585,7 +585,7 @@ cd agmsg
 シーケンス図をファイルに保存して
 ```
 
-> 💡 エディタに Mermaid 形式のビューアが入っていない場合は、**Mermaid Viewer**（`https://mermaidviewer.com/ja`）に出力を貼り付けて図を確認できる。
+> 💡 エディタに Mermaid 形式のビューアが入っていない場合は、**Mermaid エディター**（`https://rakkokeyword.com/techo/tool-mermaid-editor/`）に出力を貼り付けて図を確認できる。
 
 ##### 演習3
 
