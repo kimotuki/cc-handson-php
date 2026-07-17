@@ -820,6 +820,30 @@ $ claude
 * `:*` は末尾ワイルドカード。`Bash(bats:*)` は `bats tests/test_send.bats` のように後ろに何が続いても一致する（`bash` など別コマンドは対象外）。`**` は複数階層のパスにマッチ
 * よく使う安全なコマンドを `allow` に登録しておくと、**承認ダイアログの往復が減ってテンポが上がる**（承認時に「Yes, and don't ask again」を選ぶと自動追記される）
 
+##### 設定例：秘密ファイルの読み取りを禁止する
+
+> ⚠️ **よくある勘違い**：「`.claudeignore` を作る」→ Claude Code に `.claudeignore` は無い。正しくは `.claude/settings.json` の `permissions.deny` で「読み取り禁止」を宣言する。
+
+プロジェクト直下に `.claude/settings.json` を作り、秘密ファイルへの Read を拒否しておく（`.claude/` ディレクトリがなければ `mkdir -p .claude` で作成）:
+
+```json
+{
+  "permissions": {
+    "deny": [
+      "Read(./.dev.vars)",
+      "Read(./**/.dev.vars)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./**/.env)",
+      "Read(./**/.env.*)",
+      "Read(./secrets/**)"
+    ]
+  }
+}
+```
+
+* `deny` は最優先。万一「`.dev.vars` 読んで」と頼んでも Claude は読めない＝事故防止
+
 ##### 設定の確認方法
 
 設定は user → project → local の順に重ねられ、**より近い設定が勝つ**（local > project > user）。いま何が効いているかは次のコマンドで確認する:

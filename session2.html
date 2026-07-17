@@ -321,6 +321,28 @@
         <li><code class="inline">:*</code> は末尾ワイルドカード。<code class="inline">Bash(bats:*)</code> は <code class="inline">bats tests/test_send.bats</code> のように後ろに何が続いても一致する（<code class="inline">bash</code> など別コマンドは対象外）。<code class="inline">**</code> は複数階層のパスにマッチ</li>
         <li>よく使う安全なコマンドを <code class="inline">allow</code> に登録しておくと、<strong>承認ダイアログの往復が減ってテンポが上がる</strong>（承認時に「Yes, and don't ask again」を選ぶと自動追記される）</li>
       </ul>
+      <h4>設定例：秘密ファイルの読み取りを禁止する</h4>
+      <div class="callout warn">
+        <strong>⚠️ よくある勘違い：「.claudeignore を作る」</strong>
+        Claude Code に <code class="inline">.claudeignore</code> は無い。正しくは <code class="inline">.claude/settings.json</code> の <code class="inline">permissions.deny</code> で「読み取り禁止」を宣言する。
+      </div>
+      <p>プロジェクト直下に <code class="inline">.claude/settings.json</code> を作り、秘密ファイルへの Read を拒否しておく（<code class="inline">.claude/</code> ディレクトリがなければ <code class="inline">mkdir -p .claude</code> で作成）:</p>
+<pre>{
+  <span class="str">"permissions"</span>: {
+    <span class="str">"deny"</span>: [
+      <span class="str">"Read(./.dev.vars)"</span>,
+      <span class="str">"Read(./**/.dev.vars)"</span>,
+      <span class="str">"Read(./.env)"</span>,
+      <span class="str">"Read(./.env.*)"</span>,
+      <span class="str">"Read(./**/.env)"</span>,
+      <span class="str">"Read(./**/.env.*)"</span>,
+      <span class="str">"Read(./secrets/**)"</span>
+    ]
+  }
+}</pre>
+      <ul>
+        <li><code class="inline">deny</code> は最優先。万一「<code class="inline">.dev.vars</code> 読んで」と頼んでも Claude は読めない＝事故防止</li>
+      </ul>
       <h4>設定の確認方法</h4>
       <p>設定は user → project → local の順に重ねられ、<strong>より近い設定が勝つ</strong>（local &gt; project &gt; user）。いま何が効いているかは次のコマンドで確認する。</p>
       <table>
